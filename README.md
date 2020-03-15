@@ -1,5 +1,5 @@
 # Dark World
-Dark World by :monkey: kwoolter  :copyright: 2017
+Dark World by :monkey: kwoolter  :copyright: 2020
 
 ## Summary
 New RPG with *smooooth* movement and next generation graphics!
