@@ -135,20 +135,23 @@ class World3D:
 
     def initialise(self, obj_count=500):
 
-        for i in range(1, obj_count):
-            new_object = Object3D(random.randint(0, 5),
-                                  random.randint(1, 5),
-                                  random.choice(World3D.HEADINGS))
+        # for i in range(1, obj_count):
+        #     new_object = Object3D(random.randint(0, 5),
+        #                           random.randint(1, 5),
+        #                           random.choice(World3D.HEADINGS))
+        #
+        #     new_object = Object3D(0,1,random.choice(World3D.HEADINGS))
+        #
+        #     self.add_object(new_object, random.randint(0, self.width), random.randint(0, self.height),
+        #                     random.randint(0, self.depth))
 
-            self.add_object(new_object, random.randint(0, self.width), random.randint(0, self.height),
-                            random.randint(0, self.depth))
+        obj_size = 32
+        for y in range(0,100):
+            for x in range(0, 100):
+                new_object = Object3D(1, obj_size, random.choice(World3D.HEADINGS))
 
+                self.add_object(new_object, x*obj_size, y*obj_size, 20)
 
-        for i in range(30, 100):
-            new_object = Object3D(int((i % 10) / 2), 10, random.choice(World3D.HEADINGS))
-
-            self.add_object(new_object, 300 + i * 20, 300, 10)
-            self.add_object(new_object, 700, 700 + i * 20, 10)
 
 
     def print(self):

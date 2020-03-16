@@ -4,6 +4,7 @@ import darkworld.view as view
 import os
 import pygame
 import sys
+import numpy as np
 from pygame.locals import *
 
 class DWController:
@@ -43,7 +44,6 @@ class DWController:
         loop = True
 
         while loop is True:
-
 
             # Loop to process game events
             event = self.m.get_next_event()
@@ -85,6 +85,23 @@ class DWController:
                 # Timer for Computer AI moves
                 elif event.type == USEREVENT + 2:
                     pass
+
+            keys = pygame.key.get_pressed()
+            if keys[K_LEFT]:
+                self.v.move_view(np.array(model.World3D.WEST) * 2)
+            elif keys[K_RIGHT]:
+                self.v.move_view(np.array(model.World3D.EAST) * 2)
+
+            if keys[K_UP]:
+                self.v.move_view(np.array(model.World3D.DOWN) * 2)
+            elif keys[K_DOWN]:
+                self.v.move_view(np.array(model.World3D.UP) * 2)
+
+            if keys[K_q]:
+                self.v.move_view(np.array(model.World3D.NORTH))
+            elif keys[K_e]:
+                self.v.move_view(np.array(model.World3D.SOUTH))
+
 
             self.v.draw()
             self.v.update()

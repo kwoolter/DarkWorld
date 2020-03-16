@@ -31,6 +31,9 @@ class View():
 
 class DWMainFrame(View):
 
+    RESOURCES_DIR = os.path.dirname(__file__) + "\\resources\\"
+
+
     def __init__(self, model : model.DWModel):
 
         self.model = model
@@ -52,6 +55,15 @@ class DWMainFrame(View):
         pygame.display.set_caption(self.model.name)
 
         self.surface = pygame.display.set_mode((self.width, self.height), pygame.DOUBLEBUF | pygame.HWACCEL)
+
+        filename = DWMainFrame.RESOURCES_DIR + "icon.png"
+
+        try:
+            image = pygame.image.load(filename)
+            image = pygame.transform.scale(image, (32, 32))
+            pygame.display.set_icon(image)
+        except Exception as err:
+            print(str(err))
 
         self.floor_view.initialise()
 
@@ -80,8 +92,14 @@ class DWMainFrame(View):
     def tick(self):
         self.floor_view.tick()
 
+    def move_view(self, direction):
+
+        self.floor_view.move_view(direction)
+
 
 class DWFloorView(View):
+
+    RESOURCES_DIR = os.path.dirname(__file__) + "\\resources\\"
 
     def __init__(self, model : model.DWModel):
 
@@ -92,8 +110,9 @@ class DWFloorView(View):
         self.depth = 400
         self.view_pos = (500,500,-50)
 
-        self.object_size_scale = int(min(self.width, self.height)/100)
-        self.object_distance_scale = 400
+        #self.object_size_scale = int(min(self.width, self.height)/100)
+        self.object_size_scale = 1
+        self.object_distance_scale = 2000
 
         self.m2v = ModelToView3D(self.model)
 
@@ -103,6 +122,14 @@ class DWFloorView(View):
 
         print("Initialising {0}".format(__class__))
         self.surface = pygame.Surface((self.width, self.height))
+
+        filename = DWFloorView.RESOURCES_DIR + "tile1.png"
+
+
+        try:
+            self.image = pygame.image.load(filename)
+        except Exception as err:
+            print(str(err))
 
     def print(self):
 
@@ -126,16 +153,16 @@ class DWFloorView(View):
 
                 size = int(obj.size * self.object_size_scale * (1 - d / self.object_distance_scale))
 
-                pygame.draw.circle(self.surface,
-                                   Colours.BLUE,
-                                   (x, y),
-                                   size)
-
-                pygame.draw.rect(self.surface, Colours.BLACK,
-                                 (int(x - size / 2), int(y - size / 2), size, size), 0)
+                # pygame.draw.circle(self.surface,
+                #                    Colours.BLUE,
+                #                    (x, y),
+                #                    size)
                 #
-                # image = pygame.transform.scale(self.alien_images[obj.type], (size, size))
-                # self.surface.blit(image, (int(x - size / 2), int(y - size / 2), size, size))
+                # pygame.draw.rect(self.surface, Colours.BLACK,
+                #                  (int(x - size / 2), int(y - size / 2), size, size), 0)
+
+                image = pygame.transform.scale(self.image,(size, size))
+                self.surface.blit(image, (int(x - size / 2), int(y - size / 2), size, size))
 
         # Draw cross hair
         cross_hair_size = 0.25
@@ -158,7 +185,12 @@ class DWFloorView(View):
                  bkg=Colours.DARK_GREY)
 
     def tick(self):
+        return
         self.view_pos = np.add(self.view_pos, np.array(model.World3D.NORTH))
+
+    def move_view(self, direction):
+
+        self.view_pos = np.add(self.view_pos, direction)
 
 
 class ModelToView3D():
