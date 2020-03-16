@@ -41,7 +41,7 @@ class DWMainFrame(View):
         self.width = 400
         self.height = 400
 
-        self.floor_view = DWFloorView(self.model)
+        self.floor_view = DWFloorView(self.model, (0,0,-64), (400,400,19))
 
 
     def initialise(self):
@@ -101,14 +101,20 @@ class DWFloorView(View):
 
     RESOURCES_DIR = os.path.dirname(__file__) + "\\resources\\"
 
-    def __init__(self, model : model.DWModel):
+    def __init__(self, model : model.DWModel, min_view_pos, max_view_pos, view_pos = None):
 
         self.model = model
         self.surface = None
         self.width = 400
         self.height = 400
         self.depth = 400
-        self.view_pos = (500,500,-50)
+
+        self.max_view_pos = np.array(max_view_pos)
+        self.min_view_pos = np.array(min_view_pos)
+        if view_pos is None:
+            view_pos = np.add(self.min_view_pos, self.max_view_pos)
+            view_pos = np.divide(view_pos, 2).astype(int)
+        self.set_view(view_pos)
 
         #self.object_size_scale = int(min(self.width, self.height)/100)
         self.object_size_scale = 1
@@ -124,8 +130,6 @@ class DWFloorView(View):
         self.surface = pygame.Surface((self.width, self.height))
 
         filename = DWFloorView.RESOURCES_DIR + "tile1.png"
-
-
         try:
             self.image = pygame.image.load(filename)
         except Exception as err:
@@ -138,8 +142,6 @@ class DWFloorView(View):
     def draw(self):
 
         self.surface.fill(Colours.DARK_GREY)
-
-        vx, vy, vz = self.view_pos
 
         # Get the visible objects from the model
         objs = self.m2v.get_object_list(self.view_pos, self.width, self.height, self.depth)
@@ -188,9 +190,13 @@ class DWFloorView(View):
         return
         self.view_pos = np.add(self.view_pos, np.array(model.World3D.NORTH))
 
+    def set_view(self, new_view_pos):
+        self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
+
     def move_view(self, direction):
 
-        self.view_pos = np.add(self.view_pos, direction)
+        new_view_pos = np.add(self.view_pos, direction)
+        self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
 
 
 class ModelToView3D():
