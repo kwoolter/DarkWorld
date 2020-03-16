@@ -41,7 +41,7 @@ class DWMainFrame(View):
         self.width = 400
         self.height = 400
 
-        self.floor_view = DWFloorView(self.model, (0,0,-64), (400,400,19))
+        self.floor_view = DWFloorView(self.model, (0,0,-200), (400,400,15))
 
 
     def initialise(self):
@@ -129,9 +129,17 @@ class DWFloorView(View):
         print("Initialising {0}".format(__class__))
         self.surface = pygame.Surface((self.width, self.height))
 
-        filename = DWFloorView.RESOURCES_DIR + "tile1.png"
+        self.tiles = []
+
+        filename1 = DWFloorView.RESOURCES_DIR + "tile1.png"
+        filename2 = DWFloorView.RESOURCES_DIR + "tile3.png"
         try:
-            self.image = pygame.image.load(filename)
+            image = pygame.image.load(filename1)
+            self.tiles.append(image)
+
+            image = pygame.image.load(filename2)
+            self.tiles.append(image)
+
         except Exception as err:
             print(str(err))
 
@@ -163,7 +171,7 @@ class DWFloorView(View):
                 # pygame.draw.rect(self.surface, Colours.BLACK,
                 #                  (int(x - size / 2), int(y - size / 2), size, size), 0)
 
-                image = pygame.transform.scale(self.image,(size, size))
+                image = pygame.transform.scale(self.tiles[min(obj.type, len(self.tiles)-1)],(size, size))
                 self.surface.blit(image, (int(x - size / 2), int(y - size / 2), size, size))
 
         # Draw cross hair

@@ -152,7 +152,15 @@ class World3D:
 
                 self.add_object(new_object, x*obj_size, y*obj_size, 20)
 
+        for y in range(0,20):
+            new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
+            self.add_object(new_object, 0, y * obj_size, 19)
+            self.add_object(new_object, 12 * obj_size, y * obj_size, 19)
 
+        for x in range(0,20):
+            new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
+            self.add_object(new_object, x * obj_size, 0,  19)
+            self.add_object(new_object, x * obj_size, 12 * obj_size, 19)
 
     def print(self):
         print("Headings {0}".format(World3D.HEADINGS))
