@@ -41,7 +41,7 @@ class DWMainFrame(View):
         self.width = 400
         self.height = 400
 
-        self.floor_view = DWFloorView(self.model, (0,0,-200), (400,400,15))
+        self.floor_view = DWFloorView(self.model, (0,0,-400), (400,400,15))
 
 
     def initialise(self):
@@ -118,9 +118,9 @@ class DWFloorView(View):
 
         #self.object_size_scale = int(min(self.width, self.height)/100)
         self.object_size_scale = 1
-        self.object_distance_scale = 2000
 
         self.m2v = ModelToView3D(self.model)
+        self.object_distance_scale = self.m2v.infinity
 
     def initialise(self):
 
@@ -131,14 +131,13 @@ class DWFloorView(View):
 
         self.tiles = []
 
-        filename1 = DWFloorView.RESOURCES_DIR + "tile1.png"
-        filename2 = DWFloorView.RESOURCES_DIR + "tile3.png"
-        try:
-            image = pygame.image.load(filename1)
-            self.tiles.append(image)
+        filenames = ("tile1.png", "tile3.png", "tile4.png", "bear.png")
 
-            image = pygame.image.load(filename2)
-            self.tiles.append(image)
+        try:
+            for filename in filenames:
+                filename = DWFloorView.RESOURCES_DIR + filename
+                image = pygame.image.load(filename)
+                self.tiles.append(image)
 
         except Exception as err:
             print(str(err))
@@ -163,16 +162,8 @@ class DWFloorView(View):
 
                 size = int(obj.size * self.object_size_scale * (1 - d / self.object_distance_scale))
 
-                # pygame.draw.circle(self.surface,
-                #                    Colours.BLUE,
-                #                    (x, y),
-                #                    size)
-                #
-                # pygame.draw.rect(self.surface, Colours.BLACK,
-                #                  (int(x - size / 2), int(y - size / 2), size, size), 0)
-
                 image = pygame.transform.scale(self.tiles[min(obj.type, len(self.tiles)-1)],(size, size))
-                self.surface.blit(image, (int(x - size / 2), int(y - size / 2), size, size))
+                self.surface.blit(image, (int(x * self.object_size_scale - size / 2), int(y * self.object_size_scale - size / 2), size, size))
 
         # Draw cross hair
         cross_hair_size = 0.25
@@ -209,12 +200,21 @@ class DWFloorView(View):
 
 class ModelToView3D():
 
+    PERSPECTIVE = "perspective"
+    PARALLEL = "parallel"
+
+
     def __init__(self, model):
         self.model = model
 
         self.infinity = 1000
 
+        self.projection = ModelToView3D.PERSPECTIVE
+        #self.projection = ModelToView3D.PARALLEL
+
     def get_object_list(self, view_pos, view_width, view_height, view_depth, view_heading=model.World3D.NORTH):
+
+
         objects = {}
 
         vx, vy, vz = view_pos
@@ -235,8 +235,8 @@ class ModelToView3D():
 
                 # Add ((x,y,z), obj)) to list of objects at this distance
                 objects[od].append((
-                    (int(ow * (1 - od / self.infinity)) + int(view_width / 2),
-                     int(oh * (1 - od / self.infinity)) + int(view_height / 2),
+                    (int(ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_width / 2),
+                     int(oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_height / 2),
                      od), obj))
 
         return objects
