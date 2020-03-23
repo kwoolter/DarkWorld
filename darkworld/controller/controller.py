@@ -98,9 +98,9 @@ class DWController:
                 self.v.move_view(np.array(model.World3D.UP) * 2)
 
             if keys[K_q]:
-                self.v.move_view(np.array(model.World3D.NORTH))
+                self.v.move_view(np.array(model.World3D.NORTH) * 2)
             elif keys[K_e]:
-                self.v.move_view(np.array(model.World3D.SOUTH))
+                self.v.move_view(np.array(model.World3D.SOUTH) * 2)
 
 
             self.v.draw()

@@ -38,10 +38,10 @@ class DWMainFrame(View):
 
         self.model = model
         self.surface = None
-        self.width = 400
-        self.height = 400
+        self.width = 800
+        self.height = 800
 
-        self.floor_view = DWFloorView(self.model, (0,0,-400), (400,400,15))
+        self.floor_view = DWFloorView(self.model, (0,0,-350), (2000,2000,500))
 
 
     def initialise(self):
@@ -105,9 +105,11 @@ class DWFloorView(View):
 
         self.model = model
         self.surface = None
-        self.width = 400
-        self.height = 400
-        self.depth = 400
+        self.width = 800
+        self.height = 800
+        self.depth = 1000
+
+        self.view_padding = 1000
 
         self.max_view_pos = np.array(max_view_pos)
         self.min_view_pos = np.array(min_view_pos)
@@ -131,7 +133,7 @@ class DWFloorView(View):
 
         self.tiles = []
 
-        filenames = ("tile1.png", "tile3.png", "tile4.png", "bear.png")
+        filenames = ("tile1.png", "tile3.png", "tile4.png", "bear.png", "tile2.png")
 
         try:
             for filename in filenames:
@@ -151,7 +153,7 @@ class DWFloorView(View):
         self.surface.fill(Colours.DARK_GREY)
 
         # Get the visible objects from the model
-        objs = self.m2v.get_object_list(self.view_pos, self.width, self.height, self.depth)
+        objs = self.m2v.get_object_list(self.view_pos, self.width + self.view_padding, self.height + self.view_padding, self.depth)
 
         # Draw visible objects in reverse order by distance
         distance = sorted(list(objs.keys()), reverse=True)
@@ -176,7 +178,7 @@ class DWFloorView(View):
                          2)
 
         # Draw current view position
-        msg = "Pos:{0}".format(self.view_pos)
+        msg = "Pos:{0} Max Distance {1}".format(self.view_pos, str(distance))
         text_rect = (0, 0, 100, 30)
         drawText(surface=self.surface,
                  text=msg,
@@ -207,13 +209,14 @@ class ModelToView3D():
     def __init__(self, model):
         self.model = model
 
-        self.infinity = 1000
+        self.infinity = 3000
 
         self.projection = ModelToView3D.PERSPECTIVE
         #self.projection = ModelToView3D.PARALLEL
 
-    def get_object_list(self, view_pos, view_width, view_height, view_depth, view_heading=model.World3D.NORTH):
+    def get_object_list(self, view_pos, view_width, view_height, view_depth):
 
+        #view_depth = 500
 
         objects = {}
 

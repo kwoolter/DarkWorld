@@ -2,6 +2,8 @@ import collections
 import copy
 import random
 import numpy as np
+import logging
+import pygame
 
 class DWModel():
 
@@ -12,7 +14,7 @@ class DWModel():
 
         self.events = EventQueue()
 
-        self.world = World3D(w = 1000, h = 1000, d = 20)
+        self.world = World3D(w = 1000, h = 1000, d = 1000)
 
     def initialise(self):
 
@@ -133,9 +135,20 @@ class World3D:
         else:
             return True
 
+
+    def is_collision(self, a , b):
+
+        hit = False
+
+
+        return hit
+
     def initialise(self, obj_count=500):
 
+        # Change to scale the size of each object in the world
         obj_size = 32
+
+        layer2_distance = 500
 
         new_object = Object3D(2, obj_size)
         for i in range(1, 10):
@@ -145,27 +158,40 @@ class World3D:
                             random.randint(1, 10) * obj_size,
                             19)
 
-        new_object = Object3D(3, obj_size)
+
+            self.add_object(new_object,
+                            (random.randint(1, 10) + 10) * obj_size,
+                            (random.randint(1, 10) + 5) * obj_size,
+                            layer2_distance - 1)
+
+        new_object = Object3D(3, obj_size * 2)
         for i in range(1, 10):
 
             self.add_object(new_object,
                             random.randint(1, 10) * obj_size,
                             random.randint(1, 10) * obj_size,
-                            19)
+                            10)
 
-        for y in range(0,100):
-            for x in range(0, 100):
-                new_object = Object3D(1, obj_size, random.choice(World3D.HEADINGS))
+        new_object1 = Object3D(1, obj_size, random.choice(World3D.HEADINGS))
+        new_object2 = Object3D(4, obj_size, random.choice(World3D.HEADINGS))
+        for y in range(0,15):
+            for x in range(0, 15):
 
-                self.add_object(new_object, x*obj_size, y*obj_size, 20)
 
-        for y in range(0,20):
-            new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
+                self.add_object(new_object2, (x + 10)*obj_size, (y+5)*obj_size, layer2_distance)
+                self.add_object(new_object2, x * obj_size, (y + 5) * obj_size, layer2_distance)
+
+                self.add_object(new_object1, x*obj_size, y*obj_size, 20)
+
+
+
+        new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
+        for y in range(0,30):
             self.add_object(new_object, 0, y * obj_size, 19)
             self.add_object(new_object, 12 * obj_size, y * obj_size, 19)
 
-        for x in range(0,20):
-            new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
+        new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
+        for x in range(0,30):
             self.add_object(new_object, x * obj_size, 0,  19)
             self.add_object(new_object, x * obj_size, 12 * obj_size, 19)
 
@@ -186,3 +212,88 @@ class Object3D:
 
     def __str__(self):
         return "type({0})".format(self.type)
+
+
+class RPGObject3D(object):
+
+    TOUCH_FIELD_X = 3
+    TOUCH_FIELD_Y = 3
+
+    def __init__(self, name: str,
+                 opos,
+                 osize,
+                 solid: bool = True,
+                 visible: bool = True,
+                 interactable: bool = True):
+
+        self.name = name
+
+        # Position and size
+        ox,oy,oz = opos
+        ow,oh,od = osize
+        self._rect = pygame.Rect(ox,oy, ow, oh)
+        self._z = oz
+
+        self._old_rect = self._rect.copy()
+
+        # Properties
+        self.is_solid = solid
+        self.is_visible = visible
+        self.is_interactable = interactable
+
+        # Movement
+        self.dx = 0
+        self.dy = 0
+        self.d2x = 0
+        self.d2y = 0
+
+    @property
+    def rect(self):
+        return self._rect
+
+    @rect.setter
+    def rect(self, new_rect):
+        self._old_rect = self._rect.copy()
+        self._rect = new_rect
+
+    @property
+    def z(self):
+        return self._z
+
+    @rect.setter
+    def z(self, new_z):
+        self._old_z = self.z
+        self._z = new_z
+
+    def back(self):
+        logging.info("Moving Object {0} back from {1} to {2}".format(self.name, self._rect, self._old_rect))
+        self._rect = self._old_rect.copy()
+
+    def is_colliding(self, other_object):
+        return self.z == other_object.layer and \
+               self != other_object and \
+               self.rect.colliderect(other_object.rect)
+
+    def is_touching(self, other_object):
+
+        touch_field = self._rect.inflate(RPGObject3D.TOUCH_FIELD_X, RPGObject3D.TOUCH_FIELD_Y)
+
+        return self.z == other_object.layer and \
+               self.is_visible and \
+               self.is_interactable and \
+               self != other_object and \
+               touch_field.colliderect(other_object.rect)
+
+    def move(self, dx: int, dy: int):
+        self._old_rect = self._rect.copy()
+        self.rect.x += dx
+        self.rect.y += dy
+
+    def set_pos(self, x: int, y: int, z : int = 0):
+        self._old_rect = self._rect.copy()
+        self.rect.x = x
+        self.rect.y = y
+        self.z = z
+
+    def get_pos(self):
+        return self._rect.x, self._rect.y, self.z
