@@ -109,7 +109,7 @@ class DWFloorView(View):
         self.height = 800
         self.depth = 1000
 
-        self.view_padding = 1000
+        self.view_padding = 0
 
         self.max_view_pos = np.array(max_view_pos)
         self.min_view_pos = np.array(min_view_pos)
@@ -138,7 +138,7 @@ class DWFloorView(View):
         try:
             for filename in filenames:
                 filename = DWFloorView.RESOURCES_DIR + filename
-                image = pygame.image.load(filename)
+                image = pygame.image.load(filename).convert()
                 self.tiles.append(image)
 
         except Exception as err:
@@ -152,8 +152,12 @@ class DWFloorView(View):
 
         self.surface.fill(Colours.DARK_GREY)
 
+        vx,vy,vz = self.view_pos
+
         # Get the visible objects from the model
-        objs = self.m2v.get_object_list(self.view_pos, self.width + self.view_padding, self.height + self.view_padding, self.depth)
+        #objs = self.m2v.get_object_list(self.view_pos, self.width + (self.view_padding * 2), self.height + (self.view_padding * 2), self.depth)
+        #view_pos = np.add(self.view_pos, np.array((-1000,-1000,0)))
+        objs = self.m2v.get_object_list(self.view_pos, self.width, self.height, self.depth)
 
         # Draw visible objects in reverse order by distance
         distance = sorted(list(objs.keys()), reverse=True)
@@ -164,7 +168,13 @@ class DWFloorView(View):
 
                 size = int(obj.size * self.object_size_scale * (1 - d / self.object_distance_scale))
 
-                image = pygame.transform.scale(self.tiles[min(obj.type, len(self.tiles)-1)],(size, size))
+                image = self.tiles[min(obj.type, len(self.tiles)-1)]
+
+                image = pygame.transform.scale(image ,(size, size))
+
+
+                image.set_alpha(255 * (1 - min(d*2.5/self.depth, 1)))
+
                 self.surface.blit(image, (int(x * self.object_size_scale - size / 2), int(y * self.object_size_scale - size / 2), size, size))
 
         # Draw cross hair
@@ -178,8 +188,8 @@ class DWFloorView(View):
                          2)
 
         # Draw current view position
-        msg = "Pos:{0} Max Distance {1}".format(self.view_pos, str(distance))
-        text_rect = (0, 0, 100, 30)
+        msg = "View Pos={0} : Distances={1}".format(self.view_pos, str(distance))
+        text_rect = (0, 0, 300, 30)
         drawText(surface=self.surface,
                  text=msg,
                  color=Colours.GOLD,
@@ -188,8 +198,12 @@ class DWFloorView(View):
                  bkg=Colours.DARK_GREY)
 
     def tick(self):
+
+        pass
+
+        #self.view_pos = np.add(self.view_pos, np.array(model.World3D.NORTH))
+
         return
-        self.view_pos = np.add(self.view_pos, np.array(model.World3D.NORTH))
 
     def set_view(self, new_view_pos):
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
@@ -228,18 +242,18 @@ class ModelToView3D():
             ow = ox - vx
             oh = oy - vy
 
-            if od <= 0 or od > view_depth or abs(ow) > view_width / 2 or abs(oh) > view_height / 2:
-                pass
-            else:
+            # if od <= 0 or od > view_depth or abs(ow) > view_width / 2 or abs(oh) > view_height / 2:
+            #     pass
+            # else:
 
-                # If we don't have a list of objects at this distance then create an empty one
-                if od not in objects.keys():
-                    objects[od] = []
+            # If we don't have a list of objects at this distance then create an empty one
+            if od not in objects.keys():
+                objects[od] = []
 
-                # Add ((x,y,z), obj)) to list of objects at this distance
-                objects[od].append((
-                    (int(ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_width / 2),
-                     int(oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_height / 2),
-                     od), obj))
+            # Add ((x,y,z), obj)) to list of objects at this distance
+            objects[od].append((
+                (int(ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_width / 2),
+                 int(oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_height / 2),
+                 od), obj))
 
         return objects

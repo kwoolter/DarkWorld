@@ -148,7 +148,7 @@ class World3D:
         # Change to scale the size of each object in the world
         obj_size = 32
 
-        layer2_distance = 500
+        layer2_distance = 800
 
         new_object = Object3D(2, obj_size)
         for i in range(1, 10):
@@ -178,7 +178,8 @@ class World3D:
             for x in range(0, 15):
 
 
-                self.add_object(new_object2, (x + 10)*obj_size, (y+5)*obj_size, layer2_distance)
+                self.add_object(new_object2, (x + 15)*obj_size, (y+5)*obj_size, layer2_distance)
+                self.add_object(new_object2, (x + 20) * obj_size, (y + 10) * obj_size, int(layer2_distance / 2))
                 self.add_object(new_object2, x * obj_size, (y + 5) * obj_size, layer2_distance)
 
                 self.add_object(new_object1, x*obj_size, y*obj_size, 20)
