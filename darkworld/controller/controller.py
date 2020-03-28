@@ -88,20 +88,28 @@ class DWController:
 
             keys = pygame.key.get_pressed()
             if keys[K_LEFT]:
-                self.v.move_view(np.array(model.World3D.WEST) * 2)
+                #self.v.move_view(np.array(model.World3D.WEST) * 2)
+                self.m.world.move_player(np.array(model.World3D.WEST) * 2)
             elif keys[K_RIGHT]:
-                self.v.move_view(np.array(model.World3D.EAST) * 2)
+                #self.v.move_view(np.array(model.World3D.EAST) * 2)
+                self.m.world.move_player(np.array(model.World3D.EAST) * 2)
 
             if keys[K_UP]:
-                self.v.move_view(np.array(model.World3D.DOWN) * 2)
+                #self.v.move_view(np.array(model.World3D.DOWN) * 2)
+                self.m.world.move_player(np.array(model.World3D.DOWN) * 2)
             elif keys[K_DOWN]:
-                self.v.move_view(np.array(model.World3D.UP) * 2)
+                #self.v.move_view(np.array(model.World3D.UP) * 2)
+                self.m.world.move_player(np.array(model.World3D.UP) * 2)
 
             if keys[K_q]:
-                self.v.move_view(np.array(model.World3D.NORTH) * 2)
+                #self.v.move_view(np.array(model.World3D.NORTH) * 2)
+                self.m.world.move_player(np.array(model.World3D.NORTH) * 2)
             elif keys[K_e]:
-                self.v.move_view(np.array(model.World3D.SOUTH) * 2)
+                #self.v.move_view(np.array(model.World3D.SOUTH) * 2)
+                self.m.world.move_player(np.array(model.World3D.SOUTH) * 2)
 
+            if keys[K_F12]:
+                self.m.print()
 
             self.v.draw()
             self.v.update()

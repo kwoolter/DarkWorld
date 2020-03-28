@@ -14,7 +14,7 @@ class DWModel():
 
         self.events = EventQueue()
 
-        self.world = World3D(w = 1000, h = 1000, d = 1000)
+        self.world = World3D(w = 1500, h = 1500, d = 1000)
 
     def initialise(self):
 
@@ -22,9 +22,22 @@ class DWModel():
 
         self.world.initialise()
 
+        #new_player = RPGObject3D("Keith", (300,300,0), (32,32,1))
+        size = 128
+        new_player = RPGObject3D(type=7,
+                                 name="Player",
+                                 opos=(300, 300, 10),
+                                 osize=(size, size, 1))
+
+        self.world.add_player(new_player)
+
 
     def print(self):
         print("Printing {0} model...".format(self.name))
+
+        objs = self.world.get_objects_at(200,200,0)
+        for obj in objs:
+            print(str(obj))
 
     def process_event(self, new_event):
         print("Default Game event process:{0}".format(new_event))
@@ -123,10 +136,49 @@ class World3D:
 
         self.objects = []
 
+        self.planes = {}
+
+    @property
+    def rect(self):
+        return pygame.Rect(0,0,self.width,self.height)
+
     def add_object(self, new_object, x, y, z):
 
         if self.is_valid_xyz(x, y, z) is True:
-            self.objects.append(((x, y, z), copy.deepcopy(new_object)))
+            copy_of_new_object = copy.deepcopy(new_object)
+            self.objects.append(((x, y, z), copy_of_new_object))
+
+            if z not in self.planes.keys():
+                self.planes[z] = {}
+
+            self.planes[z][(x, y)] = new_object
+
+        else:
+            print("Can't add obje3ct {0} at ({1},{2},{3})".format(str(new_object),x,y,z))
+
+    def add_object3D(self, new_object):
+
+        x,y,z = new_object.xyz
+
+        if self.is_valid_xyz(x, y, z) is True:
+            copy_of_new_object = copy.deepcopy(new_object)
+            self.objects.append(((x, y, z), copy_of_new_object))
+
+            if z not in self.planes.keys():
+                self.planes[z] = {}
+
+            self.planes[z][(x, y)] = new_object
+
+        else:
+            print("Can't add obje3ct {0} at ({1},{2},{3})".format(str(new_object),x,y,z))
+
+    def add_player(self, new_player):
+
+        self.player = new_player
+
+        self.add_object3D(new_player)
+
+        return
 
     def is_valid_xyz(self, x, y, z):
 
@@ -136,65 +188,206 @@ class World3D:
             return True
 
 
-    def is_collision(self, a , b):
+    def initialise(self):
 
-        hit = False
-
-
-        return hit
-
-    def initialise(self, obj_count=500):
-
-        # Change to scale the size of each object in the world
+        # Set the scale of each object in the world
         obj_size = 32
-
         layer2_distance = 800
 
-        new_object = Object3D(2, obj_size)
         for i in range(1, 10):
+            z = 19
+            new_object = RPGObject3D(type=2,
+                                     name="Object {0}:{1}".format(type, i),
+                                     opos=(random.randint(1, 10) * obj_size,
+                                           random.randint(1, 10) * obj_size,
+                                           z),
+                                     osize=(obj_size, obj_size, 1))
 
-            self.add_object(new_object,
-                            random.randint(1, 10) * obj_size,
-                            random.randint(1, 10) * obj_size,
-                            19)
+            self.add_object3D(new_object)
+
+            z = layer2_distance
+            new_object = RPGObject3D(type=3,
+                                     name="Object {0}:{1}".format(type, i),
+                                     opos=((random.randint(1, 10) + 10) * obj_size,
+                                           (random.randint(1, 10) + 10) * obj_size,
+                                           z - 1),
+                                     osize=(obj_size, obj_size, 1))
+
+            self.add_object3D(new_object)
+
+        # new_object = Object3D(3, obj_size * 2)
+        # for i in range(1, 10):
+        #
+        #     self.add_object(new_object,
+        #                     random.randint(1, 10) * obj_size,
+        #                     random.randint(1, 10) * obj_size,
+        #                     10)
+        #
+        # new_object = Object3D(6, obj_size)
+        # for i in range(1, 15):
+        #
+        #     self.add_object(new_object,
+        #                     (random.randint(0, 10) + 20) * obj_size,
+        #                     (random.randint(0, 10) + 10) * obj_size,
+        #                     int(layer2_distance / 2)-1)
+        #
 
 
-            self.add_object(new_object,
-                            (random.randint(1, 10) + 10) * obj_size,
-                            (random.randint(1, 10) + 5) * obj_size,
-                            layer2_distance - 1)
-
-        new_object = Object3D(3, obj_size * 2)
-        for i in range(1, 10):
-
-            self.add_object(new_object,
-                            random.randint(1, 10) * obj_size,
-                            random.randint(1, 10) * obj_size,
-                            10)
-
+        # Create some floors
         new_object1 = Object3D(1, obj_size, random.choice(World3D.HEADINGS))
-        new_object2 = Object3D(4, obj_size, random.choice(World3D.HEADINGS))
+        new_object2 = Object3D(5, obj_size, random.choice(World3D.HEADINGS))
         for y in range(0,15):
             for x in range(0, 15):
+                obj_size = 32
+                z = 19
+                otype = 1
+                new_object = RPGObject3D(type=otype,
+                                         name="Object {0}:{1},{2}".format(otype, x, y),
+                                         opos=(x * obj_size,
+                                               y * obj_size,
+                                               z),
+                                         osize=(obj_size, obj_size, 1))
+                self.add_object3D(new_object)
+                z = layer2_distance
+                new_object = RPGObject3D(type=otype,
+                                         name="Object {0}:{1},{2}".format(otype, x, y),
+                                         opos=((x + 15) * obj_size,
+                                               (y + 5) * obj_size,
+                                                z),
+                                         osize=(obj_size, obj_size, 1))
+
+                self.add_object3D(new_object)
+
+                # self.add_object(new_object2, (x + 15)*obj_size, (y+5)*obj_size, layer2_distance)
+                # self.add_object(new_object2, (x + 20) * obj_size, (y + 10) * obj_size, int(layer2_distance / 2))
+                # self.add_object(new_object2, x * obj_size, (y + 5) * obj_size, layer2_distance)
+                #
+                # self.add_object(new_object1, x*obj_size, y*obj_size, 20)
+        #
+        #
+        # # Add vertical walls
+        # new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
+        # for y in range(0,30):
+        #     self.add_object(new_object, 0, y * obj_size, 19)
+        #     self.add_object(new_object, 12 * obj_size, y * obj_size, 19)
+        #     self.add_object(new_object, 20 * obj_size, y * obj_size, 19)
+        #
+        # # Add horizontal walls
+        # new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
+        # for x in range(0,30):
+        #     self.add_object(new_object, x * obj_size, 0,  19)
+        #     self.add_object(new_object, x * obj_size, 12 * obj_size, 19)
+        #     self.add_object(new_object, x * obj_size, 20 * obj_size, 19)
 
 
-                self.add_object(new_object2, (x + 15)*obj_size, (y+5)*obj_size, layer2_distance)
-                self.add_object(new_object2, (x + 20) * obj_size, (y + 10) * obj_size, int(layer2_distance / 2))
-                self.add_object(new_object2, x * obj_size, (y + 5) * obj_size, layer2_distance)
+    def move_object_by(self, obj, vector):
 
-                self.add_object(new_object1, x*obj_size, y*obj_size, 20)
+        dx, dy, dz = vector
+
+        if dx != 0:
+            self.move_object(obj, (dx,0,0))
+
+        if dy !=0:
+            self.move_object(obj, (0,dy,0))
+
+        if dz != 0:
+            self.move_object(obj, (0,0,dz))
+
+
+    def move_object(self, obj, vector):
+
+        opos = obj.xyz
+        vector = np.array(vector)
+        new_opos = np.add(opos, vector)
+
+        hit_objects = self.get_objects_at(new_opos)
+
+        if len(hit_objects) == 0:
+            obj.xyz = new_opos
+
+    def move_player(self, vector):
+
+        dx, dy, dz = vector
+
+        selected_player = self.player
+
+        objects = self.get_objects_by_plane(selected_player.z + dz)
+
+        if dz != 0:
+            selected_player.move(0, 0, dz)
+
+            if self.rect.contains(selected_player.rect) is False:
+                selected_player.back()
+            else:
+                for object in objects:
+                    if object.is_solid is True and object.is_colliding(selected_player):
+                        selected_player.back()
+                        print("DZ:Player {0} collided with object {1}".format(self.player, object))
+                        break
+
+        objects = self.get_objects_by_plane(selected_player.z)
+
+        if dx != 0:
+            selected_player.move(dx, 0, 0)
+
+            if self.rect.contains(selected_player.rect) is False:
+                selected_player.back()
+            else:
+                for object in objects:
+                    if object.is_solid is True and object.is_colliding(selected_player):
+                        selected_player.back()
+                        print("DX:Player {0} collided with object {1}".format(self.player, object))
+                        break
+        if dy != 0:
+            selected_player.move(0, dy, 0)
+
+            if self.rect.contains(selected_player.rect) is False:
+                selected_player.back()
+            else:
+                for object in objects:
+                    if object.is_solid is True and object.is_colliding(selected_player):
+                        selected_player.back()
+                        print("DY:Player {0} collided with object {1}".format(self.player, object))
+                        break
 
 
 
-        new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
-        for y in range(0,30):
-            self.add_object(new_object, 0, y * obj_size, 19)
-            self.add_object(new_object, 12 * obj_size, y * obj_size, 19)
+        print("Player moved to {0}".format(self.player.get_pos()))
 
-        new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
-        for x in range(0,30):
-            self.add_object(new_object, x * obj_size, 0,  19)
-            self.add_object(new_object, x * obj_size, 12 * obj_size, 19)
+    def get_player_xyz(self):
+        return self.player.xyz
+
+    def get_objects_by_plane(self, z : int = None):
+
+        objects_by_plane = []
+
+        if z is None:
+            plane_ids = sorted(self.planes.keys(), reverse=True)
+        else:
+            plane_ids = []
+            if z in self.planes.keys():
+                plane_ids.append(z)
+
+        for plane_id in plane_ids:
+            current_plane = self.planes[plane_id]
+            for obj in current_plane.values():
+                objects_by_plane.append(obj)
+
+
+        return objects_by_plane
+
+
+    def get_objects_at(self, x, y, z):
+
+        matching_objects = []
+
+        if z in self.planes.keys():
+
+            for obj in self.planes[z].values():
+                if self.is_collision((x,y,z), obj) is True:
+                    matching_objects.append(obj)
+
+        return matching_objects
 
 
 
@@ -221,20 +414,22 @@ class RPGObject3D(object):
     TOUCH_FIELD_Y = 3
 
     def __init__(self, name: str,
-                 opos,
-                 osize,
+                 type : int = 0,
+                 opos = (0,0,0),
+                 osize = (1,1,1),
                  solid: bool = True,
                  visible: bool = True,
                  interactable: bool = True):
 
         self.name = name
+        self.type = type
 
         # Position and size
         ox,oy,oz = opos
         ow,oh,od = osize
-        self._rect = pygame.Rect(ox,oy, ow, oh)
         self._z = oz
-
+        self._old_z = oz
+        self._rect = pygame.Rect(ox,oy, ow, oh)
         self._old_rect = self._rect.copy()
 
         # Properties
@@ -242,11 +437,8 @@ class RPGObject3D(object):
         self.is_visible = visible
         self.is_interactable = interactable
 
-        # Movement
-        self.dx = 0
-        self.dy = 0
-        self.d2x = 0
-        self.d2y = 0
+    def __str__(self):
+        return "{0} ({1})".format(self.name, self.type)
 
     @property
     def rect(self):
@@ -258,20 +450,25 @@ class RPGObject3D(object):
         self._rect = new_rect
 
     @property
+    def xyz(self):
+        return (int(self.rect.x), int(self.rect.y), self.z)
+
+    @property
     def z(self):
         return self._z
 
-    @rect.setter
+    @z.setter
     def z(self, new_z):
-        self._old_z = self.z
+        self._old_z = self._z
         self._z = new_z
 
     def back(self):
         logging.info("Moving Object {0} back from {1} to {2}".format(self.name, self._rect, self._old_rect))
         self._rect = self._old_rect.copy()
+        self._z = self._old_z
 
     def is_colliding(self, other_object):
-        return self.z == other_object.layer and \
+        return self.z == other_object.z and \
                self != other_object and \
                self.rect.colliderect(other_object.rect)
 
@@ -285,16 +482,24 @@ class RPGObject3D(object):
                self != other_object and \
                touch_field.colliderect(other_object.rect)
 
-    def move(self, dx: int, dy: int):
+    def move(self, dx: int, dy: int, dz : int):
         self._old_rect = self._rect.copy()
         self.rect.x += dx
         self.rect.y += dy
+        self.z += dz
 
-    def set_pos(self, x: int, y: int, z : int = 0):
+    def set_xyz(self, x: int, y: int, z : int = 0):
+        self.set_pos((x,y,z))
+
+    def get_xyz(self):
+        return self.get_pos()
+
+    def set_pos(self, new_pos):
+        x, y, z = new_pos
         self._old_rect = self._rect.copy()
         self.rect.x = x
         self.rect.y = y
         self.z = z
 
     def get_pos(self):
-        return self._rect.x, self._rect.y, self.z
+        return (self._rect.x, self._rect.y, self._z)

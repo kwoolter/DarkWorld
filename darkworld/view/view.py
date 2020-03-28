@@ -133,7 +133,7 @@ class DWFloorView(View):
 
         self.tiles = []
 
-        filenames = ("tile1.png", "tile3.png", "tile4.png", "bear.png", "tile2.png")
+        filenames = ("tile1.png", "tile3.png", "tile4.png", "bear.png", "tile2.png", "tile5.png", "tile6.png", "bot.png")
 
         try:
             for filename in filenames:
@@ -152,7 +152,11 @@ class DWFloorView(View):
 
         self.surface.fill(Colours.DARK_GREY)
 
-        vx,vy,vz = self.view_pos
+        vx,vy,vz = self.model.world.get_player_xyz()
+
+        vz -= 20
+
+        self.view_pos = (vx,vy,vz)
 
         # Get the visible objects from the model
         #objs = self.m2v.get_object_list(self.view_pos, self.width + (self.view_padding * 2), self.height + (self.view_padding * 2), self.depth)
@@ -164,16 +168,27 @@ class DWFloorView(View):
         for d in distance:
             objs_at_d = objs[d]
             for pos, obj in objs_at_d:
-                x, y, z = pos
 
-                size = int(obj.size * self.object_size_scale * (1 - d / self.object_distance_scale))
+                x, y, z = obj.xyz
+
+                size = int(obj.rect.width * self.object_size_scale * (1 - d / self.object_distance_scale))
 
                 image = self.tiles[min(obj.type, len(self.tiles)-1)]
 
                 image = pygame.transform.scale(image ,(size, size))
 
+                image.set_alpha(255 * (1 - min(d*2/self.m2v.infinity, 1)))
 
-                image.set_alpha(255 * (1 - min(d*2.5/self.depth, 1)))
+                #brighten = min(int(d), 255)
+                #image.fill((brighten, brighten, brighten), special_flags=pygame.BLEND_RGB_ADD)
+
+                # pygame.draw.rect(self.surface,
+                #                  Colours.BLACK,
+                #                  (int(x * self.object_size_scale - size / 2),
+                #                  int(y * self.object_size_scale - size / 2),
+                #                  size,
+                #                  size),
+                #                  0)
 
                 self.surface.blit(image, (int(x * self.object_size_scale - size / 2), int(y * self.object_size_scale - size / 2), size, size))
 
@@ -230,8 +245,6 @@ class ModelToView3D():
 
     def get_object_list(self, view_pos, view_width, view_height, view_depth):
 
-        #view_depth = 500
-
         objects = {}
 
         vx, vy, vz = view_pos
@@ -241,19 +254,19 @@ class ModelToView3D():
             od = oz - vz
             ow = ox - vx
             oh = oy - vy
+            #if od <= 0 or od > view_depth or abs(ow) > view_width / 2 or abs(oh) > view_height / 2:
+            if od <= 0 or od > view_depth:
+                pass
+            else:
 
-            # if od <= 0 or od > view_depth or abs(ow) > view_width / 2 or abs(oh) > view_height / 2:
-            #     pass
-            # else:
+                # If we don't have a list of objects at this distance then create an empty one
+                if od not in objects.keys():
+                    objects[od] = []
 
-            # If we don't have a list of objects at this distance then create an empty one
-            if od not in objects.keys():
-                objects[od] = []
-
-            # Add ((x,y,z), obj)) to list of objects at this distance
-            objects[od].append((
-                (int(ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_width / 2),
-                 int(oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_height / 2),
-                 od), obj))
+                # Add ((x,y,z), obj)) to list of objects at this distance
+                objects[od].append((
+                    (int(ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_width / 2),
+                     int(oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_height / 2),
+                     od), obj))
 
         return objects
