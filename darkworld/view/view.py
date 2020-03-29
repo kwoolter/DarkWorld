@@ -169,7 +169,7 @@ class DWFloorView(View):
             objs_at_d = objs[d]
             for pos, obj in objs_at_d:
 
-                x, y, z = obj.xyz
+                x, y, z = pos
 
                 size = int(obj.rect.width * self.object_size_scale * (1 - d / self.object_distance_scale))
 
@@ -193,8 +193,8 @@ class DWFloorView(View):
                 self.surface.blit(image, (int(x * self.object_size_scale - size / 2), int(y * self.object_size_scale - size / 2), size, size))
 
         # Draw cross hair
-        cross_hair_size = 0.25
-        pygame.draw.circle(self.surface, Colours.WHITE, (int(self.width / 2), int(self.height / 2)), 10, 1)
+        cross_hair_size = 0.1
+        #pygame.draw.circle(self.surface, Colours.WHITE, (int(self.width / 2), int(self.height / 2)), 10, 1)
         pygame.draw.rect(self.surface,
                          Colours.GOLD,
                          (int(self.width / 2 * (1 - cross_hair_size)),

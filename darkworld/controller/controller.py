@@ -110,6 +110,7 @@ class DWController:
 
             if keys[K_F12]:
                 self.m.print()
+                print("view pos={0}".format(self.v.floor_view.view_pos))
 
             self.v.draw()
             self.v.update()
