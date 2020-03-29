@@ -23,7 +23,7 @@ class DWModel():
         self.world.initialise()
 
         #new_player = RPGObject3D("Keith", (300,300,0), (32,32,1))
-        size = 128
+        size = 64
         new_player = RPGObject3D(type=7,
                                  name="Player",
                                  opos=(300, 300, 10),
@@ -35,9 +35,11 @@ class DWModel():
     def print(self):
         print("Printing {0} model...".format(self.name))
 
-        objs = self.world.get_objects_at(200,200,0)
-        for obj in objs:
-            print(str(obj))
+        self.world.print()
+
+        # objs = self.world.get_objects_at(self.player.xyz)
+        # for obj in objs:
+        #     print(str(obj))
 
     def process_event(self, new_event):
         print("Default Game event process:{0}".format(new_event))
@@ -156,33 +158,46 @@ class World3D:
         else:
             print("Can't add obje3ct {0} at ({1},{2},{3})".format(str(new_object),x,y,z))
 
-    def add_object3D(self, new_object):
+    def add_object3D(self, new_object, do_copy : bool = True):
 
         x,y,z = new_object.xyz
 
         if self.is_valid_xyz(x, y, z) is True:
-            copy_of_new_object = copy.deepcopy(new_object)
-            self.objects.append(((x, y, z), copy_of_new_object))
+
+            if do_copy is True:
+                new_object = copy.deepcopy(new_object)
 
             if z not in self.planes.keys():
-                self.planes[z] = {}
+                self.planes[z] = []
 
-            self.planes[z][(x, y)] = new_object
+            self.planes[z].append(new_object)
 
         else:
-            print("Can't add obje3ct {0} at ({1},{2},{3})".format(str(new_object),x,y,z))
+            print("Can't add object {0} at ({1},{2},{3})".format(str(new_object),x,y,z))
+
+    def delete_object3D(self, selected_object, plane : int = None):
+
+        x,y,z = selected_object.xyz
+
+        if plane is not None:
+            z = plane
+
+        if z in self.planes.keys():
+            self.planes[z].remove(selected_object)
+        else:
+            print("Can't delete object {0} at ({1},{2},{3})".format(str(selected_object),x,y,z))
 
     def add_player(self, new_player):
 
         self.player = new_player
 
-        self.add_object3D(new_player)
+        self.add_object3D(new_player, do_copy = False)
 
         return
 
     def is_valid_xyz(self, x, y, z):
 
-        if x < 0 or x > self.width or y < 0 or y > self.height or z < 0 or z > self.depth:
+        if x < 0 or x > int(self.width) or y < 0 or y > int(self.height) or z < 0 or z > int(self.depth):
             return False
         else:
             return True
@@ -311,13 +326,20 @@ class World3D:
 
         selected_player = self.player
 
-        objects = self.get_objects_by_plane(selected_player.z + dz)
+        #objects = self.get_objects_by_plane(selected_player.z + dz)
+        new_plane = selected_player.z + dz
+        if new_plane in self.planes.keys():
+            objects = self.planes[new_plane]
+        else:
+            objects = []
 
+        # Are we attempting to change planes?
         if dz != 0:
             selected_player.move(0, 0, dz)
 
             if self.rect.contains(selected_player.rect) is False:
                 selected_player.back()
+                print("DZ:Player {0} moving to {1} goes outside the world".format(self.player, vector))
             else:
                 for object in objects:
                     if object.is_solid is True and object.is_colliding(selected_player):
@@ -325,8 +347,19 @@ class World3D:
                         print("DZ:Player {0} collided with object {1}".format(self.player, object))
                         break
 
-        objects = self.get_objects_by_plane(selected_player.z)
+        # If we succeeded in moving planes...
+        if selected_player.has_changed_planes() is True:
 
+            print("Player has changed planes from {0} to {1}".format(self.player.z, self.player._old_z))
+
+            # Get the objects for the new plane
+            new_plane = selected_player.z
+            if new_plane in self.planes.keys():
+                objects = self.planes[new_plane]
+            else:
+                objects = []
+
+        # Are we attempting to change X position?
         if dx != 0:
             selected_player.move(dx, 0, 0)
 
@@ -338,6 +371,8 @@ class World3D:
                         selected_player.back()
                         print("DX:Player {0} collided with object {1}".format(self.player, object))
                         break
+
+        # Are we attempting to change Y position?
         if dy != 0:
             selected_player.move(0, dy, 0)
 
@@ -350,9 +385,17 @@ class World3D:
                         print("DY:Player {0} collided with object {1}".format(self.player, object))
                         break
 
+        # did we move anywhere?
+        if self.player.has_moved() is True:
+            print("Player moved from {0} to {1}".format(self.player.xyz, self.player.old_xyz))
 
+            # If we succeeded in moving planes...
+            if selected_player.has_changed_planes() is True:
+                print("Player has changed planes from {0} to {1}".format(self.player.z, self.player._old_z))
+                # Adjust the plane data to reflect new position
+                self.delete_object3D(self.player, self.player._old_z)
+                self.add_object3D(self.player, do_copy=False)
 
-        print("Player moved to {0}".format(self.player.get_pos()))
 
     def get_player_xyz(self):
         return self.player.xyz
@@ -370,7 +413,7 @@ class World3D:
 
         for plane_id in plane_ids:
             current_plane = self.planes[plane_id]
-            for obj in current_plane.values():
+            for obj in current_plane:
                 objects_by_plane.append(obj)
 
 
@@ -451,16 +494,20 @@ class RPGObject3D(object):
 
     @property
     def xyz(self):
-        return (int(self.rect.x), int(self.rect.y), self.z)
+        return (int(self._rect.x), int(self._rect.y), int(self._z))
+
+    @property
+    def old_xyz(self):
+        return (int(self._old_rect.x), int(self._old_rect.y), int(self._old_z))
 
     @property
     def z(self):
-        return self._z
+        return int(self._z)
 
     @z.setter
     def z(self, new_z):
         self._old_z = self._z
-        self._z = new_z
+        self._z = int(new_z)
 
     def back(self):
         logging.info("Moving Object {0} back from {1} to {2}".format(self.name, self._rect, self._old_rect))
@@ -481,6 +528,12 @@ class RPGObject3D(object):
                self.is_interactable and \
                self != other_object and \
                touch_field.colliderect(other_object.rect)
+
+    def has_moved(self):
+        return self._z != self._old_z or self._rect != self._old_rect
+
+    def has_changed_planes(self):
+        return int(self._z) != int(self._old_z)
 
     def move(self, dx: int, dy: int, dz : int):
         self._old_rect = self._rect.copy()

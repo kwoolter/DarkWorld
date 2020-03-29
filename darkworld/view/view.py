@@ -249,24 +249,31 @@ class ModelToView3D():
 
         vx, vy, vz = view_pos
 
-        for (ox, oy, oz), obj in self.model.world.objects:
+        for z in self.model.world.planes.keys():
 
-            od = oz - vz
-            ow = ox - vx
-            oh = oy - vy
-            #if od <= 0 or od > view_depth or abs(ow) > view_width / 2 or abs(oh) > view_height / 2:
-            if od <= 0 or od > view_depth:
-                pass
-            else:
+            objects_at_z = self.model.world.planes[z]
 
-                # If we don't have a list of objects at this distance then create an empty one
-                if od not in objects.keys():
-                    objects[od] = []
+            for obj in objects_at_z:
 
-                # Add ((x,y,z), obj)) to list of objects at this distance
-                objects[od].append((
-                    (int(ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_width / 2),
-                     int(oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_height / 2),
-                     od), obj))
+                ox,oy,oz = obj.xyz
+
+                od = oz - vz
+                ow = ox - vx
+                oh = oy - vy
+                #if od <= 0 or od > view_depth or abs(ow) > view_width / 2 or abs(oh) > view_height / 2:
+                if od <= 0 or od > view_depth:
+                    pass
+                else:
+
+                    # If we don't have a list of objects at this distance then create an empty one
+                    if od not in objects.keys():
+                        objects[od] = []
+
+                    # Add ((x,y,z), obj)) to list of objects at this distance
+                    objects[od].append((
+                        (int(ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_width / 2),
+                         int(oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_height / 2),
+                         od), obj))
 
         return objects
+

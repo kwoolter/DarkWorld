@@ -103,10 +103,10 @@ class DWController:
 
             if keys[K_q]:
                 #self.v.move_view(np.array(model.World3D.NORTH) * 2)
-                self.m.world.move_player(np.array(model.World3D.NORTH) * 2)
+                self.m.world.move_player(np.array(model.World3D.NORTH) * 1)
             elif keys[K_e]:
                 #self.v.move_view(np.array(model.World3D.SOUTH) * 2)
-                self.m.world.move_player(np.array(model.World3D.SOUTH) * 2)
+                self.m.world.move_player(np.array(model.World3D.SOUTH) * 1)
 
             if keys[K_F12]:
                 self.m.print()
