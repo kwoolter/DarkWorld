@@ -37,7 +37,7 @@ class DWController:
 
         FPSCLOCK = pygame.time.Clock()
 
-        pygame.time.set_timer(USEREVENT + 1, 150)
+        pygame.time.set_timer(USEREVENT + 1, 50)
         pygame.time.set_timer(USEREVENT + 2, 500)
         pygame.event.set_allowed([QUIT, KEYDOWN, USEREVENT])
 
@@ -89,28 +89,28 @@ class DWController:
             keys = pygame.key.get_pressed()
             if keys[K_LEFT]:
                 #self.v.move_view(np.array(model.World3D.WEST) * 2)
-                self.m.world.move_player(np.array(model.World3D.WEST) * 2)
+                self.m.move_player(np.array(model.World3D.WEST) * 2)
             elif keys[K_RIGHT]:
                 #self.v.move_view(np.array(model.World3D.EAST) * 2)
-                self.m.world.move_player(np.array(model.World3D.EAST) * 2)
+                self.m.move_player(np.array(model.World3D.EAST) * 2)
 
             if keys[K_UP]:
                 #self.v.move_view(np.array(model.World3D.DOWN) * 2)
-                self.m.world.move_player(np.array(model.World3D.DOWN) * 2)
+                self.m.move_player(np.array(model.World3D.DOWN) * 2)
             elif keys[K_DOWN]:
                 #self.v.move_view(np.array(model.World3D.UP) * 2)
-                self.m.world.move_player(np.array(model.World3D.UP) * 2)
+                self.m.move_player(np.array(model.World3D.UP) * 2)
 
             if keys[K_q]:
                 #self.v.move_view(np.array(model.World3D.NORTH) * 2)
-                self.m.world.move_player(np.array(model.World3D.NORTH) * 1)
+                self.m.move_player(np.array(model.World3D.NORTH) * 1)
             elif keys[K_e]:
                 #self.v.move_view(np.array(model.World3D.SOUTH) * 2)
-                self.m.world.move_player(np.array(model.World3D.SOUTH) * 1)
+                self.m.move_player(np.array(model.World3D.SOUTH) * 1)
 
             if keys[K_F12]:
+                self.v.print()
                 self.m.print()
-                print("view pos={0}".format(self.v.floor_view.view_pos))
 
             self.v.draw()
             self.v.update()

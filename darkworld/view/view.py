@@ -70,6 +70,7 @@ class DWMainFrame(View):
     def print(self):
 
         print("Printing Dark Work view...")
+        self.floor_view.print()
 
     def draw(self):
 
@@ -107,7 +108,7 @@ class DWFloorView(View):
         self.surface = None
         self.width = 800
         self.height = 800
-        self.depth = 1000
+        self.depth = 400
 
         self.view_padding = 0
 
@@ -133,7 +134,7 @@ class DWFloorView(View):
 
         self.tiles = []
 
-        filenames = ("tile1.png", "tile3.png", "tile4.png", "bear.png", "tile2.png", "tile5.png", "tile6.png", "bot.png")
+        filenames = ("tile1.png", "tile3.png", "tile4.png", "bear.png", "tile2.png", "tile5.png", "tile6.png", "bot.png", "down shoot.png")
 
         try:
             for filename in filenames:
@@ -147,20 +148,35 @@ class DWFloorView(View):
     def print(self):
 
         print("Printing Dark Work Floor view...")
+        print("View Pos = {0}\nPlayer pos = {1}".format(self.view_pos, self.model.world.player.xyz))
+        vx, vy, vz = self.view_pos
+        pz = self.model.world.player.z
+        alpha = 255 * (1 - min((abs(pz - vx) * 3 / self.m2v.infinity, 1)))
+        #print("Alpha at vz={0},pz={1} = {2}".format(vz, pz, alpha))
+
+        #objs = self.m2v.get_object_list(self.view_pos, self.width + (self.view_padding * 2), self.height + (self.view_padding * 2), self.depth)
+        objs = self.m2v.get_object_list(self.view_pos, self.width, self.height, self.depth)
+
+        # Draw visible objects in reverse order by distance
+        distance = sorted(list(objs.keys()), reverse=True)
+
+        for d in distance:
+            alpha = 255 * (1 - min((abs(pz - d - vz) * 3 / self.m2v.infinity, 1)))
+            print("Alpha at d={0},pz={1} = {2}".format(d, pz, alpha))
 
     def draw(self):
 
-        self.surface.fill(Colours.DARK_GREY)
+        self.surface.fill(Colours.BLACK)
 
         vx,vy,vz = self.model.world.get_player_xyz()
+        pz = vz
+        vz -= 28
 
-        vz -= 20
+        self.set_view((vx,vy,vz))
 
-        self.view_pos = (vx,vy,vz)
 
         # Get the visible objects from the model
         #objs = self.m2v.get_object_list(self.view_pos, self.width + (self.view_padding * 2), self.height + (self.view_padding * 2), self.depth)
-        #view_pos = np.add(self.view_pos, np.array((-1000,-1000,0)))
         objs = self.m2v.get_object_list(self.view_pos, self.width, self.height, self.depth)
 
         # Draw visible objects in reverse order by distance
@@ -177,7 +193,8 @@ class DWFloorView(View):
 
                 image = pygame.transform.scale(image ,(size, size))
 
-                image.set_alpha(255 * (1 - min(d*2/self.m2v.infinity, 1)))
+                alpha = 255 * (1 - min((abs(pz-d-vz)*10/self.m2v.infinity, 1)))
+                image.set_alpha(alpha)
 
                 #brighten = min(int(d), 255)
                 #image.fill((brighten, brighten, brighten), special_flags=pygame.BLEND_RGB_ADD)
@@ -190,15 +207,19 @@ class DWFloorView(View):
                 #                  size),
                 #                  0)
 
-                self.surface.blit(image, (int(x * self.object_size_scale - size / 2), int(y * self.object_size_scale - size / 2), size, size))
+                #self.surface.blit(image, (int(x * self.object_size_scale - size / 2), int(y * self.object_size_scale - size / 2), size, size))
+                self.surface.blit(image, (int(x * self.object_size_scale), int(y * self.object_size_scale), size, size))
 
         # Draw cross hair
-        cross_hair_size = 0.1
+        cross_hair_size = 0.15
         #pygame.draw.circle(self.surface, Colours.WHITE, (int(self.width / 2), int(self.height / 2)), 10, 1)
+        pw = self.model.world.player.rect.width/2
+        ph = self.model.world.player.rect.height/2
         pygame.draw.rect(self.surface,
                          Colours.GOLD,
-                         (int(self.width / 2 * (1 - cross_hair_size)),
-                          int(self.height / 2 * (1 - cross_hair_size)), int(self.width * cross_hair_size),
+                         (int(self.width / 2 * (1 - cross_hair_size) + pw),
+                          int(self.height / 2 * (1 - cross_hair_size) + ph),
+                          int(self.width * cross_hair_size),
                           int(self.height * cross_hair_size)),
                          2)
 
@@ -213,10 +234,6 @@ class DWFloorView(View):
                  bkg=Colours.DARK_GREY)
 
     def tick(self):
-
-        pass
-
-        #self.view_pos = np.add(self.view_pos, np.array(model.World3D.NORTH))
 
         return
 
@@ -238,7 +255,7 @@ class ModelToView3D():
     def __init__(self, model):
         self.model = model
 
-        self.infinity = 3000
+        self.infinity = 1000
 
         self.projection = ModelToView3D.PERSPECTIVE
         #self.projection = ModelToView3D.PARALLEL
@@ -260,8 +277,8 @@ class ModelToView3D():
                 od = oz - vz
                 ow = ox - vx
                 oh = oy - vy
-                #if od <= 0 or od > view_depth or abs(ow) > view_width / 2 or abs(oh) > view_height / 2:
-                if od <= 0 or od > view_depth:
+                if od <= 0 or od > view_depth or abs(ow) > view_width / 2 or abs(oh) > view_height / 2:
+                #if od <= 0 or od > view_depth:
                     pass
                 else:
 

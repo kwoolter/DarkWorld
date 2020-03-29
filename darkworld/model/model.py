@@ -25,7 +25,7 @@ class DWModel():
         size = 32
         new_player = RPGObject3D(type=7,
                                  name="Player",
-                                 opos=(300, 300, 10),
+                                 opos=(size * 5, size * 5, 1),
                                  osize=(size, size, 1))
 
         self.world.add_player(new_player)
@@ -45,6 +45,11 @@ class DWModel():
     def tick(self):
         self.tick_count += 1
         self.world.move_player(World3D.NORTH)
+        if self.world.player.has_changed_planes() is True:
+            print("I'm falling....")
+            self.world.state = World3D.PLAYER_FALLING
+        else:
+            self.world.state = World3D.PLAYER_MOVING
 
     def get_next_event(self):
         next_event = None
@@ -52,6 +57,20 @@ class DWModel():
             next_event = self.events.pop_event()
 
         return next_event
+
+    def move_player(self, vector):
+
+        if self.world.state == World3D.PLAYER_FALLING:
+            return
+
+        self.world.move_player(vector)
+
+        touching_objects = self.world.touching_objects(self.world.player)
+
+        for object in touching_objects:
+            if object.is_interactable is True:
+                print("touching {0}".format(object))
+                self.world.delete_object3D(object)
 
     def end(self):
         pass
@@ -117,6 +136,9 @@ class EventQueue():
 
 
 class World3D:
+
+
+    # Define direction vectors
     INVERSE = np.array([-1, -1, -1])
     NORTH = np.array([0, 0, 1])
     SOUTH = np.multiply(NORTH, INVERSE)
@@ -127,11 +149,17 @@ class World3D:
 
     HEADINGS = (NORTH, SOUTH, EAST, WEST, UP, DOWN)
 
+    # Define states
+    PLAYER_MOVING = "moving"
+    PLAYER_FALLING = "falling"
+
+
     def __init__(self, w, h, d):
 
         self.width = w
         self.height = h
         self.depth = d
+        self.state = World3D.PLAYER_MOVING
 
         self.objects = []
 
@@ -207,12 +235,14 @@ class World3D:
 
         # Set the scale of each object in the world
         obj_size = 32
-        layer2_distance = 100
+        layer2_distance = 50
 
+        # Add some random solid objects
         for i in range(1, 20):
             z = 19
-            new_object = RPGObject3D(type=2,
-                                     name="Object {0}:{1}".format(type, i),
+            type = 2
+            new_object = RPGObject3D(type=type,
+                                     name="Block {0}:{1}".format(type, i),
                                      opos=(random.randint(1, 15) * obj_size,
                                            random.randint(1, 15) * obj_size,
                                            z),
@@ -220,13 +250,42 @@ class World3D:
 
             self.add_object3D(new_object)
 
-            # z = layer2_distance
-            new_object = RPGObject3D(type=3,
-                                     name="Object {0}:{1}".format(type, i),
-                                     opos=((random.randint(1, 10) + 10) * obj_size,
-                                           (random.randint(1, 10) + 10) * obj_size,
+            z = 19
+            type = 8
+            new_object = RPGObject3D(type=type,
+                                     name="Shoot {0}:{1}".format(type, i),
+                                     opos=(random.randint(1, 15) * obj_size,
+                                           random.randint(1, 15) * obj_size,
                                            z),
-                                     osize=(obj_size, obj_size, 1))
+                                     osize=(obj_size, obj_size, 1),
+                                     solid = True,
+                                     interactable = False)
+
+            self.add_object3D(new_object)
+
+            z = layer2_distance - 1
+            type = 2
+            new_object = RPGObject3D(type=type,
+                                     name="Shoot {0}:{1}".format(type, i),
+                                     opos=((random.randint(1, 15) + 10) * obj_size,
+                                           (random.randint(1, 15) + 5) * obj_size,
+                                           z),
+                                     osize=(obj_size, obj_size, 1),
+                                     solid = True,
+                                     interactable = False)
+
+            self.add_object3D(new_object)
+
+            z = layer2_distance - 1
+            type = 3
+            new_object = RPGObject3D(type=type,
+                                     name="Bear {0}:{1}".format(type, i),
+                                     opos=((random.randint(1, 15) + 10) * obj_size,
+                                           (random.randint(1, 15) + 5) * obj_size,
+                                           z),
+                                     osize=(obj_size, obj_size, 1),
+                                     solid = False,
+                                     interactable = True)
 
             self.add_object3D(new_object)
 
@@ -248,9 +307,11 @@ class World3D:
         #
 
         # Create some floors
-        for y in range(0, 15):
-            for x in range(0, 15):
-                obj_size = 32
+
+        obj_size = 32
+        for y in range(0, 17):
+            for x in range(0, 17):
+
                 z = 20
                 otype = 1
                 new_object = RPGObject3D(type=otype,
@@ -261,11 +322,14 @@ class World3D:
                                          osize=(obj_size, obj_size, 1))
 
                 self.add_object3D(new_object)
+
+
                 z = layer2_distance
+                otype = 5
 
                 new_object = RPGObject3D(type=otype,
                                          name="Object {0}:{1},{2}".format(otype, x, y),
-                                         opos=((x + 15) * obj_size,
+                                         opos=((x + 10) * obj_size,
                                                (y + 5) * obj_size,
                                                z),
                                          osize=(obj_size, obj_size, 1))
@@ -279,12 +343,36 @@ class World3D:
                 # self.add_object(new_object1, x*obj_size, y*obj_size, 20)
         #
         #
-        # # Add vertical walls
-        # new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
-        # for y in range(0,30):
-        #     self.add_object(new_object, 0, y * obj_size, 19)
-        #     self.add_object(new_object, 12 * obj_size, y * obj_size, 19)
-        #     self.add_object(new_object, 20 * obj_size, y * obj_size, 19)
+        # Add vertical walls
+        #new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
+
+        z = 19
+        otype = 0
+
+
+        for y in range(0,30):
+            new_object = RPGObject3D(type=otype,
+                                     name="Object {0}:{1},{2}".format(otype, x, y),
+                                     opos=(0,
+                                           y * obj_size,
+                                           z),
+                                     osize=(obj_size, obj_size, 1))
+            self.add_object3D(new_object)
+
+            new_object = RPGObject3D(type=otype,
+                                     name="Object {0}:{1},{2}".format(otype, x, y),
+                                     opos=(12 * obj_size,
+                                           y * obj_size,
+                                           z),
+                                     osize=(obj_size, obj_size, 1))
+
+            self.add_object3D(new_object)
+
+
+
+            # self.add_object(new_object, 0, y * obj_size, 19)
+            # self.add_object(new_object, 12 * obj_size, y * obj_size, 19)
+            # self.add_object(new_object, 20 * obj_size, y * obj_size, 19)
         #
         # # Add horizontal walls
         # new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
@@ -293,22 +381,13 @@ class World3D:
         #     self.add_object(new_object, x * obj_size, 12 * obj_size, 19)
         #     self.add_object(new_object, x * obj_size, 20 * obj_size, 19)
 
-    def move_object_by(self, obj, vector):
-
-        dx, dy, dz = vector
-
-        if dx != 0:
-            self.move_object(obj, (dx, 0, 0))
-
-        if dy != 0:
-            self.move_object(obj, (0, dy, 0))
-
-        if dz != 0:
-            self.move_object(obj, (0, 0, dz))
-
     def move_player(self, vector):
 
         dx, dy, dz = vector
+
+        # if self.state == World3D.PLAYER_FALLING:
+        #     dx = dy = 0
+        #     vector = (0,0,dz)
 
         selected_player = self.player
 
@@ -330,7 +409,7 @@ class World3D:
                 for object in objects:
                     if object.is_solid is True and object.is_colliding(selected_player):
                         selected_player.back()
-                        print("DZ:Player {0} collided with object {1}".format(self.player, str(object)))
+                        #print("DZ:Player {0} collided with object {1}".format(self.player, str(object)))
                         break
 
         # If we succeeded in moving planes...
@@ -373,11 +452,11 @@ class World3D:
 
         # did we move anywhere?
         if self.player.has_moved() is True:
-            print("Player moved from {0} to {1}".format(self.player.xyz, self.player.old_xyz))
+            #print("Player moved from {0} to {1}".format(self.player.xyz, self.player.old_xyz))
 
             # If we succeeded in moving planes...
             if selected_player.has_changed_planes() is True:
-                print("Player has changed planes from {0} to {1}".format(self.player.z, self.player._old_z))
+                #print("Player has changed planes from {0} to {1}".format(self.player.z, self.player._old_z))
                 # Adjust the plane data to reflect new position
                 self.delete_object3D(self.player, self.player._old_z)
                 self.add_object3D(self.player, do_copy=False)
@@ -415,8 +494,19 @@ class World3D:
 
         return matching_objects
 
+    def touching_objects(self, target):
+
+        objects = self.planes[target.z]
+
+        touching = []
+
+        for object in objects:
+            if object.is_touching(target):
+                touching.append(object)
+
+        return touching
+
     def print(self):
-        print("Headings {0}".format(World3D.HEADINGS))
         for pos, obj in self.objects:
             print("{0}:{1}".format(pos, obj))
 
@@ -442,7 +532,7 @@ class RPGObject3D(object):
                  osize=(1, 1, 1),
                  solid: bool = True,
                  visible: bool = True,
-                 interactable: bool = True):
+                 interactable: bool = False):
         self.name = name
         self.type = type
 
@@ -460,7 +550,7 @@ class RPGObject3D(object):
         self.is_interactable = interactable
 
     def __str__(self):
-        return "{0} ({1})".format(self.name, self.type)
+        return "{0} type({1}) pos({2})".format(self.name, self.type, self.xyz)
 
     @property
     def rect(self):
@@ -501,7 +591,7 @@ class RPGObject3D(object):
     def is_touching(self, other_object):
         touch_field = self._rect.inflate(RPGObject3D.TOUCH_FIELD_X, RPGObject3D.TOUCH_FIELD_Y)
 
-        return self.z == other_object.layer and \
+        return self.z == other_object.z and \
                self.is_visible and \
                self.is_interactable and \
                self != other_object and \
