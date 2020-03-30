@@ -37,7 +37,7 @@ class DWController:
 
         FPSCLOCK = pygame.time.Clock()
 
-        pygame.time.set_timer(USEREVENT + 1, 50)
+        pygame.time.set_timer(USEREVENT + 1, 5)
         pygame.time.set_timer(USEREVENT + 2, 500)
         pygame.event.set_allowed([QUIT, KEYDOWN, USEREVENT])
 

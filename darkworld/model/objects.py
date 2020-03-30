@@ -1,0 +1,15 @@
+
+class Objects:
+    PLAYER = "player"
+    TILE1 = "tile1"
+    TILE2 = "tile2"
+    TILE3 = "tile3"
+    CRATE = "crate"
+    WALL = "wall"
+    KEY = "key"
+    BOSS_KEY = "boss key"
+    PLAYER = "player"
+    TREASURE = "treasure"
+    TREASURE_CHEST = "treasure chest"
+    DOOR = "door"
+    TELEPORT = "teleport"
