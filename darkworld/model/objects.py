@@ -6,6 +6,9 @@ class Objects:
     TILE3 = "tile3"
     CRATE = "crate"
     WALL = "wall"
+    FAKE_WALL = "fake wall"
+    BLOCK1 = "block1"
+    BLOCK2 = "block2"
     TRAP = "trap"
     KEY = "key"
     BOSS_KEY = "boss key"
@@ -17,3 +20,7 @@ class Objects:
     HOLE = "hole"
     EXIT_NEXT = "exit_next"
     EXIT_PREVIOUS = "exit_previous"
+    SWITCH_OFF = "swicth off"
+    SWITCH_ON = "switch on"
+    SWITCH_TILE = "switch tile"
+

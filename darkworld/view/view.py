@@ -60,21 +60,36 @@ class ImageManager:
         new_skin = (new_skin_name, {
 
             model.Objects.WALL: "wall.png",
-            model.Objects.PLAYER: ("bot.png", "bot.png"),
+            model.Objects.FAKE_WALL: "wall.png",
+            model.Objects.BLOCK1: "block1.png",
+            model.Objects.BLOCK2: "block2.png",
+            model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
             model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE_CHEST: "treasure_chest2.png",
             model.Objects.TRAP: "trap.png",
             model.Objects.KEY: "key2.png",
-            model.Objects.BOSS_KEY: "boss_key.png",
-            model.Objects.TILE1: "tile1.png",
+            model.Objects.BOSS_KEY: "key4.png",
+            model.Objects.TILE1: "tile4.png",
             model.Objects.TILE2: "tile2.png",
             model.Objects.TILE3: "tile3.png",
-            model.Objects.TELEPORT: "teleport2.png",
+            model.Objects.TELEPORT: ("teleport_00.png","teleport_01.png","teleport_02.png"),
             model.Objects.HOLE: "down shoot.png",
-            model.Objects.EXIT_NEXT: "exit.png",
-            model.Objects.EXIT_PREVIOUS: "exit.png",
+            model.Objects.EXIT_NEXT: "exit_green.png",
+            model.Objects.EXIT_PREVIOUS: "exit_red.png",
+            model.Objects.SWITCH_TILE: None,
+            model.Objects.SWITCH_OFF: "switch_off.png",
+            model.Objects.SWITCH_ON: "switch_on.png",
 
+        })
 
+        ImageManager.skins[new_skin_name] = new_skin
+
+        new_skin_name = "test"
+        new_skin = (new_skin_name, {
+
+            model.Objects.WALL: "wall2.png",
+            model.Objects.FAKE_WALL: "wall2.png",
+            model.Objects.TILE1: "tile4.png",
         })
 
         ImageManager.skins[new_skin_name] = new_skin
@@ -212,22 +227,33 @@ class DWFloorView(View):
 
         super(DWFloorView, self).__init__()
 
+        # Connect to the model
         self.model = model
+
         self.surface = None
+
+        #  How big a view are we going to render?
         self.width = 800
         self.height = 800
+
+        # How far away from the camera are we rendering objects?
         self.depth = 400
+
+        # How far above the player is the camera?
+        self.camera_distance = -10
 
         self.view_padding = 0
 
+        # What are the contraints to the view position
         self.max_view_pos = np.array(max_view_pos)
         self.min_view_pos = np.array(min_view_pos)
         if view_pos is None:
             view_pos = np.add(self.min_view_pos, self.max_view_pos)
             view_pos = np.divide(view_pos, 2).astype(int)
+
+        # Move the camera to the point
         self.set_view(view_pos)
 
-        #self.object_size_scale = int(min(self.width, self.height)/100)
         self.object_size_scale = 1
 
         self.m2v = ModelToView3D(self.model)
@@ -244,32 +270,25 @@ class DWFloorView(View):
 
         print("Printing Dark Work Floor view...")
         print("View Pos = {0}\nPlayer pos = {1}".format(self.view_pos, self.model.world.player.xyz))
-        vx, vy, vz = self.view_pos
-        pz = self.model.world.player.z
-        alpha = 255 * (1 - min((abs(pz - vx) * 10 / self.m2v.infinity, 1)))
-        print("Alpha at vz={0},pz={1} = {2}".format(vz, pz, alpha))
 
-        #objs = self.m2v.get_object_list(self.view_pos, self.width + (self.view_padding * 2), self.height + (self.view_padding * 2), self.depth)
-        objs = self.m2v.get_object_list(self.view_pos, self.width, self.height, self.depth)
-
-        # Draw visible objects in reverse order by distance
-        distance = sorted(list(objs.keys()), reverse=True)
-
-        for d in distance:
-            alpha = 255 * (1 - min((abs(pz - d - vz) * 3 / self.m2v.infinity, 1)))
-            print("Alpha at d={0},pz={1} = {2}".format(d, pz, alpha))
 
     def draw(self):
 
+        self.skin = self.model.world.skin
+
         self.surface.fill(Colours.BLACK)
 
+        # Find out where the player currently is
         vx,vy,vz = self.model.world.get_player_xyz()
         pz = vz
-        vz -= 28
 
+        # Move the camera relative to the players position
+        vz += self.camera_distance
+
+        # Set the view at the poisiton
         self.set_view((vx,vy,vz))
 
-        # Get the visible objects from the model
+        # Get the visible objects at this view point from the model
         objs = self.m2v.get_object_list(self.view_pos, self.width, self.height, self.depth)
 
         # Draw visible objects in reverse order by distance
@@ -282,19 +301,17 @@ class DWFloorView(View):
 
                 size = int(obj.rect.width * self.object_size_scale * (1 - d / self.object_distance_scale))
 
-                #image = self.tiles[min(obj.type, len(self.tiles)-1)]
-
                 image = View.image_manager.get_skin_image(obj.name,
+                                                          skin_name=self.skin,
                                                           tick=self.tick_count)
 
-                image = pygame.transform.scale(image ,(size, size))
+                if image is not None:
+                    image = pygame.transform.scale(image ,(size, size))
 
-                alpha = 255 * (1 - min((abs(pz-d-vz)*20/self.m2v.infinity, 1)))
-                image.set_alpha(alpha)
+                    alpha = 255 * (1 - min((abs(pz-d-vz)*20/self.m2v.infinity, 1)))
+                    image.set_alpha(alpha)
 
-
-                #self.surface.blit(image, (int(x * self.object_size_scale - size / 2), int(y * self.object_size_scale - size / 2), size, size))
-                self.surface.blit(image, (int(x * self.object_size_scale), int(y * self.object_size_scale), size, size))
+                    self.surface.blit(image, (int(x * self.object_size_scale), int(y * self.object_size_scale), size, size))
 
         # Draw cross hair
         cross_hair_size = 0.15
@@ -310,7 +327,7 @@ class DWFloorView(View):
         #                  2)
 
         # Draw current view position
-        msg = "View Pos={0} : Distances={1}".format(self.view_pos, str(distance))
+        msg = "View Pos={0} : Distances={1} : Tick={2}".format(self.view_pos, str(distance), self.tick_count)
         text_rect = (0, 0, 300, 30)
         drawText(surface=self.surface,
                  text=msg,
@@ -318,10 +335,6 @@ class DWFloorView(View):
                  rect=text_rect,
                  font=pygame.font.SysFont(pygame.font.get_default_font(), 12),
                  bkg=Colours.DARK_GREY)
-
-    def tick(self):
-
-        return
 
     def set_view(self, new_view_pos):
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
@@ -338,10 +351,17 @@ class ModelToView3D():
     PARALLEL = "parallel"
 
     def __init__(self, model):
+
+        # Connect to the model
         self.model = model
 
-        self.infinity = 2000
+        # How far away is infinity so we can calculate perspective?
+        self.infinity = 1000
 
+        # How much space around the view so we want to add extra objects?
+        self.view_padding = 256
+
+        #  Add perspective to the positiojn of objects in the view
         self.projection = ModelToView3D.PERSPECTIVE
 
     def get_object_list(self, view_pos, view_width, view_height, view_depth):
@@ -364,7 +384,10 @@ class ModelToView3D():
                 oh = oy - vy
 
                 # filter out objects that don't fit into the current view.
-                if od <= 0 or od > view_depth or abs(ow) > view_width / 2 or abs(oh) > view_height / 2:
+                if od <= 0 or \
+                        od > view_depth\
+                        or abs(ow) > (view_width + self.view_padding) / 2\
+                        or abs(oh) > (view_height + self.view_padding) / 2:
                     pass
                 else:
 

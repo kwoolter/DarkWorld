@@ -14,7 +14,7 @@ class DWModel():
 
         self.world_factory = None
         self.world = None
-        self.current_world_id = None
+        self.current_world_id = -1
 
         self.player = None
 
@@ -36,6 +36,7 @@ class DWModel():
 
     def print(self):
         print("Printing {0} model...".format(self.name))
+        print("Player currently at {0}".format(self.player.xyz))
         self.world.print()
 
 
@@ -67,33 +68,46 @@ class DWModel():
         touching_objects = self.world.touching_objects(self.world.player)
 
         for object in touching_objects:
+
+            if object.name == Objects.EXIT_NEXT:
+                if self.world.player.is_inside(object):
+                    print("Going to next world...")
+                    self.move_world(self.current_world_id + 1)
+                    print(str(self.world))
+
+            elif object.name == Objects.EXIT_PREVIOUS:
+                if self.world.player.is_inside(object):
+                    print("Going to previous world...")
+                    self.move_world(self.current_world_id - 1)
+                    print(str(self.world))
+
+            elif object.name == Objects.HOLE:
+                print("Falling...")
+                self.move_player((0,0,-2))
+
+            elif object.name == Objects.TRAP:
+                if self.world.player.is_colliding(object):
+                    print("Ouch...")
+                    self.world.delete_object3D(object)
+
+
+    def interact(self):
+
+        touching_objects = self.world.touching_objects(self.world.player)
+
+        for object in touching_objects:
             if object.is_interactable is True:
 
-                print("touching {0}".format(object))
+                print("Interacting with {0}".format(str(object)))
 
                 if object.name == Objects.TELEPORT:
                     if self.world.player.is_inside(object):
                         print("Teleporting...")
-                        self.move_player((180,180,-140))
-
-                elif object.name == Objects.EXIT_NEXT:
-                    if self.world.player.is_inside(object):
-                        print("Going to next world...")
-                        self.move_world(self.current_world_id + 1)
-                        print(str(self.world))
-
-                elif object.name == Objects.EXIT_PREVIOUS:
-                    if self.world.player.is_inside(object):
-                        print("Going to previous world...")
-                        self.move_world(self.current_world_id - 1)
-                        print(str(self.world))
-
-                elif object.name == Objects.HOLE:
-                    print("Falling...")
-                    self.move_player((0,0,-2))
-
+                        self.world.move_player_to_start()
                 else:
                     self.world.delete_object3D(object)
+
+
 
     def move_world(self, new_world_id : int):
 
@@ -110,7 +124,7 @@ class DWModel():
                 self.world.delete_player()
 
             self.world = new_world
-            self.world.add_player(self.player)
+            self.world.add_player(self.player, start_pos = (self.current_world_id < new_world_id))
             self.current_world_id = new_world_id
         else:
             print("Can't find new world {0}".format(new_world_id))

@@ -78,13 +78,12 @@ class RPGObject3D(object):
 
         return self.z == other_object.z and \
                self.is_visible and \
-               self.is_interactable and \
                self != other_object and \
                touch_field.colliderect(other_object.rect)
 
     def is_inside(self, other_object):
-        b = other_object.rect.contains(self.rect)
-        print("{0} contains {1} = {2}".format(other_object.name, self.name, b))
+        # b = other_object.rect.contains(self.rect)
+        # print("{0} contains {1} = {2}".format(other_object.name, self.name, b))
 
         return self.z == other_object.z and \
                self != other_object and \
@@ -157,17 +156,18 @@ class WorldBuilder():
         # - world name
         # - skin name
         # - player start pos
+        # - player exit pos
 
         new_world_id = 1
-        new_world_properties = ("The Trial", "default", (256,256,0))
+        new_world_properties = ("The Trial", "default", (256,192,0),(100, 562, 120))
         self.world_properties[new_world_id] = new_world_properties
 
         new_world_id = 2
-        new_world_properties = ("The Test", "test", (256,500,0))
+        new_world_properties = ("The Test", "test", (504, 558, 150), (104, 48, 170))
         self.world_properties[new_world_id] = new_world_properties
 
         new_world_id = 3
-        new_world_properties = ("The Next Test", "test2", (500,500,0))
+        new_world_properties = ("The Next Test", "test", (504, 558, 150), (50, 100, 170))
         self.world_properties[new_world_id] = new_world_properties
 
         for id in self.world_properties.keys():
@@ -341,6 +341,7 @@ class World3D:
         self.name = name
         self.skin = "default"
         self.player_start_pos = (0,0,0)
+        self.player_exit_pos = (0,0,0)
         self.width = w
         self.height = h
         self.depth = d
@@ -390,13 +391,13 @@ class World3D:
         else:
             print("Can't delete object {0} at ({1},{2},{3})".format(str(selected_object), x, y, z))
 
-    def add_player(self, new_player):
+    def add_player(self, new_player, start_pos : bool):
 
         self.player = new_player
-        self.move_player_to_xyz(self.player_start_pos)
-        #self.add_object3D(new_player, do_copy=False)
-
-
+        if start_pos is True:
+            self.move_player_to_xyz(self.player_start_pos)
+        else:
+            self.move_player_to_xyz(self.player_exit_pos)
 
         return
 
@@ -425,8 +426,9 @@ class World3D:
         # - world name
         # - skin name
         # - player start pos
+        # - player exit pos
         if world_properties is not None:
-            self.name, self.skin, self.player_start_pos = world_properties
+            self.name, self.skin, self.player_start_pos, self.player_exit_pos = world_properties
 
 
     def move_player(self, vector):
@@ -435,7 +437,6 @@ class World3D:
 
         selected_player = self.player
 
-        # objects = self.get_objects_by_plane(selected_player.z + dz)
         new_plane = selected_player.z + dz
         if new_plane in self.planes.keys():
             objects = self.planes[new_plane]
@@ -478,7 +479,7 @@ class World3D:
                 for object in objects:
                     if object.is_solid is True and object.is_colliding(selected_player):
                         selected_player.back()
-                        print("DX:Player {0} collided with object {1}".format(self.player, str(object)))
+                        #print("DX:Player {0} collided with object {1}".format(self.player, str(object)))
                         break
 
         # Are we attempting to change Y position?
@@ -491,16 +492,14 @@ class World3D:
                 for object in objects:
                     if object.is_solid is True and object.is_colliding(selected_player):
                         selected_player.back()
-                        print("DY:Player {0} collided with object {1}".format(self.player, str(object)))
+                        #print("DY:Player {0} collided with object {1}".format(self.player, str(object)))
                         break
 
         # did we move anywhere?
         if self.player.has_moved() is True:
-            #print("Player moved from {0} to {1}".format(self.player.xyz, self.player.old_xyz))
 
             # If we succeeded in moving planes...
             if selected_player.has_changed_planes() is True:
-                #print("Player has changed planes from {0} to {1}".format(self.player.z, self.player._old_z))
                 # Adjust the plane data to reflect new position
                 self.delete_object3D(self.player, self.player._old_z)
                 self.add_object3D(self.player, do_copy=False)
@@ -513,6 +512,14 @@ class World3D:
             self.delete_object3D(self.player)
             self.player.set_pos((x,y,z))
             self.add_object3D(self.player, do_copy=False)
+
+    def move_player_to_start(self):
+
+        self.move_player_to_xyz(self.player_start_pos)
+
+    def move_player_to_exit(self):
+
+        self.move_player_to_xyz(self.player_exit_pos)
 
     def get_player_xyz(self):
         return self.player.xyz
