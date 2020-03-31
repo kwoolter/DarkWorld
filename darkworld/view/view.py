@@ -43,8 +43,8 @@ class ImageManager:
             try:
                 logging.info("Loading image {0}...".format(filename))
                 #original_image = pygame.image.load(filename).convert_alpha()
-                original_image = pygame.image.load(filename).convert()
-                image = pygame.transform.scale(original_image, (width, height))
+                image = pygame.image.load(filename).convert()
+                #image = pygame.transform.scale(original_image, (width, height))
                 ImageManager.image_cache[image_file_name] = image
                 logging.info("Image {0} loaded and cached.".format(filename))
                 print("loading img")
@@ -63,12 +63,16 @@ class ImageManager:
             model.Objects.PLAYER: ("bot.png", "bot.png"),
             model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE_CHEST: "treasure_chest2.png",
+            model.Objects.TRAP: "trap.png",
             model.Objects.KEY: "key2.png",
             model.Objects.BOSS_KEY: "boss_key.png",
             model.Objects.TILE1: "tile1.png",
             model.Objects.TILE2: "tile2.png",
             model.Objects.TILE3: "tile3.png",
-            model.Objects.TELEPORT: "teleport.png"
+            model.Objects.TELEPORT: "teleport2.png",
+            model.Objects.HOLE: "down shoot.png",
+            model.Objects.EXIT_NEXT: "exit.png",
+            model.Objects.EXIT_PREVIOUS: "exit.png",
 
 
         })
@@ -295,15 +299,15 @@ class DWFloorView(View):
         # Draw cross hair
         cross_hair_size = 0.15
         #pygame.draw.circle(self.surface, Colours.WHITE, (int(self.width / 2), int(self.height / 2)), 10, 1)
-        pw = self.model.world.player.rect.width/2
-        ph = self.model.world.player.rect.height/2
-        pygame.draw.rect(self.surface,
-                         Colours.GOLD,
-                         (int(self.width / 2 * (1 - cross_hair_size) + pw),
-                          int(self.height / 2 * (1 - cross_hair_size) + ph),
-                          int(self.width * cross_hair_size),
-                          int(self.height * cross_hair_size)),
-                         2)
+        # pw = self.model.world.player.rect.width/2
+        # ph = self.model.world.player.rect.height/2
+        # pygame.draw.rect(self.surface,
+        #                  Colours.GOLD,
+        #                  (int(self.width / 2 * (1 - cross_hair_size) + pw),
+        #                   int(self.height / 2 * (1 - cross_hair_size) + ph),
+        #                   int(self.width * cross_hair_size),
+        #                   int(self.height * cross_hair_size)),
+        #                  2)
 
         # Draw current view position
         msg = "View Pos={0} : Distances={1}".format(self.view_pos, str(distance))

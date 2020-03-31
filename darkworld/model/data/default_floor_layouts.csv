@@ -1,161 +1,201 @@
-ID,Name,Skin,Layer,Layout
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,default,149,####################
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#  K               #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#              K   #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,#                  #
-1,World1,default,149,####################
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,       fff          
-1,World1,default,80,      fffff         
-1,World1,default,80,      fffff         
-1,World1,default,80,      fffff         
-1,World1,default,80,       ffffff       
-1,World1,default,80,       ffffff       
-1,World1,default,80,         fff        
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,80,                    
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,79,     ##   ##        
-1,World1,default,79,     #     #        
-1,World1,default,79,     #     #        
-1,World1,default,79,     #     ###      
-1,World1,default,79,     ##      #      
-1,World1,default,79,      #      #      
-1,World1,default,79,      ###   ##      
-1,World1,default,79,        #####       
-1,World1,default,79,                    
-1,World1,default,79,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,       ***          
-1,World1,default,50,      *****         
-1,World1,default,50,      *****         
-1,World1,default,50,      *****         
-1,World1,default,50,       ***          
-1,World1,default,50,       ***          
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,50,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,      #####         
-1,World1,default,49,     ##   ##        
-1,World1,default,49,     #     #        
-1,World1,default,49,     #     #        
-1,World1,default,49,     #     #        
-1,World1,default,49,     ##   ##        
-1,World1,default,49,      #   #         
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-1,World1,default,49,                    
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,0,FFFFFFFFFFFFFFFFFFFF
-2,World2,default,1,####################
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,#                  #
-2,World2,default,1,####################
+ID,Name,Layer,Layout
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,150,FFFFFFFFFFFFFFFFFFFF
+1,World1,149,####################
+1,World1,149,#+   ##           ^#
+1,World1,149,#                 k#
+1,World1,149,#                  #
+1,World1,149,#    ##     $      #
+1,World1,149,######             #
+1,World1,149,######             #
+1,World1,149,#    #   #         #
+1,World1,149,#    #####         #
+1,World1,149,#  ^     #  $      #
+1,World1,149,# ^K^             ##
+1,World1,149,#            #######
+1,World1,149,#            #    ##
+1,World1,149,#            #     #
+1,World1,149,#      $       ^   #
+1,World1,149,#              K^  #
+1,World1,149,#            # ^   #
+1,World1,149,#n           #     #
+1,World1,149,#          ###   ^#
+1,World1,149,####################
+1,World1,80,                    
+1,World1,80,                    
+1,World1,80,                    
+1,World1,80,                    
+1,World1,80,                    
+1,World1,80,                    
+1,World1,80,                    
+1,World1,80,       O f          
+1,World1,80,         f          
+1,World1,80,       fff          
+1,World1,80,      ffff          
+1,World1,80,      fffff         
+1,World1,80,      fffff         
+1,World1,80,      ffffff        
+1,World1,80,       ffffff       
+1,World1,80,       ffffff       
+1,World1,80,         fff        
+1,World1,80,                    
+1,World1,80,                    
+1,World1,80,                    
+1,World1,79,                    
+1,World1,79,                    
+1,World1,79,                    
+1,World1,79,                    
+1,World1,79,                    
+1,World1,79,                    
+1,World1,79,      #####         
+1,World1,79,      #   #         
+1,World1,79,      #   #         
+1,World1,79,     ##   #         
+1,World1,79,     # ^  ##        
+1,World1,79,     #    ^#        
+1,World1,79,     #     #        
+1,World1,79,     #^    ###      
+1,World1,79,     ##  ^   #      
+1,World1,79,      #      #      
+1,World1,79,      ###   ##      
+1,World1,79,        #####       
+1,World1,79,                    
+1,World1,79,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,       ***          
+1,World1,50,      *****         
+1,World1,50,      *****         
+1,World1,50,      *****         
+1,World1,50,       ***          
+1,World1,50,       ***          
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,50,                    
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,      #####         
+1,World1,49,     ##^ ^##        
+1,World1,49,     #p    #        
+1,World1,49,     #     #        
+1,World1,49,     #     #        
+1,World1,49,     ##^ ^##        
+1,World1,49,      #   #         
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,                    
+1,World1,49,                    
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,199,####################
+2,World2,199,#n               p #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,####################
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,200,FFFFFFFFFFFFFFFFFFFF
+3,World3,199,####################
+3,World3,199,#              p   #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,#                  #
+3,World3,199,####################

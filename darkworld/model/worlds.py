@@ -82,6 +82,20 @@ class RPGObject3D(object):
                self != other_object and \
                touch_field.colliderect(other_object.rect)
 
+    def is_inside(self, other_object):
+        b = other_object.rect.contains(self.rect)
+        print("{0} contains {1} = {2}".format(other_object.name, self.name, b))
+
+        return self.z == other_object.z and \
+               self != other_object and \
+               other_object.rect.contains(self.rect)
+
+    def contains(self, other_object):
+        return self.z == other_object.z and \
+               self != other_object and \
+               self.rect.contains(other_object.rect)
+
+
     def has_moved(self):
         return self._z != self._old_z or self._rect != self._old_rect
 
@@ -112,6 +126,7 @@ class RPGObject3D(object):
 
 
 class WorldBuilder():
+
     FLOOR_LAYOUT_FILE_NAME = "_floor_layouts.csv"
     FLOOR_OBJECT_FILE_NAME = "_floor_objects.csv"
 
@@ -119,9 +134,10 @@ class WorldBuilder():
         self.data_file_directory = data_file_directory
         self.world_properties = {}
 
-    def initialise(self, file_prefix: str = "default"):
+        self.world_layouts = None
+        self.world_objects = None
 
-        self.load_floor_details()
+    def initialise(self, file_prefix: str = "default"):
 
         self.world_objects = WorldObjectLoader(
             self.data_file_directory + file_prefix + WorldBuilder.FLOOR_OBJECT_FILE_NAME)
@@ -133,22 +149,32 @@ class WorldBuilder():
         self.world_layouts.load()
         self.world_layouts.print()
 
-    def load_floor_details(self):
+        self.load_world_properties()
 
-        # Floor Details:-
-        # - name
-        # - team1 player start layer
-        # - team1 start locations rect
-        # - team2 player start layer
-        # - team2 start locations rect
-        # - potions
-        # - chests
-        # - Swap tiles
+    def load_world_properties(self):
 
-        new_floor_id = 0
-        new_floor_details = ("The Trial", 1, (6, 1, 16, 3), 1, (5, 16, 14, 18), 4, 4, None)
-        self.world_properties[new_floor_id] = new_floor_details
+        # World Properties:-
+        # - world name
+        # - skin name
+        # - player start pos
 
+        new_world_id = 1
+        new_world_properties = ("The Trial", "default", (256,256,0))
+        self.world_properties[new_world_id] = new_world_properties
+
+        new_world_id = 2
+        new_world_properties = ("The Test", "test", (256,500,0))
+        self.world_properties[new_world_id] = new_world_properties
+
+        new_world_id = 3
+        new_world_properties = ("The Next Test", "test2", (500,500,0))
+        self.world_properties[new_world_id] = new_world_properties
+
+        for id in self.world_properties.keys():
+            properties = self.world_properties[id]
+            world = self.get_world(id)
+            if world is not None:
+                world.initialise(properties)
 
     def get_world(self, world_name : str):
         return self.world_layouts.get_world(world_name)
@@ -181,16 +207,15 @@ class WorldLayoutLoader():
             # For each row in the file....
             for row in reader:
 
-                floor_id = str(row.get("ID"))
-                floor_layout_name = row.get("Name")
-                floor_skin_name = row.get("Skin")
+                world_id = int(row.get("ID"))
+                world_name = row.get("Name")
 
-                if floor_id != current_floor_id:
-                    WorldLayoutLoader.world_layouts[floor_id] = World3D(name = floor_id, w=1000,h=1000,d=1000)
-                    current_floor_id = floor_id
+                if world_id != current_floor_id:
+                    WorldLayoutLoader.world_layouts[world_id] = World3D(name = world_name, w=1000,h=1000,d=1000)
+                    current_floor_id = world_id
                     y = 0
 
-                floor = WorldLayoutLoader.world_layouts[floor_id]
+                floor = WorldLayoutLoader.world_layouts[world_id]
 
                 floor_layer = int(row.get("Layer"))
                 if floor_layer != current_floor_layer:
@@ -211,7 +236,11 @@ class WorldLayoutLoader():
                 y += WorldLayoutLoader.DEFAULT_OBJECT_DEPTH
 
     def get_world(self, world_name : str):
-        return self.world_layouts[world_name]
+        if world_name in self.world_layouts.keys():
+            return self.world_layouts[world_name]
+        else:
+            print("Couldn't find world {0}".format(world_name))
+            return None
 
     def print(self):
         print("{0} world layouts loaded".format(len(self.world_layouts.keys())))
@@ -310,6 +339,8 @@ class World3D:
     def __init__(self, name : str = "default", w : int = 100, h : int = 100, d : int = 100):
 
         self.name = name
+        self.skin = "default"
+        self.player_start_pos = (0,0,0)
         self.width = w
         self.height = h
         self.depth = d
@@ -318,6 +349,11 @@ class World3D:
         self.objects = []
 
         self.planes = {}
+
+        self.player = None
+
+    def __str__(self):
+        return "World {0}: skin({1}), size({2},{3},{4})".format(self.name, self.skin,self.width, self.height, self.depth)
 
     @property
     def rect(self):
@@ -348,15 +384,26 @@ class World3D:
             z = plane
 
         if z in self.planes.keys():
-            self.planes[z].remove(selected_object)
+            selected_plane = self.planes[z]
+            if selected_object in selected_plane:
+                self.planes[z].remove(selected_object)
         else:
             print("Can't delete object {0} at ({1},{2},{3})".format(str(selected_object), x, y, z))
 
     def add_player(self, new_player):
 
         self.player = new_player
+        self.move_player_to_xyz(self.player_start_pos)
+        #self.add_object3D(new_player, do_copy=False)
 
-        self.add_object3D(new_player, do_copy=False)
+
+
+        return
+
+    def delete_player(self):
+
+        if self.player is not None:
+            self.delete_object3D(self.player)
 
         return
 
@@ -371,200 +418,20 @@ class World3D:
         x, y, z = pos
         return self.is_valid_xyz(x, y, z)
 
-    def initialise(self):
+    def initialise(self, world_properties = None):
 
-        # Set the scale of each object in the world
-        obj_size = 32
-        layer2_distance = 50
+        # parse the properties
+        # World Properties:-
+        # - world name
+        # - skin name
+        # - player start pos
+        if world_properties is not None:
+            self.name, self.skin, self.player_start_pos = world_properties
 
-        z = layer2_distance * 3 - 1
-
-
-        type = 9
-        obj_size = 32
-        new_object = RPGObject3D(type=type,
-                                 name=Objects.TELEPORT,
-                                 opos=(random.randint(0, 10) * obj_size,
-                                       random.randint(0, 10) * obj_size,
-                                       z),
-                                 osize=(obj_size * 4, obj_size * 4, 1),
-                                 solid=False,
-                                 interactable=True)
-
-        self.add_object3D(new_object)
-
-        type = 10
-        new_object = RPGObject3D(type=type,
-                                 name=Objects.KEY,
-                                 opos=(random.randint(0, 10) * obj_size,
-                                       random.randint(0, 10) * obj_size,
-                                       z - 1),
-                                 osize=(obj_size, obj_size, 1),
-                                 solid=False,
-                                 interactable=True)
-
-        self.add_object3D(new_object)
-
-        obj_size = 32
-
-
-        # Add some random solid objects
-        for i in range(1, 20):
-            z = 19
-            type = 2
-            new_object = RPGObject3D(type=type,
-                                     name=Objects.TREASURE,
-                                     opos=(random.randint(1, 15) * obj_size,
-                                           random.randint(1, 15) * obj_size,
-                                           z),
-                                     osize=(obj_size, obj_size, 1))
-
-            self.add_object3D(new_object)
-
-            z = 19
-            type = 8
-            new_object = RPGObject3D(type=type,
-                                     name=Objects.TREASURE,
-                                     opos=(random.randint(1, 15) * obj_size,
-                                           random.randint(1, 15) * obj_size,
-                                           z),
-                                     osize=(obj_size, obj_size, 1),
-                                     solid = True,
-                                     interactable = False)
-
-            self.add_object3D(new_object)
-
-            z = layer2_distance - 1
-            type = 2
-            new_object = RPGObject3D(type=type,
-                                     name=Objects.WALL,
-                                     opos=((random.randint(1, 15) + 10) * obj_size,
-                                           (random.randint(1, 15) + 5) * obj_size,
-                                           z),
-                                     osize=(obj_size, obj_size, 1),
-                                     solid = True,
-                                     interactable = False)
-
-            self.add_object3D(new_object)
-
-            z = layer2_distance - 1
-            type = 3
-            new_object = RPGObject3D(type=type,
-                                     name=Objects.WALL,
-                                     opos=((random.randint(1, 15) + 10) * obj_size,
-                                           (random.randint(1, 15) + 5) * obj_size,
-                                           z),
-                                     osize=(obj_size, obj_size, 1),
-                                     solid = False,
-                                     interactable = True)
-
-            self.add_object3D(new_object)
-
-        # Create some floors
-        obj_size = 32
-        for y in range(0, 17):
-            for x in range(0, 17):
-
-                z = 20
-                otype = 1
-                new_object = RPGObject3D(type=otype,
-                                         name=Objects.TILE1,
-                                         opos=(x * obj_size,
-                                               y * obj_size,
-                                               z),
-                                         osize=(obj_size, obj_size, 1))
-
-                self.add_object3D(new_object)
-
-                z = layer2_distance * 3
-                otype = 1
-                new_object = RPGObject3D(type=otype,
-                                         name=Objects.TILE2,
-                                         opos=(x * obj_size,
-                                               y * obj_size,
-                                               z),
-                                         osize=(obj_size, obj_size, 1))
-
-                self.add_object3D(new_object)
-
-
-                z = layer2_distance
-                otype = 5
-
-                new_object = RPGObject3D(type=otype,
-                                         name=Objects.TILE1,
-                                         opos=((x + 10) * obj_size,
-                                               (y + 5) * obj_size,
-                                               z),
-                                         osize=(obj_size, obj_size, 1))
-
-                self.add_object3D(new_object)
-
-
-                z = layer2_distance + 50
-                otype = 1
-
-                new_object = RPGObject3D(type=otype,
-                                         name=Objects.TILE2,
-                                         opos=((x + 15) * obj_size,
-                                               (y + 10) * obj_size,
-                                               z),
-                                         osize=(obj_size, obj_size, 1))
-
-                self.add_object3D(new_object)
-
-                # self.add_object(new_object2, (x + 15)*obj_size, (y+5)*obj_size, layer2_distance)
-                # self.add_object(new_object2, (x + 20) * obj_size, (y + 10) * obj_size, int(layer2_distance / 2))
-                # self.add_object(new_object2, x * obj_size, (y + 5) * obj_size, layer2_distance)
-                #
-                # self.add_object(new_object1, x*obj_size, y*obj_size, 20)
-        #
-        #
-        # Add vertical walls
-        #new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
-
-        z = 19
-        otype = 0
-
-
-        for y in range(0,30):
-            new_object = RPGObject3D(type=otype,
-                                     name=Objects.WALL,
-                                     opos=(0,
-                                           y * obj_size,
-                                           z),
-                                     osize=(obj_size, obj_size, 1))
-            self.add_object3D(new_object)
-
-            new_object = RPGObject3D(type=otype,
-                                     name=Objects.WALL,
-                                     opos=(12 * obj_size,
-                                           y * obj_size,
-                                           z),
-                                     osize=(obj_size, obj_size, 1))
-
-            self.add_object3D(new_object)
-
-
-
-            # self.add_object(new_object, 0, y * obj_size, 19)
-            # self.add_object(new_object, 12 * obj_size, y * obj_size, 19)
-            # self.add_object(new_object, 20 * obj_size, y * obj_size, 19)
-        #
-        # # Add horizontal walls
-        # new_object = Object3D(0, obj_size, random.choice(World3D.HEADINGS))
-        # for x in range(0,30):
-        #     self.add_object(new_object, x * obj_size, 0,  19)
-        #     self.add_object(new_object, x * obj_size, 12 * obj_size, 19)
-        #     self.add_object(new_object, x * obj_size, 20 * obj_size, 19)
 
     def move_player(self, vector):
 
         dx, dy, dz = vector
-
-        # if self.state == World3D.PLAYER_FALLING:
-        #     dx = dy = 0
-        #     vector = (0,0,dz)
 
         selected_player = self.player
 
@@ -637,6 +504,15 @@ class World3D:
                 # Adjust the plane data to reflect new position
                 self.delete_object3D(self.player, self.player._old_z)
                 self.add_object3D(self.player, do_copy=False)
+
+    def move_player_to_xyz(self, xyz):
+
+        x,y,z = xyz
+
+        if self.is_valid_xyz(x,y,z):
+            self.delete_object3D(self.player)
+            self.player.set_pos((x,y,z))
+            self.add_object3D(self.player, do_copy=False)
 
     def get_player_xyz(self):
         return self.player.xyz
