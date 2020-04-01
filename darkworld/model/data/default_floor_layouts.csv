@@ -28,7 +28,7 @@ ID,Name,Layer,Layout
 1,World1,149,######             #
 1,World1,149,#    #   #         #
 1,World1,149,#    #####         #
-1,World1,149,#  ^     #  $      #
+1,World1,149,#  ^     #  $     c#
 1,World1,149,# ^K^             ##
 1,World1,149,#            #######
 1,World1,149,#            #    ##
@@ -146,7 +146,7 @@ ID,Name,Layer,Layout
 1,World1,49,                    
 1,World1,49,      #####         
 1,World1,49,     ##b b##        
-1,World1,49,     #p    #        
+1,World1,49,     #     #        
 1,World1,49,     #     #        
 1,World1,49,     #     #        
 1,World1,49,     ##^ ^##        
@@ -180,7 +180,7 @@ ID,Name,Layer,Layout
 2,World2,200,FFFFFFFFFFFFFFFFFFFF
 2,World2,200,FFFFFFFFFFFFFFFFFFFF
 2,World2,199,####################
-2,World2,199,#n                 #
+2,World2,199,#n                k#
 2,World2,199,#                  #
 2,World2,199,#                  #
 2,World2,199,#                  #
@@ -197,7 +197,7 @@ ID,Name,Layer,Layout
 2,World2,199,#                  #
 2,World2,199,#                  #
 2,World2,199,#                p #
-2,World2,199,#                  #
+2,World2,199,#K                 #
 2,World2,199,####################
 3,World3,200,FFFFFFFFFFFFFFFFFFFF
 3,World3,200,FFFFFFFFFFFFFFFFFFFF
@@ -220,7 +220,7 @@ ID,Name,Layer,Layout
 3,World3,200,FFFFFFFFFFFFFFFFFFFF
 3,World3,200,FFFFFFFFFFFFFFFFFFFF
 3,World3,199,####################
-3,World3,199,#n                 #
+3,World3,199,#n                k#
 3,World3,199,#                  #
 3,World3,199,#                  #
 3,World3,199,#                  #
@@ -237,5 +237,5 @@ ID,Name,Layer,Layout
 3,World3,199,#                  #
 3,World3,199,#                  #
 3,World3,199,#                p #
-3,World3,199,#                  #
+3,World3,199,#K                 #
 3,World3,199,####################

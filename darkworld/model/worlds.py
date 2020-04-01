@@ -16,10 +16,13 @@ class RPGObject3D(object):
                  osize=(1, 1, 1),
                  solid: bool = True,
                  visible: bool = True,
-                 interactable: bool = False):
+                 interactable: bool = False,
+                 collectable:bool = False,
+                 state = None):
 
         self.name = name
         self.type = type
+        self.state = state
 
         # Position and size
         ox, oy, oz = opos
@@ -33,6 +36,7 @@ class RPGObject3D(object):
         self.is_solid = solid
         self.is_visible = visible
         self.is_interactable = interactable
+        self.is_collectable = collectable
 
     def __str__(self):
         return "{0} type({1}) pos({2})".format(self.name, self.type, self.xyz)
@@ -159,7 +163,7 @@ class WorldBuilder():
         # - player exit pos
 
         new_world_id = 1
-        new_world_properties = ("The Trial", "default", (256,192,0),(100, 562, 120))
+        new_world_properties = ("Welcome World", "default", (224, 254, 49),(100, 562, 120))
         self.world_properties[new_world_id] = new_world_properties
 
         new_world_id = 2
@@ -278,7 +282,8 @@ class WorldObjectLoader():
                                          osize = (int(row.get("width")), int(row.get("depth")),int(row.get("height"))), \
                                          solid=WorldObjectLoader.BOOL_MAP[row.get("solid").upper()], \
                                          visible=WorldObjectLoader.BOOL_MAP[row.get("visible").upper()], \
-                                         interactable=WorldObjectLoader.BOOL_MAP[row.get("interactable").upper()]
+                                         interactable=WorldObjectLoader.BOOL_MAP[row.get("interactable").upper()],
+                                         collectable=WorldObjectLoader.BOOL_MAP[row.get("collectable").upper()]
                                          )
 
 
@@ -348,8 +353,8 @@ class World3D:
         self.state = World3D.PLAYER_MOVING
 
         self.objects = []
-
         self.planes = {}
+        self.switches = {}
 
         self.player = None
 
@@ -460,7 +465,7 @@ class World3D:
         # If we succeeded in moving planes...
         if selected_player.has_changed_planes() is True:
 
-            print("Player has changed planes from {0} to {1}".format(self.player.z, self.player._old_z))
+            #print("Player has changed planes from {0} to {1}".format(self.player.z, self.player._old_z))
 
             # Get the objects for the new plane
             new_plane = selected_player.z

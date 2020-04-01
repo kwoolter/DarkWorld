@@ -17,6 +17,7 @@ class DWModel():
         self.current_world_id = -1
 
         self.player = None
+        self.inventory = {}
 
     def initialise(self):
         print("Initialising {0}:{1}".format(self.name, __class__))
@@ -37,6 +38,8 @@ class DWModel():
     def print(self):
         print("Printing {0} model...".format(self.name))
         print("Player currently at {0}".format(self.player.xyz))
+        for obj, count in self.inventory.items():
+            print("Carrying {0} x {1}".format(obj,count))
         self.world.print()
 
 
@@ -70,16 +73,22 @@ class DWModel():
         for object in touching_objects:
 
             if object.name == Objects.EXIT_NEXT:
+                req_obj = Objects.BOSS_KEY
                 if self.world.player.is_inside(object):
-                    print("Going to next world...")
-                    self.move_world(self.current_world_id + 1)
-                    print(str(self.world))
+                    if self.have_object(req_obj) is True:
+                        print("Using {0} to go to next world...".format(req_obj))
+                        if self.move_world(self.current_world_id + 1) is True:
+                            self.use_object(req_obj)
+                            print(str(self.world))
+                    else:
+                        print("You don't have required object {0}".format(req_obj))
 
             elif object.name == Objects.EXIT_PREVIOUS:
                 if self.world.player.is_inside(object):
-                    print("Going to previous world...")
-                    self.move_world(self.current_world_id - 1)
-                    print(str(self.world))
+                    print("Going back to previous world...")
+                    if self.move_world(self.current_world_id - 1) is True:
+                        self.use_object(Objects.BOSS_KEY, count=-1)
+                        print(str(self.world))
 
             elif object.name == Objects.HOLE:
                 print("Falling...")
@@ -104,12 +113,50 @@ class DWModel():
                     if self.world.player.is_inside(object):
                         print("Teleporting...")
                         self.world.move_player_to_start()
+
+                elif object.name == Objects.TREASURE_CHEST:
+                    req_obj = Objects.KEY
+                    if self.have_object(req_obj) is True:
+                        print("Using {0} to open chest...".format(req_obj))
+                        self.use_object(req_obj)
+                        self.swap_object(object, Objects.TREASURE)
+
+                    else:
+                        print("You don't have required object {0}".format(req_obj))
                 else:
+                    self.collect_object(object)
                     self.world.delete_object3D(object)
 
 
+    def collect_object(self, new_object):
+        if new_object.is_collectable is True:
+            if new_object.name not in self.inventory.keys():
+                self.inventory[new_object.name] = 0
+            self.inventory[new_object.name] += 1
+
+    def have_object(self, object_name : str):
+        have = False
+
+        if object_name in self.inventory.keys() and self.inventory[object_name] > 0:
+            have = True
+
+        return have
+
+    def use_object(self, object_name : str, count = 1):
+        if object_name in self.inventory.keys():
+                self.inventory[object_name] -= count
+
+    def swap_object(self, old_object, new_object_name):
+
+        xyz = old_object.xyz
+        new_object = WorldObjectLoader.get_object_copy_by_name(new_object_name)
+        new_object.set_pos(xyz)
+        self.world.add_object3D(new_object)
+        self.world.delete_object3D(old_object)
 
     def move_world(self, new_world_id : int):
+
+        moved = False
 
         print("Moving from world {0} to world {1}".format(self.current_world_id, new_world_id))
 
@@ -126,10 +173,11 @@ class DWModel():
             self.world = new_world
             self.world.add_player(self.player, start_pos = (self.current_world_id < new_world_id))
             self.current_world_id = new_world_id
+            moved = True
         else:
             print("Can't find new world {0}".format(new_world_id))
 
-
+        return moved
 
 
     def end(self):

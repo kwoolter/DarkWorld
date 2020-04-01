@@ -26,6 +26,7 @@ class ImageManager:
 
     image_cache = {}
     skins = {}
+    sprite_sheets = {}
     initialised = False
 
     def __init__(self):
@@ -34,20 +35,47 @@ class ImageManager:
     def initialise(self):
         if ImageManager.initialised is False:
             self.load_skins()
+            self.load_sprite_sheets()
 
     def get_image(self, image_file_name: str, width: int = 32, height: int = 32):
 
+        # if image_file_name not in ImageManager.image_cache.keys():
+
+            # filename = ImageManager.RESOURCES_DIR + image_file_name
+            # try:
+            #     logging.info("Loading image {0}...".format(filename))
+            #     #image = pygame.image.load(filename).convert_alpha()
+            #     image = pygame.image.load(filename).convert()
+            #     #image = pygame.transform.scale(original_image, (width, height))
+            #     ImageManager.image_cache[image_file_name] = image
+            #     logging.info("Image {0} loaded and cached.".format(filename))
+            #     print("loading img")
+            #
+            # except Exception as err:
+            #     print(str(err))
+
         if image_file_name not in ImageManager.image_cache.keys():
 
-            filename = ImageManager.RESOURCES_DIR + image_file_name
-            try:
+            if image_file_name in self.sprite_sheets.keys():
+                file_name, rect = self.sprite_sheets[image_file_name]
+                filename = ImageManager.RESOURCES_DIR + file_name
+                logging.info("Loading image {0} from {1} at {2}...".format(image_file_name, filename, rect))
+
+                image_sheet = spritesheet(filename)
+                original_image = image_sheet.image_at(rect)
+            else:
+                filename = ImageManager.RESOURCES_DIR + image_file_name
                 logging.info("Loading image {0}...".format(filename))
-                #original_image = pygame.image.load(filename).convert_alpha()
-                image = pygame.image.load(filename).convert()
+                image_sheet = spritesheet(filename)
+                original_image = image_sheet.image_at()
+
+            try:
+
                 #image = pygame.transform.scale(original_image, (width, height))
-                ImageManager.image_cache[image_file_name] = image
-                logging.info("Image {0} loaded and cached.".format(filename))
-                print("loading img")
+
+                ImageManager.image_cache[image_file_name] = original_image
+                logging.info("Image {0} loaded and scaled to {1}x{2} and cached.".format(filename, width, height))
+                print("Image {0} loaded and scaled to {1}x{2} and cached.".format(filename, width, height))
 
             except Exception as err:
                 print(str(err))
@@ -64,12 +92,14 @@ class ImageManager:
             model.Objects.BLOCK1: "block1.png",
             model.Objects.BLOCK2: "block2.png",
             model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
+            #model.Objects.PLAYER: ("man_0.png", "man_1.png"),
             model.Objects.TREASURE: "treasure.png",
-            model.Objects.TREASURE_CHEST: "treasure_chest2.png",
+            model.Objects.TREASURE_CHEST: "treasure_chest.png",
             model.Objects.TRAP: "trap.png",
             model.Objects.KEY: "key2.png",
             model.Objects.BOSS_KEY: "key4.png",
             model.Objects.TILE1: "tile4.png",
+            #model.Objects.TILE1: "brick2.png",
             model.Objects.TILE2: "tile2.png",
             model.Objects.TILE3: "tile3.png",
             model.Objects.TELEPORT: ("teleport_00.png","teleport_01.png","teleport_02.png"),
@@ -87,8 +117,8 @@ class ImageManager:
         new_skin_name = "test"
         new_skin = (new_skin_name, {
 
-            model.Objects.WALL: "wall2.png",
-            model.Objects.FAKE_WALL: "wall2.png",
+            model.Objects.WALL: "brick2.png",
+            model.Objects.FAKE_WALL: "brick2.png",
             model.Objects.TILE1: "tile4.png",
         })
 
@@ -126,6 +156,12 @@ class ImageManager:
 
         return image
 
+    def load_sprite_sheets(self):
+
+        sheet_file_name = "brick_tiles_1.png"
+        for i in range(0, 5):
+            self.sprite_sheets["brick{0}.png".format(i)] = (sheet_file_name, (i * 33 + 1, 1, 32, 32))
+
 
 class View():
     image_manager = ImageManager()
@@ -159,10 +195,12 @@ class DWMainFrame(View):
 
         self.model = model
         self.surface = None
-        self.width = 800
-        self.height = 800
+        self.width = 600
+        self.height = 600
 
-        self.floor_view = DWFloorView(self.model, (0,0,-350), (2000,2000,500))
+        # Create a view for rendering the model of the current world
+        # Define how far away the camera is allowed to follow the player by setting min and max positions
+        self.world_view = DWWorldView(self.model, min_view_pos = (200, 200, -350), max_view_pos = (440, 440, 400))
 
 
     def initialise(self):
@@ -186,24 +224,24 @@ class DWMainFrame(View):
         except Exception as err:
             print(str(err))
 
-        self.floor_view.initialise()
+        self.world_view.initialise()
 
     def print(self):
 
         print("Printing Dark Work view...")
-        self.floor_view.print()
+        self.world_view.print()
 
     def draw(self):
 
-        self.surface.fill((255,0,255))
+        # self.surface.fill((255,0,255))
 
         pane_rect = self.surface.get_rect()
 
         x = 0
-        y = 20
+        y = 0
 
-        self.floor_view.draw()
-        self.surface.blit(self.floor_view.surface, (x, y))
+        self.world_view.draw()
+        self.surface.blit(self.world_view.surface, (x, y))
 
     def update(self):
         pygame.display.update()
@@ -212,20 +250,20 @@ class DWMainFrame(View):
         pygame.quit()
 
     def tick(self):
-        self.floor_view.tick()
+        self.world_view.tick()
 
     def move_view(self, direction):
 
-        self.floor_view.move_view(direction)
+        self.world_view.move_view(direction)
 
 
-class DWFloorView(View):
+class DWWorldView(View):
 
     RESOURCES_DIR = os.path.dirname(__file__) + "\\resources\\"
 
     def __init__(self, model : model.DWModel, min_view_pos, max_view_pos, view_pos = None):
 
-        super(DWFloorView, self).__init__()
+        super(DWWorldView, self).__init__()
 
         # Connect to the model
         self.model = model
@@ -233,14 +271,14 @@ class DWFloorView(View):
         self.surface = None
 
         #  How big a view are we going to render?
-        self.width = 800
-        self.height = 800
+        self.width = 600
+        self.height = 600
 
         # How far away from the camera are we rendering objects?
         self.depth = 400
 
         # How far above the player is the camera?
-        self.camera_distance = -10
+        self.camera_distance = -20
 
         self.view_padding = 0
 
@@ -261,7 +299,7 @@ class DWFloorView(View):
 
     def initialise(self):
 
-        super(DWFloorView, self).initialise()
+        super(DWWorldView, self).initialise()
 
         print("Initialising {0}".format(__class__))
         self.surface = pygame.Surface((self.width, self.height))
@@ -274,9 +312,10 @@ class DWFloorView(View):
 
     def draw(self):
 
+        # Get what skin we are using for the world that we are drawing
         self.skin = self.model.world.skin
 
-        self.surface.fill(Colours.BLACK)
+        self.surface.fill(Colours.DARK_GREY)
 
         # Find out where the player currently is
         vx,vy,vz = self.model.world.get_player_xyz()
@@ -285,36 +324,52 @@ class DWFloorView(View):
         # Move the camera relative to the players position
         vz += self.camera_distance
 
-        # Set the view at the poisiton
+        # Set the view at the position
         self.set_view((vx,vy,vz))
 
         # Get the visible objects at this view point from the model
         objs = self.m2v.get_object_list(self.view_pos, self.width, self.height, self.depth)
 
-        # Draw visible objects in reverse order by distance
+        # Draw visible objects in reverse order by distance from the camera
         distance = sorted(list(objs.keys()), reverse=True)
+
+        # For each plane away from the camera...
         for d in distance:
+
             objs_at_d = objs[d]
+
+            # For each object found in that plane...
             for pos, obj in objs_at_d:
 
-                x, y, z = pos
-
-                size = int(obj.rect.width * self.object_size_scale * (1 - d / self.object_distance_scale))
-
+                # Get the image for the object based on the object's name
                 image = View.image_manager.get_skin_image(obj.name,
                                                           skin_name=self.skin,
                                                           tick=self.tick_count)
 
+                # If we got an image...
                 if image is not None:
-                    image = pygame.transform.scale(image ,(size, size))
 
+                    # Get the object's position in the view
+                    x, y, z = pos
+
+                    # Scale the object based on the size of the object and how far away from the camera it is
+                    size_adj = self.object_size_scale * (1 - d / self.object_distance_scale)
+                    size_w = int(obj.rect.width * size_adj)
+                    size_h = int(obj.rect.height * size_adj)
+                    image = pygame.transform.scale(image ,(size_w, size_h))
+
+                    # Change the image's transparency based on how far away from the player's plane it is
+                    # Player's plane = opaque (alpha = 255)
+                    # Between player and camera - increasing transparency the closer to the camera you get
+                    # Beyond the player's plane - increasing levels of transparency
                     alpha = 255 * (1 - min((abs(pz-d-vz)*20/self.m2v.infinity, 1)))
                     image.set_alpha(alpha)
 
-                    self.surface.blit(image, (int(x * self.object_size_scale), int(y * self.object_size_scale), size, size))
+                    # Blit the object image at the appropriate place and size
+                    self.surface.blit(image, (int(x * self.object_size_scale), int(y * self.object_size_scale), size_w, size_h))
 
         # Draw cross hair
-        cross_hair_size = 0.15
+        # cross_hair_size = 0.15
         #pygame.draw.circle(self.surface, Colours.WHITE, (int(self.width / 2), int(self.height / 2)), 10, 1)
         # pw = self.model.world.player.rect.width/2
         # ph = self.model.world.player.rect.height/2
@@ -337,6 +392,7 @@ class DWFloorView(View):
                  bkg=Colours.DARK_GREY)
 
     def set_view(self, new_view_pos):
+        # Set the position of the camera applying the minimum and maximum constraints of where is is allowed to go
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
 
     def move_view(self, direction):
@@ -346,6 +402,9 @@ class DWFloorView(View):
 
 
 class ModelToView3D():
+    """
+    This class is a helper class that takes a 3D world and renders it onto a 2D plane
+    """
 
     PERSPECTIVE = "perspective"
     PARALLEL = "parallel"
@@ -356,50 +415,55 @@ class ModelToView3D():
         self.model = model
 
         # How far away is infinity so we can calculate perspective?
-        self.infinity = 1000
+        self.infinity = 1300
 
-        # How much space around the view so we want to add extra objects?
+        # How much space around the view do we want to add extra objects?
         self.view_padding = 256
 
-        #  Add perspective to the positiojn of objects in the view
+        #  Add perspective to the position of objects in the view
         self.projection = ModelToView3D.PERSPECTIVE
 
     def get_object_list(self, view_pos, view_width, view_height, view_depth):
 
+        # List for holding the objects that will be visible and whgere they are positions relative to the camera
         objects = {}
 
         vx, vy, vz = view_pos
 
+        # for each plane in the model world...
         for z in self.model.world.planes.keys():
 
+            # Get the list of objects from the model that are at this plane...
             objects_at_z = self.model.world.planes[z]
 
+            # For each object in the list...
             for obj in objects_at_z:
 
+                # Calculate where the object's position is relative to the current camera view point
                 ox,oy,oz = obj.xyz
-
-                # Calculate where the object is versus the current view point
                 od = oz - vz
                 ow = ox - vx
                 oh = oy - vy
 
-                # filter out objects that don't fit into the current view.
-                if od <= 0 or \
+                # filter out objects that don't fit into the current camera view size (h, w, d)
+                if od < 0 or \
                         od > view_depth\
                         or abs(ow) > (view_width + self.view_padding) / 2\
                         or abs(oh) > (view_height + self.view_padding) / 2:
                     pass
+                # If the object fits into the current view...
                 else:
 
                     # If we don't have a list of objects at this distance then create an empty one
                     if od not in objects.keys():
                         objects[od] = []
 
-                    # Add ((x,y,z), obj)) to list of objects at this distance where x,y,x is the adjusted view position
-                    objects[od].append((
-                        (int(ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_width / 2),
-                         int(oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE))) + int(view_height / 2),
-                         od), obj))
+                    # Add the object's adjusted position and the object itself to our collection of objects in this plane
+                    objects[od].append(((
+                            ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE)) + (view_width / 2),
+                            oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE)) + (view_height / 2),
+                            od),
+                        obj))
 
         return objects
 

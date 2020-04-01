@@ -40,7 +40,7 @@ class DWController:
 
         pygame.time.set_timer(USEREVENT + 1, 5)
         pygame.time.set_timer(USEREVENT + 2, 300)
-        pygame.event.set_allowed([QUIT, KEYDOWN, USEREVENT])
+        pygame.event.set_allowed([QUIT, KEYDOWN, KEYUP, USEREVENT])
 
         loop = True
 
@@ -76,9 +76,13 @@ class DWController:
 
                         self.m.tick()
 
-
                     except Exception as err:
                         print(str(err))
+
+                elif event.type == KEYUP:
+                    if event.key == K_SPACE:
+                        print("interact")
+                        self.m.interact()
 
                 elif event.type == QUIT:
                     loop = False
@@ -113,8 +117,6 @@ class DWController:
                 self.v.print()
                 self.m.print()
 
-            elif keys[K_SPACE]:
-                self.m.interact()
 
             self.v.draw()
             self.v.update()

@@ -23,4 +23,6 @@ class Objects:
     SWITCH_OFF = "swicth off"
     SWITCH_ON = "switch on"
     SWITCH_TILE = "switch tile"
+    LIQUID1 = "liquid1"
+    LIQUID2 = "liquid2"
 
