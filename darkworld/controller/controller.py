@@ -34,11 +34,13 @@ class DWController:
         self.m.print()
         self.v.print()
 
+        self.move_speed = 2
+
         os.environ["SDL_VIDEO_CENTERED"] = "1"
 
         FPSCLOCK = pygame.time.Clock()
 
-        pygame.time.set_timer(USEREVENT + 1, 5)
+        pygame.time.set_timer(USEREVENT + 1, 20)
         pygame.time.set_timer(USEREVENT + 2, 300)
         pygame.event.set_allowed([QUIT, KEYDOWN, KEYUP, USEREVENT])
 
@@ -83,6 +85,9 @@ class DWController:
                     if event.key == K_SPACE:
                         print("interact")
                         self.m.interact()
+                    elif event.key == K_F12:
+                        self.v.print()
+                        self.m.print()
 
                 elif event.type == QUIT:
                     loop = False
@@ -94,29 +99,24 @@ class DWController:
             keys = pygame.key.get_pressed()
             if keys[K_LEFT]:
 
-                self.m.move_player(np.array(model.World3D.WEST) * 2)
+                self.m.move_player(np.array(model.World3D.WEST) * self.move_speed)
             elif keys[K_RIGHT]:
 
-                self.m.move_player(np.array(model.World3D.EAST) * 2)
+                self.m.move_player(np.array(model.World3D.EAST) * self.move_speed)
 
             if keys[K_UP]:
 
-                self.m.move_player(np.array(model.World3D.DOWN) * 2)
+                self.m.move_player(np.array(model.World3D.DOWN) * self.move_speed)
             elif keys[K_DOWN]:
 
-                self.m.move_player(np.array(model.World3D.UP) * 2)
+                self.m.move_player(np.array(model.World3D.UP) * self.move_speed)
 
-            if keys[K_q]:
-
-                self.m.move_player(np.array(model.World3D.NORTH) * 1)
-            elif keys[K_e]:
-
-                self.m.move_player(np.array(model.World3D.SOUTH) * 1)
-
-            if keys[K_F12]:
-                self.v.print()
-                self.m.print()
-
+            # if keys[K_q]:
+            #
+            #     self.m.move_player(np.array(model.World3D.NORTH) * 1)
+            # elif keys[K_e]:
+            #
+            #     self.m.move_player(np.array(model.World3D.SOUTH) * 1)
 
             self.v.draw()
             self.v.update()

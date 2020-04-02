@@ -39,21 +39,6 @@ class ImageManager:
 
     def get_image(self, image_file_name: str, width: int = 32, height: int = 32):
 
-        # if image_file_name not in ImageManager.image_cache.keys():
-
-            # filename = ImageManager.RESOURCES_DIR + image_file_name
-            # try:
-            #     logging.info("Loading image {0}...".format(filename))
-            #     #image = pygame.image.load(filename).convert_alpha()
-            #     image = pygame.image.load(filename).convert()
-            #     #image = pygame.transform.scale(original_image, (width, height))
-            #     ImageManager.image_cache[image_file_name] = image
-            #     logging.info("Image {0} loaded and cached.".format(filename))
-            #     print("loading img")
-            #
-            # except Exception as err:
-            #     print(str(err))
-
         if image_file_name not in ImageManager.image_cache.keys():
 
             if image_file_name in self.sprite_sheets.keys():
@@ -87,6 +72,7 @@ class ImageManager:
         new_skin_name = ImageManager.DEFAULT_SKIN
         new_skin = (new_skin_name, {
 
+            model.Objects.EMPTY: None,
             model.Objects.WALL: "wall.png",
             model.Objects.FAKE_WALL: "wall.png",
             model.Objects.BLOCK1: "block1.png",
@@ -95,7 +81,10 @@ class ImageManager:
             #model.Objects.PLAYER: ("man_0.png", "man_1.png"),
             model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE_CHEST: "treasure_chest.png",
+            model.Objects.DOOR: "door.png",
+            model.Objects.DOOR_OPEN: "door_open.png",
             model.Objects.TRAP: "trap.png",
+            model.Objects.TRAP_DISABLE: "trap_disable.png",
             model.Objects.KEY: "key2.png",
             model.Objects.BOSS_KEY: "key4.png",
             model.Objects.TILE1: "tile4.png",
@@ -109,6 +98,8 @@ class ImageManager:
             model.Objects.SWITCH_TILE: None,
             model.Objects.SWITCH_OFF: "switch_off.png",
             model.Objects.SWITCH_ON: "switch_on.png",
+            model.Objects.LIQUID1: "liquid3.png",
+            model.Objects.LIQUID2: "liquid2.png",
 
         })
 
@@ -275,7 +266,7 @@ class DWWorldView(View):
         self.height = 600
 
         # How far away from the camera are we rendering objects?
-        self.depth = 400
+        self.depth = 60
 
         # How far above the player is the camera?
         self.camera_distance = -20
@@ -340,6 +331,11 @@ class DWWorldView(View):
 
             # For each object found in that plane...
             for pos, obj in objs_at_d:
+
+                # if obj.name == model.Objects.SWITCH_TILE:
+                #     obj = self.model.world.get_switch_object(obj, (512, 288, 109))
+
+                #obj = obj.get_current_object()
 
                 # Get the image for the object based on the object's name
                 image = View.image_manager.get_skin_image(obj.name,
