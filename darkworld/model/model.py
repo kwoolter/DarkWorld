@@ -28,7 +28,7 @@ class DWModel():
         self.world_factory.initialise()
         self.world = self.world_factory.get_world(self.current_world_id)
 
-        size = 32
+        size = 30
 
         self.player = RPGObject3D(type=7,
                                   name=Objects.PLAYER,
@@ -144,15 +144,17 @@ class DWModel():
                     else:
                         print("You don't have required object {0}".format(req_obj))
 
-                elif object.name == Objects.SWITCH_ON:
-                    self.swap_world_object(object, Objects.SWITCH_OFF)
-                    self.world.set_switch(object.name, False)
-                    print("Switching {0} OFF".format(object))
+                elif object.is_switch is True:
+                    self.world.set_switch_object(object)
 
-                elif object.name == Objects.SWITCH_OFF:
-                    self.swap_world_object(object, Objects.SWITCH_ON)
-                    self.world.set_switch(object.name, True)
-                    print("Switching {0} ON".format(object))
+                    print("Switching {0}".format(object))
+
+                # elif object.name == Objects.SWITCH_2:
+                #     #self.swap_world_object(object, Objects.SWITCH_ON)
+                #     #self.world.set_switch(object.name, True)
+                #     self.world.set_object_switch(object)
+                #     #self.world.swap_objects_by_name(Objects.TILE1, Objects.SWITCH_TILE)
+                #     print("Switching {0}".format(object))
 
                 else:
                     self.collect_inventory_object(object)

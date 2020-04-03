@@ -11,8 +11,8 @@ from .objects import Objects
 
 class RPGObject3D(object):
 
-    TOUCH_FIELD_X = 3
-    TOUCH_FIELD_Y = 3
+    TOUCH_FIELD_X = 4
+    TOUCH_FIELD_Y = 4
 
     def __init__(self, name: str,
                  type: int = 0,
@@ -23,8 +23,10 @@ class RPGObject3D(object):
                  interactable: bool = False,
                  collectable: bool = False,
                  switchable: bool = False,
+                 switch = False,
                  state=None):
 
+        self.tick_count = 0
         self.name = name
         self.type = type
         self.state = state
@@ -45,10 +47,16 @@ class RPGObject3D(object):
         self.is_visible = visible
         self.is_interactable = interactable
         self.is_collectable = collectable
+        self.is_switch = switch
         self.is_switchable = switchable
+
 
     def __str__(self):
         return "{0} type({1}) pos({2})".format(self.name, self.type, self.xyz)
+
+    def tick(self):
+        self.tick_count += 1
+        print("{0} ticked to {1}".format(self.name, self.tick_count))
 
     def get_current_object(self):
         return self
@@ -166,18 +174,59 @@ class SwitchGroup:
     AND = "and"
     OR = "or"
 
-    def __init__(self, name: str, type=AND):
+    def __init__(self, name: str, from_object_name : str = None, to_object_name : str = None, type=AND):
 
         self.name = name
+        self._old_output = None
+        self.outputs = { False:from_object_name, True: to_object_name, None : "????" }
         self.type = type
-        self.switches = []
+        self.switches = {}
 
-    def add_switch(self, new_switch):
+    def set_from_to(self, from_object_name : str, to_object_name : str):
+        self.outputs[False] = from_object_name
+        self.outputs[True] = to_object_name
 
-        self.switches.append(new_switch)
+    def has_changed_state(self):
+        new_state = self.output()
+        if self._old_output != new_state:
+            return True
+        else:
+            return False
 
-    def add_switchable_object(self, new_object: SwitchableObject):
-        pass
+    def add_switch(self, new_switch, value : bool = False):
+
+        new_switch_id = str(new_switch.xyz)
+
+        if value not in (True, False):
+            value = False
+
+        if new_switch_id not in self.switches.keys():
+            self.switch(new_switch, value)
+        else:
+            pass
+            print("Already got switch with id = {0}".format(new_switch_id))
+
+    def remove_switch(self, old_switch):
+
+        old_switch_id = str(old_switch.xyz)
+
+        if old_switch_id in self.switches.keys():
+            del self.switches[old_switch_id]
+
+    def switch(self, switch, value = None):
+        switch_id = str(switch.xyz)
+
+        self._old_output = self.output()
+
+        if switch_id not in self.switches.keys():
+            self.switches[switch_id] = False
+
+        if value is None:
+            self.switches[switch_id] = not self.switches[switch_id]
+        else:
+            self.switches[switch_id] = value
+
+        return self.output()
 
     def output(self):
 
@@ -185,9 +234,9 @@ class SwitchGroup:
         or_result = False
         and_result = True
 
-        for switch in self.switches:
-            or_result = or_result or switch.state
-            and_result = and_result and switch.state
+        for switch_state in self.switches.values():
+            or_result = or_result or switch_state
+            and_result = and_result and switch_state
 
         if self.type == SwitchGroup.AND:
             result = and_result
@@ -198,11 +247,12 @@ class SwitchGroup:
         return result
 
     def print(self):
-        print("Switch group {0}: type=({1}), switches={2}, output={3}".format(self.name,
+        print("Switch group name='{0}': type=({1}), switches={2}, output={3}".format(self.name,
                                                                               self.type,
-                                                                              len(self.switches),
+                                                                              len(self.switches.keys()),
                                                                               self.output()))
 
+        print("swithes:{0}".format(str(self.switches.values())))
 
 class WorldBuilder():
     FLOOR_LAYOUT_FILE_NAME = "_floor_layouts.csv"
@@ -236,21 +286,22 @@ class WorldBuilder():
         # - skin name
         # - player start pos
         # - player exit pos
-        # - switch -> swap tiles mapping
+        # - switch groups
 
-        switch_tiles = {(512, 288, 109): {Objects.SWITCH_TILE: (Objects.TILE2, Objects.TILE1)}}
-        switch_tiles = {(512, 288, 109): {Objects.SWITCH_TILE: (Objects.EMPTY, Objects.TILE3)}}
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR),
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.AND)}
 
         new_world_id = 1
-        new_world_properties = ("Welcome World", "default", (224, 254, 0), (100, 562, 120), switch_tiles)
+        new_world_properties = ("Welcome World", "default", (224, 254, 0), (102, 244, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         new_world_id = 2
-        new_world_properties = ("The Test", "test", (504, 558, 150), (104, 48, 170), switch_tiles)
+        new_world_properties = ("The Test", "test", (504, 558, 150), (104, 48, 170), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         new_world_id = 3
-        new_world_properties = ("The Next Test", "test", (504, 558, 150), (50, 100, 170), switch_tiles)
+        new_world_properties = ("The Next Test", "test", (504, 558, 150), (50, 100, 170), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         for id in self.world_properties.keys():
@@ -363,7 +414,8 @@ class WorldObjectLoader():
                                          visible=WorldObjectLoader.BOOL_MAP[row.get("visible").upper()], \
                                          interactable=WorldObjectLoader.BOOL_MAP[row.get("interactable").upper()],
                                          collectable=WorldObjectLoader.BOOL_MAP[row.get("collectable").upper()],
-                                         switchable=WorldObjectLoader.BOOL_MAP[row.get("switchable").upper()]
+                                         switchable=WorldObjectLoader.BOOL_MAP[row.get("switchable").upper()],
+                                         switch=WorldObjectLoader.BOOL_MAP[row.get("switch").upper()]
                                          )
 
                 # Store the floor object in the code cache
@@ -421,6 +473,7 @@ class World3D:
 
     def __init__(self, name: str = "default", w: int = 100, h: int = 100, d: int = 100):
 
+        # World propoerties
         self.name = name
         self.skin = "default"
         self.player_start_pos = (0, 0, 0)
@@ -430,10 +483,8 @@ class World3D:
         self.depth = d
         self.state = World3D.PLAYER_MOVING
 
-        self.objects = []
+        # World contents
         self.planes = {}
-        self.switches = {}
-        self.switch_tiles = {}
         self.switch_groups = {}
 
         self.player = None
@@ -455,12 +506,9 @@ class World3D:
             if do_copy is True:
                 new_object = copy.deepcopy(new_object)
 
-            # If this new object is a switchable object...
-            if new_object.is_switchable is True:
-                new_switch_object = SwitchableObject(new_object, new_object)
-                if new_object.name not in self.switch_groups.keys():
-                    self.switch_groups[new_object.name] = SwitchGroup(new_object.name)
-                self.switch_groups[new_object.name].add_switch(new_object)
+            # If this new object is a switch object...
+            if new_object.is_switch is True:
+                self.add_switch_object(new_object)
 
             if z not in self.planes.keys():
                 self.planes[z] = []
@@ -481,38 +529,24 @@ class World3D:
             selected_plane = self.planes[z]
             if selected_object in selected_plane:
                 self.planes[z].remove(selected_object)
+                #del selected_object
         else:
             print("Can't delete object {0} at ({1},{2},{3})".format(str(selected_object), x, y, z))
 
     def add_switch_group(self, new_switch_group : SwitchGroup):
 
+        if new_switch_group.name in self.switch_groups.keys():
+            print("Already got a switch group with id {0}".format(new_switch_group.name))
+            new_switch_group.switches = copy.deepcopy(self.switch_groups[new_switch_group.name].switches)
+
         self.switch_groups[new_switch_group.name] = new_switch_group
 
-    def get_switch_object(self, switch_tile, switch_key):
+    def add_switch_object(self, new_object):
 
-        object = switch_tile
+        if new_object.name not in self.switch_groups.keys():
+            self.add_switch_group(SwitchGroup(name=new_object.name, from_object_name=new_object.name))
 
-        # If the switch_key is a valid key in this world...
-        # and the switch_key has a switch_ tile map...
-        # and the switch tile map has a mapping for the tile to be switched....
-        if switch_key in self.switches.keys() and \
-                switch_key in self.switch_tiles.keys() and \
-                switch_tile.name in self.switch_tiles[switch_key].keys():
-
-            switch_value = self.switches[switch_key]
-            switch_tiles_map = self.switch_tiles[switch_key][switch_tile.name]
-
-            if switch_value is True:
-                new_object_name = switch_tiles_map[1]
-            else:
-                new_object_name = switch_tiles_map[0]
-
-            if new_object_name == Objects.EMPTY:
-                object = None
-            else:
-                object = WorldObjectLoader.get_object_copy_by_name(new_object_name)
-
-        return object
+        self.switch_groups[new_object.name].add_switch(new_object)
 
     def add_player(self, new_player, start_pos: bool):
 
@@ -550,9 +584,17 @@ class World3D:
         # - skin name
         # - player start pos
         # - player exit pos
-        # - switches to switch tiles map
+        # - switch groups settings
+
         if world_properties is not None:
-            self.name, self.skin, self.player_start_pos, self.player_exit_pos, self.switch_tiles = world_properties
+            self.name, self.skin, self.player_start_pos, self.player_exit_pos, switch_group_settings = world_properties
+
+            for switch_id, settings in switch_group_settings.items():
+                from_object, to_object, type = settings
+                self.add_switch_group(SwitchGroup(name=switch_id,
+                                                  from_object_name=from_object,
+                                                  to_object_name=to_object,
+                                                  type = type))
 
     def move_player(self, vector):
 
@@ -702,25 +744,59 @@ class World3D:
 
         xyz = old_object.xyz
         new_object = WorldObjectLoader.get_object_copy_by_name(new_object_name)
+        new_object.is_switchable = True
         new_object.set_pos(xyz)
         self.add_object3D(new_object)
         self.delete_object3D(old_object)
 
+    def swap_objects_by_name(self, target_object_name : str, new_object_name : str):
+
+        # Collect the list of objects that need to be swapped
+        objects_to_swap = []
+        for plane in self.planes.values():
+            for obj in plane:
+                if obj.name == target_object_name and obj.is_switchable is True:
+                    objects_to_swap.append(obj)
+
+        # Swap each object that we found matching
+        for obj in objects_to_swap:
+            self.swap_object(obj, new_object_name)
+
+        print("{0} world objects swapped from {1} to {2}".format(len(objects_to_swap), target_object_name, new_object_name))
+
     def set_switch(self, switch_key, state=None):
+
+        output = None
 
         if switch_key in self.switch_groups.keys():
             if state is None:
-                self.switches[switch_key].switch()
+                output = self.switches[switch_key].switch()
             else:
-                self.switches[switch_key] = state
+                output = self.switches[switch_key] = state
+
+        return output
+
+    def set_switch_object(self, object, state=None):
+
+        object.tick()
+
+        if object.state is None:
+            object.state = False
+
+        if state is None:
+            object.state = not object.state
+        else:
+            object.state =  state
+
+        if object.name in self.switch_groups.keys():
+            switch_group = self.switch_groups[object.name]
+            output = switch_group.switch(object, state)
+            if switch_group.has_changed_state() is True:
+                print("swapping")
+                self.swap_objects_by_name(target_object_name=switch_group.outputs[not output], new_object_name = switch_group.outputs[output])
+
 
     def print(self):
-
-        for switch_key, setting in self.switches.items():
-            print("Switch ID={0} set to {1}".format(switch_key, setting))
-
-        for switch_key, switch_tiles in self.switch_tiles.items():
-            print("Switch ID={0}: switches {1}".format(switch_key, switch_tiles))
 
         for switch_group in self.switch_groups.values():
             switch_group.print()

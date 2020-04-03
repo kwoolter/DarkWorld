@@ -95,9 +95,10 @@ class ImageManager:
             model.Objects.HOLE: "down shoot.png",
             model.Objects.EXIT_NEXT: "exit_green.png",
             model.Objects.EXIT_PREVIOUS: "exit_red.png",
-            model.Objects.SWITCH_TILE: None,
-            model.Objects.SWITCH_OFF: "switch_off.png",
-            model.Objects.SWITCH_ON: "switch_on.png",
+            model.Objects.SWITCH_TILE1: None,
+            model.Objects.SWITCH_TILE2: None,
+            model.Objects.SWITCH_1: ("switch_off.png", "switch_on.png"),
+            model.Objects.SWITCH_2: ("switch_off.png", "switch_on.png"),
             model.Objects.LIQUID1: "liquid3.png",
             model.Objects.LIQUID2: "liquid2.png",
 
@@ -306,7 +307,7 @@ class DWWorldView(View):
         # Get what skin we are using for the world that we are drawing
         self.skin = self.model.world.skin
 
-        self.surface.fill(Colours.DARK_GREY)
+        self.surface.fill(Colours.BLACK)
 
         # Find out where the player currently is
         vx,vy,vz = self.model.world.get_player_xyz()
@@ -337,10 +338,15 @@ class DWWorldView(View):
 
                 #obj = obj.get_current_object()
 
+                if obj.name in (model.Objects.SWITCH_1, model.Objects.SWITCH_2):
+                    tick_count = obj.tick_count
+                else:
+                    tick_count = self.tick_count
+
                 # Get the image for the object based on the object's name
                 image = View.image_manager.get_skin_image(obj.name,
                                                           skin_name=self.skin,
-                                                          tick=self.tick_count)
+                                                          tick=tick_count)
 
                 # If we got an image...
                 if image is not None:

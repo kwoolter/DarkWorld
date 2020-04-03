@@ -21,8 +21,8 @@ ID,Name,Layer,Layout
 1,World1,150,FFFFFFFFFFFFFFFFFFFF
 1,World1,149,####################
 1,World1,149,#+   ##           ^#
-1,World1,149,#                 k#
-1,World1,149,#                  #
+1,World1,149,#     D           k#
+1,World1,149,#     #            #
 1,World1,149,#    ##     $  l   #
 1,World1,149,######             #
 1,World1,149,######             #
@@ -36,7 +36,7 @@ ID,Name,Layer,Layout
 1,World1,149,#      $LLL  # ^   #
 1,World1,149,#            D K^  #
 1,World1,149,#            # ^   #
-1,World1,149,#n          _#     #
+1,World1,149,#           _#     #
 1,World1,149,#           ###   ^#
 1,World1,149,####################
 1,World1,110,                    
@@ -47,7 +47,7 @@ ID,Name,Layer,Layout
 1,World1,110,        ffffffff    
 1,World1,110,        fff__fff    
 1,World1,110,       fff __ fff   
-1,World1,110,       fff ff fff   
+1,World1,110,       fff ~~ fff   
 1,World1,110,       fff ff fff   
 1,World1,110,           ff       
 1,World1,110,                    
@@ -61,8 +61,8 @@ ID,Name,Layer,Layout
 1,World1,110,                    
 1,World1,109,                    
 1,World1,109,         ######     
-1,World1,109,       ###    ###   
-1,World1,109,       #        #   
+1,World1,109,       ###S   ###   
+1,World1,109,       #       s#   
 1,World1,109,       #        #   
 1,World1,109,       #        #   
 1,World1,109,      ##        ##  
@@ -124,13 +124,13 @@ ID,Name,Layer,Layout
 1,World1,50,                    
 1,World1,50,                    
 1,World1,50,                    
-1,World1,50,                    
+1,World1,50,    **              
+1,World1,50, ****  ***          
+1,World1,50, **** *****         
+1,World1,50, **********         
+1,World1,50, **** *****         
+1,World1,50,    *  ***          
 1,World1,50,       ***          
-1,World1,50,      *****         
-1,World1,50,      *****         
-1,World1,50,      *****         
-1,World1,50,       ***          
-1,World1,50,       ***          
 1,World1,50,                    
 1,World1,50,                    
 1,World1,50,                    
@@ -144,11 +144,11 @@ ID,Name,Layer,Layout
 1,World1,49,                    
 1,World1,49,                    
 1,World1,49,                    
-1,World1,49,      #####         
-1,World1,49,     ##b b##        
-1,World1,49,     #     #        
-1,World1,49,     #     #        
-1,World1,49,     #     #        
+1,World1,49,     K#####         
+1,World1,49,###  ##b b##        
+1,World1,49,#n   #     #        
+1,World1,49,#    D     #        
+1,World1,49,###  #     #        
 1,World1,49,     ##^ ^##        
 1,World1,49,      #   #         
 1,World1,49,                    
@@ -159,6 +159,26 @@ ID,Name,Layer,Layout
 1,World1,49,                    
 1,World1,49,                    
 1,World1,49,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,     _____          
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
+1,World1,10,                    
 2,World2,200,FFFFFFFFFFFFFFFFFFFF
 2,World2,200,FFFFFFFFFFFFFFFFFFFF
 2,World2,200,FFFFFFFFFFFFFFFFFFFF

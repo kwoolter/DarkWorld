@@ -23,9 +23,10 @@ class Objects:
     HOLE = "hole"
     EXIT_NEXT = "exit_next"
     EXIT_PREVIOUS = "exit_previous"
-    SWITCH_OFF = "switch off"
-    SWITCH_ON = "switch on"
-    SWITCH_TILE = "switch tile"
+    SWITCH_1 = "switch 1"
+    SWITCH_2 = "switch 2"
+    SWITCH_TILE1 = "switch tile 1"
+    SWITCH_TILE2 = "switch tile 2"
     LIQUID1 = "liquid1"
     LIQUID2 = "liquid2"
 
