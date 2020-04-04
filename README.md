@@ -14,10 +14,10 @@ New RPG with *smooooth* movement and next generation graphics!
 <table>
 <tr>
 <td>
-<img height=300 width=370 src="https://github.com/kwoolter/Nimrod/blob/master/screenshots/Capture9.PNG" alt="game1">
+<img height=300 width=370 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Capture1.JPG" alt="game1">
 </td>
 <td>
-<img height=300 width=370 src="https://github.com/kwoolter/Nimrod/blob/master/screenshots/Capture10.PNG" alt="game2">
+<img height=300 width=370 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Capture2.JPG" alt="game2">
 </td>
 </tr>
 </table>
