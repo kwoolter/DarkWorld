@@ -35,7 +35,7 @@ class DWModel():
                                   opos=(size * 9, size * 9, 1),
                                   osize=(size, size, 1))
 
-        self.move_world(1)
+        self.move_world(2)
 
     def print(self):
         print("Printing {0} model...".format(self.name))
@@ -49,6 +49,7 @@ class DWModel():
         print("Default Game event process:{0}".format(new_event))
 
     def tick(self):
+        self.world.tick()
         self.tick_count += 1
         self.world.move_player(World3D.NORTH)
         if self.world.player.has_changed_planes() is True:

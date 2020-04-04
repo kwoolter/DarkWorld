@@ -56,7 +56,7 @@ class RPGObject3D(object):
 
     def tick(self):
         self.tick_count += 1
-        print("{0} ticked to {1}".format(self.name, self.tick_count))
+        #print("{0} ticked to {1}".format(self.name, self.tick_count))
 
     def get_current_object(self):
         return self
@@ -172,6 +172,7 @@ class SwitchableObject(RPGObject3D):
 
 class SwitchGroup:
     AND = "and"
+    AND_LINKED = "and linked"
     OR = "or"
 
     def __init__(self, name: str, from_object_name : str = None, to_object_name : str = None, type=AND):
@@ -226,6 +227,11 @@ class SwitchGroup:
         else:
             self.switches[switch_id] = value
 
+        if self.type == SwitchGroup.AND_LINKED:
+            value = self.switches[switch_id]
+            for switch_id in self.switches.keys():
+                self.switches[switch_id] = value
+
         return self.output()
 
     def output(self):
@@ -279,6 +285,7 @@ class WorldBuilder():
 
         self.load_world_properties()
 
+
     def load_world_properties(self):
 
         # World Properties:-
@@ -286,18 +293,18 @@ class WorldBuilder():
         # - skin name
         # - player start pos
         # - player exit pos
-        # - switch groups
+        # - switch group settings
 
         switch_groups = {
-            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR),
-            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.AND)}
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE3, SwitchGroup.OR),
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.AND)}
 
         new_world_id = 1
         new_world_properties = ("Welcome World", "default", (224, 254, 0), (102, 244, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         new_world_id = 2
-        new_world_properties = ("The Test", "test", (504, 558, 150), (104, 48, 170), switch_groups)
+        new_world_properties = ("The Test", "test", (560, 112, 0), (104, 48, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         new_world_id = 3
@@ -309,6 +316,30 @@ class WorldBuilder():
             world = self.get_world(id)
             if world is not None:
                 world.initialise(properties)
+
+        world = self.get_world(1)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
+        new_monster.set_pos((256, 320, 79))
+        world.add_monster(new_monster, World3D.DOWN)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
+        new_monster.set_pos((240, 416, 79))
+        world.add_monster(new_monster, World3D.EAST)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
+        new_monster.set_pos((120, 524, 149))
+        world.add_monster(new_monster, World3D.UP)
+
+        world = self.get_world(2)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
+        new_monster.set_pos((319, 400, 66))
+        world.add_monster(new_monster, World3D.DOWN)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
+        new_monster.set_pos((200, 544, 66))
+        world.add_monster(new_monster, World3D.WEST)
+
 
     def get_world(self, world_name: str):
         return self.world_layouts.get_world(world_name)
@@ -482,9 +513,11 @@ class World3D:
         self.height = h
         self.depth = d
         self.state = World3D.PLAYER_MOVING
+        self.tick_count = 0
 
         # World contents
         self.planes = {}
+        self.monsters = {}
         self.switch_groups = {}
 
         self.player = None
@@ -555,8 +588,24 @@ class World3D:
             self.move_player_to_xyz(self.player_start_pos)
         else:
             self.move_player_to_xyz(self.player_exit_pos)
-
         return
+
+    def add_monster(self, new_monster, move_vector):
+        self.monsters[new_monster] = move_vector
+        self.add_object3D(new_monster, do_copy=False)
+
+    def move_monsters(self, override_vector = None, reverse = True):
+
+        for monster in self.monsters.keys():
+            if override_vector is None:
+                vector = self.monsters[monster]
+            else:
+                vector = override_vector
+
+            self.move_object(monster, vector)
+            if monster.has_moved() is False and reverse is True:
+                self.monsters[monster] = np.multiply(vector, World3D.INVERSE)
+                #print("Change from {0} to {1}".format(vector, self.monsters[monster]))
 
     def delete_player(self):
 
@@ -584,7 +633,7 @@ class World3D:
         # - skin name
         # - player start pos
         # - player exit pos
-        # - switch groups settings
+        # - switch groups settings - ID, from, to, type
 
         if world_properties is not None:
             self.name, self.skin, self.player_start_pos, self.player_exit_pos, switch_group_settings = world_properties
@@ -596,18 +645,28 @@ class World3D:
                                                   to_object_name=to_object,
                                                   type = type))
 
+        self.print()
+
+
+    def tick(self):
+        self.tick_count += 1
+        #self.move_monsters(World3D.NORTH, reverse=False)
+        self.move_monsters()
+        #self.print()
+
     def move_player(self, vector):
+        self.move_object(self.player, vector)
+
+    def move_object(self, selected_object, vector):
 
         dx, dy, dz = vector
 
-        if len(self.touching_objects(self.player, distance = 0, filter=World3D.SLOW_TILES)) > 0:
+        if len(self.touching_objects(selected_object, distance = 0, filter=World3D.SLOW_TILES)) > 0:
             print("Hitting some slowing objects")
             dx = int(dx/2)
             dy = int(dy/2)
 
-        selected_player = self.player
-
-        new_plane = selected_player.z + dz
+        new_plane = selected_object.z + dz
         if new_plane in self.planes.keys():
             objects = self.planes[new_plane]
         else:
@@ -615,25 +674,25 @@ class World3D:
 
         # Are we attempting to change planes?
         if dz != 0:
-            selected_player.move(0, 0, dz)
+            selected_object.move(0, 0, dz)
 
-            if self.is_valid_pos(selected_player.xyz) is False:
-                selected_player.back()
-                print("DZ:Player {0} moving to {1} goes outside the world".format(self.player, vector))
+            if self.is_valid_pos(selected_object.xyz) is False:
+                selected_object.back()
+                #print("DZ:Object {0} moving to {1} goes outside the world".format(selected_object, vector))
             else:
                 for object in objects:
-                    if object.is_solid is True and object.is_colliding(selected_player):
-                        selected_player.back()
-                        # print("DZ:Player {0} collided with object {1}".format(self.player, str(object)))
+                    if object.is_solid is True and object.is_colliding(selected_object):
+                        selected_object.back()
+                        #print("DZ:Object {0} collided with object {1}".format(selected_object, str(object)))
                         break
 
         # If we succeeded in moving planes...
-        if selected_player.has_changed_planes() is True:
+        if selected_object.has_changed_planes() is True:
 
-            # print("Player has changed planes from {0} to {1}".format(self.player.z, self.player._old_z))
+            print("Object has changed planes from {0} to {1}".format(selected_object.z, selected_object._old_z))
 
             # Get the objects for the new plane
-            new_plane = selected_player.z
+            new_plane = selected_object.z
             if new_plane in self.planes.keys():
                 objects = self.planes[new_plane]
             else:
@@ -641,38 +700,41 @@ class World3D:
 
         # Are we attempting to change X position?
         if dx != 0:
-            selected_player.move(dx, 0, 0)
+            selected_object.move(dx, 0, 0)
 
-            if self.is_valid_pos(selected_player.get_pos()) is False:
-                selected_player.back()
+            if self.is_valid_pos(selected_object.get_pos()) is False:
+                selected_object.back()
             else:
                 for object in objects:
-                    if object.is_solid is True and object.is_colliding(selected_player):
-                        selected_player.back()
-                        # print("DX:Player {0} collided with object {1}".format(self.player, str(object)))
+                    if object.is_solid is True and object.is_colliding(selected_object):
+                        selected_object.back()
+                        #print("DX:Object {0} collided with object {1}".format(selected_object, str(object)))
                         break
 
         # Are we attempting to change Y position?
         if dy != 0:
-            selected_player.move(0, dy, 0)
+            selected_object.move(0, dy, 0)
 
-            if self.is_valid_pos(selected_player.get_pos()) is False:
-                selected_player.back()
+            if self.is_valid_pos(selected_object.get_pos()) is False:
+                selected_object.back()
             else:
                 for object in objects:
-                    if object.is_solid is True and object.is_colliding(selected_player):
-                        selected_player.back()
-                        # print("DY:Player {0} collided with object {1}".format(self.player, str(object)))
+                    if object.is_solid is True and object.is_colliding(selected_object):
+                        selected_object.back()
+                        #print("DY:Object {0} collided with object {1}".format(selected_object, str(object)))
                         break
 
         # did we move anywhere?
-        if self.player.has_moved() is True:
+        if selected_object.has_moved() is True:
 
             # If we succeeded in moving planes...
-            if selected_player.has_changed_planes() is True:
+            if selected_object.has_changed_planes() is True:
                 # Adjust the plane data to reflect new position
-                self.delete_object3D(self.player, self.player._old_z)
-                self.add_object3D(self.player, do_copy=False)
+                self.delete_object3D(selected_object, selected_object._old_z)
+                self.add_object3D(selected_object, do_copy=False)
+            else:
+                selected_object.tick()
+
 
     def move_player_to_xyz(self, xyz):
 
@@ -795,8 +857,10 @@ class World3D:
                 print("swapping")
                 self.swap_objects_by_name(target_object_name=switch_group.outputs[not output], new_object_name = switch_group.outputs[output])
 
-
     def print(self):
+
+        for monster, vector in self.monsters.items():
+            print("Monster {0} moving {1}".format(monster, vector))
 
         for switch_group in self.switch_groups.values():
             switch_group.print()

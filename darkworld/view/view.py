@@ -73,13 +73,18 @@ class ImageManager:
         new_skin = (new_skin_name, {
 
             model.Objects.EMPTY: None,
-            model.Objects.WALL: "wall.png",
+            model.Objects.WALL1: "winter_tiles0.png",
+            model.Objects.WALL2: "winter_tiles2.png",
+            model.Objects.WALL3: "winter_tiles3.png",
             model.Objects.FAKE_WALL: "wall.png",
             model.Objects.BLOCK1: "block1.png",
             model.Objects.BLOCK2: "block2.png",
             model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
-            #model.Objects.PLAYER: ("man_0.png", "man_1.png"),
-            model.Objects.TREASURE: "treasure.png",
+            model.Objects.MONSTER1: "bear.png",
+            model.Objects.MONSTER2: "winter_tiles0.png",
+            # model.Objects.PLAYER: ("man0.png", "man2.png", "man1.png", "man2.png"),
+            #model.Objects.TREASURE: "treasure.png",
+            model.Objects.TREASURE: ("token0.png", "token1.png", "token2.png", "token3.png"),
             model.Objects.TREASURE_CHEST: "treasure_chest.png",
             model.Objects.DOOR: "door.png",
             model.Objects.DOOR_OPEN: "door_open.png",
@@ -89,7 +94,7 @@ class ImageManager:
             model.Objects.BOSS_KEY: "key4.png",
             model.Objects.TILE1: "tile4.png",
             #model.Objects.TILE1: "brick2.png",
-            model.Objects.TILE2: "tile2.png",
+            model.Objects.TILE2: "tile10.png",
             model.Objects.TILE3: "tile3.png",
             model.Objects.TELEPORT: ("teleport_00.png","teleport_01.png","teleport_02.png"),
             model.Objects.HOLE: "down shoot.png",
@@ -109,7 +114,7 @@ class ImageManager:
         new_skin_name = "test"
         new_skin = (new_skin_name, {
 
-            model.Objects.WALL: "brick2.png",
+            model.Objects.WALL1: "brick2.png",
             model.Objects.FAKE_WALL: "brick2.png",
             model.Objects.TILE1: "tile4.png",
         })
@@ -155,6 +160,19 @@ class ImageManager:
             self.sprite_sheets["brick{0}.png".format(i)] = (sheet_file_name, (i * 33 + 1, 1, 32, 32))
 
 
+        sheet_file_name = "man_sheet.png"
+        for i in range(0, 3):
+            self.sprite_sheets["man{0}.png".format(i)] = (sheet_file_name, (i * 13, 0, 13, 10))
+
+        sheet_file_name = "token.png"
+        for i in range(0, 5):
+            self.sprite_sheets["token{0}.png".format(i)] = (sheet_file_name, (i * 8, 0, 8, 8))
+
+
+        sheet_file_name = "winter_sheet2.png"
+        for i in range(0, 5):
+            self.sprite_sheets["winter_tiles{0}.png".format(i)] = (sheet_file_name, (i * 119, 1, 96, 96))
+
 class View():
     image_manager = ImageManager()
 
@@ -187,12 +205,12 @@ class DWMainFrame(View):
 
         self.model = model
         self.surface = None
-        self.width = 600
-        self.height = 600
+        self.width = 1000
+        self.height = 1000
 
         # Create a view for rendering the model of the current world
         # Define how far away the camera is allowed to follow the player by setting min and max positions
-        self.world_view = DWWorldView(self.model, min_view_pos = (200, 200, -350), max_view_pos = (440, 440, 400))
+        self.world_view = DWWorldView(self.model, min_view_pos = (200, -200, -350), max_view_pos = (800, 800, 400))
 
 
     def initialise(self):
@@ -263,16 +281,15 @@ class DWWorldView(View):
         self.surface = None
 
         #  How big a view are we going to render?
-        self.width = 600
-        self.height = 600
+        self.object_size_scale = 1.0
+        self.width = 600 * self.object_size_scale
+        self.height = 600 * self.object_size_scale
 
         # How far away from the camera are we rendering objects?
         self.depth = 60
 
         # How far above the player is the camera?
-        self.camera_distance = -20
-
-        self.view_padding = 0
+        self.camera_distance = -15
 
         # What are the contraints to the view position
         self.max_view_pos = np.array(max_view_pos)
@@ -284,10 +301,9 @@ class DWWorldView(View):
         # Move the camera to the point
         self.set_view(view_pos)
 
-        self.object_size_scale = 1
-
         self.m2v = ModelToView3D(self.model)
-        self.object_distance_scale = self.m2v.infinity
+        self.infinity = self.m2v.infinity
+
 
     def initialise(self):
 
@@ -320,7 +336,10 @@ class DWWorldView(View):
         self.set_view((vx,vy,vz))
 
         # Get the visible objects at this view point from the model
-        objs = self.m2v.get_object_list(self.view_pos, self.width, self.height, self.depth)
+        objs = self.m2v.get_object_list(self.view_pos,
+                                        self.width * self.object_size_scale,
+                                        self.height * self.object_size_scale,
+                                        self.depth)
 
         # Draw visible objects in reverse order by distance from the camera
         distance = sorted(list(objs.keys()), reverse=True)
@@ -333,13 +352,10 @@ class DWWorldView(View):
             # For each object found in that plane...
             for pos, obj in objs_at_d:
 
-                # if obj.name == model.Objects.SWITCH_TILE:
-                #     obj = self.model.world.get_switch_object(obj, (512, 288, 109))
-
-                #obj = obj.get_current_object()
-
                 if obj.name in (model.Objects.SWITCH_1, model.Objects.SWITCH_2):
                     tick_count = obj.tick_count
+                elif obj.name in (model.Objects.PLAYER):
+                    tick_count = obj.tick_count // 10
                 else:
                     tick_count = self.tick_count
 
@@ -355,7 +371,8 @@ class DWWorldView(View):
                     x, y, z = pos
 
                     # Scale the object based on the size of the object and how far away from the camera it is
-                    size_adj = self.object_size_scale * (1 - d / self.object_distance_scale)
+                    # Size adjust = 1 on the plane that the player is currently on
+                    size_adj = (1 - (d + self.camera_distance) / self.infinity) * self.object_size_scale
                     size_w = int(obj.rect.width * size_adj)
                     size_h = int(obj.rect.height * size_adj)
                     image = pygame.transform.scale(image ,(size_w, size_h))
@@ -364,11 +381,13 @@ class DWWorldView(View):
                     # Player's plane = opaque (alpha = 255)
                     # Between player and camera - increasing transparency the closer to the camera you get
                     # Beyond the player's plane - increasing levels of transparency
-                    alpha = 255 * (1 - min((abs(pz-d-vz)*20/self.m2v.infinity, 1)))
+                    #alpha = 255 * (1 - min((abs(pz-d-vz)*20/self.m2v.infinity, 1)))
+                    alpha = 255 * (1 - min((abs(pz-d-vz)/self.depth, 1)))
                     image.set_alpha(alpha)
 
                     # Blit the object image at the appropriate place and size
                     self.surface.blit(image, (int(x * self.object_size_scale), int(y * self.object_size_scale), size_w, size_h))
+
 
         # Draw cross hair
         # cross_hair_size = 0.15
@@ -417,12 +436,13 @@ class ModelToView3D():
         self.model = model
 
         # How far away is infinity so we can calculate perspective?
-        self.infinity = 1300
+        self.infinity = 500
 
         # How much space around the view do we want to add extra objects?
         self.view_padding = 256
 
         #  Add perspective to the position of objects in the view
+        self.projection = ModelToView3D.PARALLEL
         self.projection = ModelToView3D.PERSPECTIVE
 
     def get_object_list(self, view_pos, view_width, view_height, view_depth):

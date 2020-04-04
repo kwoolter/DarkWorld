@@ -20,14 +20,14 @@ ID,Name,Layer,Layout
 1,World1,150,FFFFFFFFFFFFFFFFFFFF
 1,World1,150,FFFFFFFFFFFFFFFFFFFF
 1,World1,149,####################
-1,World1,149,#+   ##           ^#
+1,World1,149,#+   ::           ^#
 1,World1,149,#     D           k#
-1,World1,149,#     #            #
-1,World1,149,#    ##     $  l   #
-1,World1,149,######             #
-1,World1,149,######             #
-1,World1,149,#    #   #         #
-1,World1,149,#    #####         #
+1,World1,149,#     :            #
+1,World1,149,#    ::     $  l   #
+1,World1,149,#:::::             #
+1,World1,149,#;;;;;             #
+1,World1,149,#    ;   #         #
+1,World1,149,#    ;;;;#         #
 1,World1,149,#  ^     #  $     c#
 1,World1,149,# ^K^             ##
 1,World1,149,#            #######
@@ -36,7 +36,7 @@ ID,Name,Layer,Layout
 1,World1,149,#      $LLL  # ^   #
 1,World1,149,#            D K^  #
 1,World1,149,#            # ^   #
-1,World1,149,#           _#     #
+1,World1,149,#            #     #
 1,World1,149,#           ###   ^#
 1,World1,149,####################
 1,World1,110,                    
@@ -108,7 +108,7 @@ ID,Name,Layer,Layout
 1,World1,79,      #####         
 1,World1,79,      #   #         
 1,World1,79,      #   #         
-1,World1,79,     ####~#         
+1,World1,79,     ####@#         
 1,World1,79,     #b^  #B        
 1,World1,79,     #    ^B        
 1,World1,79,     #     B        
@@ -167,7 +167,8 @@ ID,Name,Layer,Layout
 1,World1,10,                    
 1,World1,10,                    
 1,World1,10,                    
-1,World1,10,     _____          
+1,World1,10,     ~~~~           
+1,World1,10,                   
 1,World1,10,                    
 1,World1,10,                    
 1,World1,10,                    
@@ -178,29 +179,126 @@ ID,Name,Layer,Layout
 1,World1,10,                    
 1,World1,10,                    
 1,World1,10,                    
-1,World1,10,                    
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,11,                    
+2,World2,11, FFF             FF 
+2,World2,11, FFFF            FF 
+2,World2,11, FFF             FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                 FF 
+2,World2,11,                FFF 
+2,World2,11,               FFFF 
+2,World2,11,                FFF 
+2,World2,11,                    
+2,World2,10,#####           ####
+2,World2,10,#n  ##          #p #
+2,World2,10,#               #  #
+2,World2,10,#   ##          #  #
+2,World2,10,#####           #  #
+2,World2,10,                #  #
+2,World2,10,                #  #
+2,World2,10,                #  #
+2,World2,10,                #  #
+2,World2,10,                #  #
+2,World2,10,                #  #
+2,World2,10,                #  #
+2,World2,10,                #  #
+2,World2,10,                #  #
+2,World2,10,                #  #
+2,World2,10,               ##  #
+2,World2,10,              ##   #
+2,World2,10,                   #
+2,World2,10,              ##   #
+2,World2,10,               #####
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,     *****          
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                   
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,                    
+2,World2,36,           *****    
+2,World2,36,                    
+2,World2,35,                    
+2,World2,35,     :::::          
+2,World2,35,                    
+2,World2,35,     :::::          
+2,World2,35,                    
+2,World2,35,                    
+2,World2,35,                    
+2,World2,35,                    
+2,World2,35,                    
+2,World2,35,                   
+2,World2,35,                    
+2,World2,35,                    
+2,World2,35,                    
+2,World2,35,                    
+2,World2,35,                    
+2,World2,35,                    
+2,World2,35,           :::::    
+2,World2,35,                    
+2,World2,35,           :::::    
+2,World2,35,                    
+2,World2,66,                    
+2,World2,66,         fff        
+2,World2,66,         fff        
+2,World2,66,         fff        
+2,World2,66,         fff        
+2,World2,66,                    
+2,World2,66,                    
+2,World2,66,                    
+2,World2,66,  f                 
+2,World2,66,  f                
+2,World2,66,  f                 
+2,World2,66,  f                 
+2,World2,66,  f                 
+2,World2,66,  f                 
+2,World2,66,  f                 
+2,World2,66, fff     fff        
+2,World2,66, fff     fff        
+2,World2,66, fff     fff        
+2,World2,66,         fff        
+2,World2,66,                    
+2,World2,65,        ;;;;;       
+2,World2,65,        ;   ;       
+2,World2,65,            ;       
+2,World2,65,            ;       
+2,World2,65,            ;       
+2,World2,65,           ;;       
+2,World2,65,                    
+2,World2,65,                    
+2,World2,65, # #                
+2,World2,65, # #               
+2,World2,65, # #                
+2,World2,65, # #                
+2,World2,65,## #                
+2,World2,65,## #                
+2,World2,65,## #       ;;       
+2,World2,65,#           ;       
+2,World2,65,#           ;       
+2,World2,65,#           ;       
+2,World2,65,####    ;   ;       
+2,World2,65,        ;;;;;       
 2,World2,199,####################
-2,World2,199,#n                k#
 2,World2,199,#                  #
 2,World2,199,#                  #
 2,World2,199,#                  #
@@ -208,17 +306,38 @@ ID,Name,Layer,Layout
 2,World2,199,#                  #
 2,World2,199,#                  #
 2,World2,199,#                  #
-2,World2,199,#       bb         #
-2,World2,199,#       BB         #
+2,World2,199,#        +         #
 2,World2,199,#                  #
 2,World2,199,#                  #
 2,World2,199,#                  #
 2,World2,199,#                  #
 2,World2,199,#                  #
 2,World2,199,#                  #
-2,World2,199,#                p #
-2,World2,199,#K                 #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
+2,World2,199,#                  #
 2,World2,199,####################
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
+2,World2,200,FFFFFFFFFFFFFFFFFFFF
 3,World3,200,FFFFFFFFFFFFFFFFFFFF
 3,World3,200,FFFFFFFFFFFFFFFFFFFF
 3,World3,200,FFFFFFFFFFFFFFFFFFFF

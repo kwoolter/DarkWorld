@@ -88,6 +88,10 @@ class DWController:
                     elif event.key == K_F12:
                         self.v.print()
                         self.m.print()
+                    elif event.key == K_F11:
+                        self.v.world_view.m2v.infinity += 10
+                    elif event.key == K_F10:
+                        self.v.world_view.m2v.infinity -= 10
 
                 elif event.type == QUIT:
                     loop = False
