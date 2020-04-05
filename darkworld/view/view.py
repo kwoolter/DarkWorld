@@ -104,8 +104,12 @@ class ImageManager:
             model.Objects.EXIT_PREVIOUS: "exit_red.png",
             model.Objects.SWITCH_TILE1: None,
             model.Objects.SWITCH_TILE2: None,
-            model.Objects.SWITCH_1: ("switch_off.png", "switch_on.png"),
-            model.Objects.SWITCH_2: ("switch_off.png", "switch_on.png"),
+            model.Objects.SWITCH_TILE3: None,
+            model.Objects.SWITCH_TILE4: None,
+            model.Objects.SWITCH_1: ("switch0.png", "switch1.png"),
+            model.Objects.SWITCH_2: ("switch1.png", "switch0.png"),
+            model.Objects.SWITCH_3: ("switch0.png", "switch1.png"),
+            model.Objects.SWITCH_4: ("switch1.png", "switch0.png"),
             model.Objects.LIQUID1: "liquid3.png",
             model.Objects.LIQUID2: "liquid2.png",
 
@@ -172,6 +176,10 @@ class ImageManager:
         for i in range(0, 5):
             self.sprite_sheets["token{0}.png".format(i)] = (sheet_file_name, (i * 8, 0, 8, 8))
 
+
+        sheet_file_name = "switches_sheet.png"
+        for i in range(0, 2):
+            self.sprite_sheets["switch{0}.png".format(i)] = (sheet_file_name, (i * 32, 0, 32, 32))
 
         sheet_file_name = "winter_sheet2.png"
         for i in range(0, 5):
@@ -356,7 +364,7 @@ class DWWorldView(View):
             # For each object found in that plane...
             for pos, obj in objs_at_d:
 
-                if obj.name in (model.Objects.SWITCH_1, model.Objects.SWITCH_2):
+                if obj.is_switch is True:
                     tick_count = obj.tick_count
                 elif obj.name in (model.Objects.PLAYER):
                     tick_count = obj.tick_count // 10

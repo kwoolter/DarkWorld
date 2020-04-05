@@ -31,8 +31,12 @@ class Objects:
     EXIT_PREVIOUS = "exit_previous"
     SWITCH_1 = "switch 1"
     SWITCH_2 = "switch 2"
+    SWITCH_3 = "switch 3"
+    SWITCH_4 = "switch 4"
     SWITCH_TILE1 = "switch tile 1"
     SWITCH_TILE2 = "switch tile 2"
+    SWITCH_TILE3 = "switch tile 3"
+    SWITCH_TILE4 = "switch tile 4"
     LIQUID1 = "liquid1"
     LIQUID2 = "liquid2"
 

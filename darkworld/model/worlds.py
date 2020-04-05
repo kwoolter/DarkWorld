@@ -365,6 +365,8 @@ class WorldBuilder():
         # - player exit pos
         # - switch group settings
 
+
+        # World 1
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE3, SwitchGroup.OR),
             Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.AND)}
@@ -373,13 +375,21 @@ class WorldBuilder():
         new_world_properties = ("Welcome World", "default", (224, 254, 0), (102, 244, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
+
+        # World 2
+
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE3, SwitchGroup.OR),
-            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.NAND)}
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.NAND),
+            Objects.SWITCH_3: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.AND),
+            Objects.SWITCH_4: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.AND)
+        }
 
         new_world_id = 2
         new_world_properties = ("The Test", "World2", (560, 112, 0), (104, 48, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
+
+        # World 3
 
         new_world_id = 3
         new_world_properties = ("The Next Test", "test", (504, 558, 150), (50, 100, 170), switch_groups)
