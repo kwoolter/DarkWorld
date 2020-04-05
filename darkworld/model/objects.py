@@ -19,6 +19,8 @@ class Objects:
     PLAYER = "player"
     MONSTER1 = "monster1"
     MONSTER2 = "monster2"
+    BIG_MONSTER1 = "big monster1"
+    BIG_MONSTER2 = "big monster2"
     TREASURE = "treasure"
     TREASURE_CHEST = "treasure chest"
     DOOR = "door"

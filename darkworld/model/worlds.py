@@ -172,8 +172,10 @@ class SwitchableObject(RPGObject3D):
 
 class SwitchGroup:
     AND = "and"
+    NAND = "nand"
     AND_LINKED = "and linked"
     OR = "or"
+    NOR = "nor"
 
     def __init__(self, name: str, from_object_name : str = None, to_object_name : str = None, type=AND):
 
@@ -247,8 +249,14 @@ class SwitchGroup:
         if self.type == SwitchGroup.AND:
             result = and_result
 
+        elif self.type == SwitchGroup.NAND:
+            result = not and_result
+
         elif self.type == SwitchGroup.OR:
             result = or_result
+
+        elif self.type == SwitchGroup.NOR:
+            result = not or_result
 
         return result
 
@@ -284,6 +292,68 @@ class WorldBuilder():
         self.world_layouts.print()
 
         self.load_world_properties()
+        self.load_moving_objects()
+
+
+    def load_moving_objects(self):
+
+
+        # World 1
+        world = self.get_world(1)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
+        new_monster.set_pos((256, 320, 79))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.DOWN, 30, False),(World3D.UP, 30, False)]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
+        new_monster.set_pos((240, 416, 79))
+        world.add_monster(new_monster, World3D.EAST)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
+        new_monster.set_pos((120, 524, 149))
+        world.add_monster(new_monster, World3D.UP)
+
+
+        # World 2
+        world = self.get_world(2)
+
+        # Monster 1 - moving block
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
+        new_monster.set_pos((10*32, 14*32, 66))
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.DOWN, 1000, True), (World3D.DUMMY, 50, False),(World3D.UP, 1000, True), (World3D.DUMMY, 50, False)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        # Monster #2 - moving block
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
+        new_monster.set_pos((200, 544, 66))
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.EAST, 1000, True),
+                        (World3D.DUMMY, 50, False),
+                        (World3D.WEST, 1000, True),
+                        (World3D.DUMMY, 50, False),
+                        (World3D.DOWN, 32*5, True),
+                        (World3D.DUMMY, 50, False),
+                        (World3D.UP, 32*5, True),
+                        (World3D.DUMMY, 50, False),
+                        ]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        # Monster #3 - Lift
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.BIG_MONSTER2)
+        new_monster.set_pos((48, 196, 70))
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.NORTH, 1000, True), (World3D.DUMMY, 50, False),(World3D.SOUTH, 1000, True), (World3D.DUMMY, 50, False)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
 
 
     def load_world_properties(self):
@@ -303,8 +373,12 @@ class WorldBuilder():
         new_world_properties = ("Welcome World", "default", (224, 254, 0), (102, 244, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE3, SwitchGroup.OR),
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.NAND)}
+
         new_world_id = 2
-        new_world_properties = ("The Test", "test", (560, 112, 0), (104, 48, 0), switch_groups)
+        new_world_properties = ("The Test", "World2", (560, 112, 0), (104, 48, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         new_world_id = 3
@@ -317,28 +391,6 @@ class WorldBuilder():
             if world is not None:
                 world.initialise(properties)
 
-        world = self.get_world(1)
-
-        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
-        new_monster.set_pos((256, 320, 79))
-        world.add_monster(new_monster, World3D.DOWN)
-
-        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
-        new_monster.set_pos((240, 416, 79))
-        world.add_monster(new_monster, World3D.EAST)
-
-        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
-        new_monster.set_pos((120, 524, 149))
-        world.add_monster(new_monster, World3D.UP)
-
-        world = self.get_world(2)
-        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
-        new_monster.set_pos((319, 400, 66))
-        world.add_monster(new_monster, World3D.DOWN)
-
-        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
-        new_monster.set_pos((200, 544, 66))
-        world.add_monster(new_monster, World3D.WEST)
 
 
     def get_world(self, world_name: str):
@@ -486,6 +538,7 @@ class WorldObjectLoader():
 
 class World3D:
     # Define direction vectors
+    DUMMY = np.array([0,0,0])
     INVERSE = np.array([-1, -1, -1])
     NORTH = np.array([0, 0, 1])
     SOUTH = np.multiply(NORTH, INVERSE)
@@ -518,6 +571,7 @@ class World3D:
         # World contents
         self.planes = {}
         self.monsters = {}
+        self.bots = []
         self.switch_groups = {}
 
         self.player = None
@@ -590,11 +644,16 @@ class World3D:
             self.move_player_to_xyz(self.player_exit_pos)
         return
 
-    def add_monster(self, new_monster, move_vector):
+    def add_monster(self, new_monster, move_vector, ai = None):
         self.monsters[new_monster] = move_vector
+        if ai is not None:
+            self.bots.append(ai)
         self.add_object3D(new_monster, do_copy=False)
 
     def move_monsters(self, override_vector = None, reverse = True):
+
+        for bot in self.bots:
+            bot.tick()
 
         for monster in self.monsters.keys():
             if override_vector is None:
@@ -645,6 +704,11 @@ class World3D:
                                                   to_object_name=to_object,
                                                   type = type))
 
+        #  Set the switch tiles based on the initial output of the switches
+        for switch_group in self.switch_groups.values():
+            output = switch_group.output()
+            self.swap_objects_by_name(target_object_name=switch_group.outputs[not output], new_object_name = switch_group.outputs[output])
+
         self.print()
 
 
@@ -689,7 +753,7 @@ class World3D:
         # If we succeeded in moving planes...
         if selected_object.has_changed_planes() is True:
 
-            print("Object has changed planes from {0} to {1}".format(selected_object.z, selected_object._old_z))
+            #print("Object has changed planes from {0} to {1}".format(selected_object.z, selected_object._old_z))
 
             # Get the objects for the new plane
             new_plane = selected_object.z
@@ -864,3 +928,69 @@ class World3D:
 
         for switch_group in self.switch_groups.values():
             switch_group.print()
+
+
+        for bot in self.bots:
+            print(str(bot))
+
+
+class AIBot:
+
+    MODE_MOVING = "moving"
+
+    def __init__(self, target_object  :RPGObject3D, world : World3D):
+        self.target_object = target_object
+        self.world = world
+        self.instructions = []
+        self.current_instruction_id = 0
+        self.current_instruction_ticks = 0
+        self.mode = AIBot.MODE_MOVING
+
+    def __str__(self):
+
+        text = "Bot: loop({0}), instructions:".format(self.loop)
+        for instruction in self.instructions:
+            action, ticks, skip_on_fail = instruction
+            text += "\t action({0}), ticks {1}), skip on fail({2})".format(action, ticks, skip_on_fail)
+
+        return text
+
+    def set_instructions(self, new_instructions : list, loop = True):
+
+        self.instructions = new_instructions
+        self.loop = loop
+
+    def tick(self):
+
+        if self.current_instruction_id < len(self.instructions) and self.current_instruction_id >=0:
+
+            current_instruction = self.instructions[self.current_instruction_id]
+            action, ticks, skip_on_fail = current_instruction
+
+            if action is not None:
+
+                self.world.move_object(self.target_object, action)
+                success = self.target_object.has_moved()
+
+            else:
+                success = True
+
+            self.current_instruction_ticks += 1
+
+            if self.current_instruction_ticks > ticks or \
+                (success == False and skip_on_fail == True):
+
+                self.next_instruction()
+        else:
+            pass
+            #print("current instruction id {0} not in range".format(self.current_instruction_id))
+
+    def next_instruction(self):
+
+        self.current_instruction_id += 1
+
+        if self.current_instruction_id >= len(self.instructions) and self.loop is True:
+            self.current_instruction_id = 0
+
+        self.current_instruction_ticks = 0
+

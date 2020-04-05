@@ -82,6 +82,8 @@ class ImageManager:
             model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
             model.Objects.MONSTER1: "bear.png",
             model.Objects.MONSTER2: "winter_tiles0.png",
+            model.Objects.BIG_MONSTER1: "bear.png",
+            model.Objects.BIG_MONSTER2: "winter_tiles0.png",
             # model.Objects.PLAYER: ("man0.png", "man2.png", "man1.png", "man2.png"),
             #model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE: ("token0.png", "token1.png", "token2.png", "token3.png"),
@@ -111,12 +113,14 @@ class ImageManager:
 
         ImageManager.skins[new_skin_name] = new_skin
 
-        new_skin_name = "test"
+        new_skin_name = "World2"
         new_skin = (new_skin_name, {
 
             model.Objects.WALL1: "brick2.png",
             model.Objects.FAKE_WALL: "brick2.png",
             model.Objects.TILE1: "tile4.png",
+            model.Objects.MONSTER1: "tile3.png",
+            model.Objects.MONSTER2: "winter_tiles0.png",
         })
 
         ImageManager.skins[new_skin_name] = new_skin
@@ -286,10 +290,10 @@ class DWWorldView(View):
         self.height = 600 * self.object_size_scale
 
         # How far away from the camera are we rendering objects?
-        self.depth = 60
+        self.depth = 100
 
         # How far above the player is the camera?
-        self.camera_distance = -15
+        self.camera_distance = -20
 
         # What are the contraints to the view position
         self.max_view_pos = np.array(max_view_pos)
