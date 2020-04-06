@@ -151,31 +151,21 @@ class RPGObject3D(object):
         return (self._rect.x, self._rect.y, self._z)
 
 
-class SwitchableObject(RPGObject3D):
-
-    def __init__(self, a : RPGObject3D, b : RPGObject3D):
-        self.switch_state = False
-        self.switch_objects = [a, b]
-
-    def switch(self, state : bool = None):
-        if state is None:
-            self.state = not self.state
-        else:
-            self.state = state
-
-    def get_current_object(self):
-        if self.state is False:
-            return self.switch_objects[0]
-        else:
-            return self.switch_objects[1]
-
 
 class SwitchGroup:
+
+    # Type of switch combinations supported
     AND = "and"
     NAND = "nand"
-    AND_LINKED = "and linked"
     OR = "or"
     NOR = "nor"
+
+    # A change to a switch changes all switches
+    AND_LINKED = "and linked"
+
+    # Cascaded XOR and XNOR implementation
+    XOR = "xor"
+    XNOR = "xnor"
 
     def __init__(self, name: str, from_object_name : str = None, to_object_name : str = None, type=AND):
 
@@ -241,10 +231,12 @@ class SwitchGroup:
         result = False
         or_result = False
         and_result = True
+        xor_result = False
 
         for switch_state in self.switches.values():
             or_result = or_result or switch_state
             and_result = and_result and switch_state
+            xor_result = abs(xor_result - switch_state) > 0
 
         if self.type == SwitchGroup.AND:
             result = and_result
@@ -257,6 +249,12 @@ class SwitchGroup:
 
         elif self.type == SwitchGroup.NOR:
             result = not or_result
+
+        elif self.type == SwitchGroup.XOR:
+            result = xor_result
+
+        elif self.type == SwitchGroup.XNOR:
+            result = not xor_result
 
         return result
 
@@ -351,7 +349,7 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.BIG_MONSTER2)
         new_monster.set_pos((48, 196, 70))
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.NORTH, 1000, True), (World3D.DUMMY, 50, False),(World3D.SOUTH, 1000, True), (World3D.DUMMY, 50, False)]
+        instructions = [(World3D.NORTH, 1000, True), (World3D.DUMMY, 50, False),(World3D.SOUTH, 1000, True), (World3D.DUMMY, 10, False)]
         ai.set_instructions(instructions)
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
@@ -380,9 +378,9 @@ class WorldBuilder():
 
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE3, SwitchGroup.OR),
-            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.NAND),
-            Objects.SWITCH_3: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.AND),
-            Objects.SWITCH_4: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.AND)
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.XNOR),
+            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.TILE1, SwitchGroup.AND),
+            Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.TILE4, SwitchGroup.OR)
         }
 
         new_world_id = 2

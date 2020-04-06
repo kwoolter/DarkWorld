@@ -4,6 +4,7 @@ import pygame
 import os
 import numpy as np
 import logging
+from operator import itemgetter
 
 class Colours:
     # set up the colours
@@ -95,9 +96,9 @@ class ImageManager:
             model.Objects.KEY: "key2.png",
             model.Objects.BOSS_KEY: "key4.png",
             model.Objects.TILE1: "tile4.png",
-            #model.Objects.TILE1: "brick2.png",
             model.Objects.TILE2: "tile10.png",
             model.Objects.TILE3: "tile3.png",
+            model.Objects.TILE4: "tile3.png",
             model.Objects.TELEPORT: ("teleport_00.png","teleport_01.png","teleport_02.png"),
             model.Objects.HOLE: "down shoot.png",
             model.Objects.EXIT_NEXT: "exit_green.png",
@@ -498,6 +499,8 @@ class ModelToView3D():
                             oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE)) + (view_height / 2),
                             od),
                         obj))
+
+            #objects[od] = sorted(objects[od], key=itemgetter(2, 1))
 
         return objects
 

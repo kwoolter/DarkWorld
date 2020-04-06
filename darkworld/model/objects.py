@@ -5,6 +5,7 @@ class Objects:
     TILE1 = "tile1"
     TILE2 = "tile2"
     TILE3 = "tile3"
+    TILE4 = "tile4"
     CRATE = "crate"
     WALL1 = "wall1"
     WALL2 = "wall2"
