@@ -132,6 +132,20 @@ class ImageManager:
 
         ImageManager.skins[new_skin_name] = new_skin
 
+        ImageManager.skins[new_skin_name] = new_skin
+
+        new_skin_name = "tutorial"
+        new_skin = (new_skin_name, {
+
+            model.Objects.WALL1: "wall.png",
+            model.Objects.FAKE_WALL: "wall.png",
+            model.Objects.TILE1: "tile20.png",
+            model.Objects.MONSTER1: "tile20.png",
+            model.Objects.MONSTER2: "tile20.png",
+        })
+
+        ImageManager.skins[new_skin_name] = new_skin
+
 
     def get_skin_image(self, tile_name: str, skin_name: str = DEFAULT_SKIN, tick=0, width: int = 32, height: int = 32):
 

@@ -544,10 +544,10 @@ ID,Name,Layer,Layout
 4,World4,20,                    
 4,World4,20,                    
 4,World4,20,####################
-4,World4,20,##      #         ##
+4,World4,20,##      #       k ##
 4,World4,20,#      S#S         #
 4,World4,20,#                  #
-4,World4,20,#         k     n  #
+4,World4,20,#               n  #
 4,World4,20,#                  #
 4,World4,20,#                  #
 4,World4,20,#      S#S         #
@@ -622,36 +622,36 @@ ID,Name,Layer,Layout
 5,World5,50,                    
 5,World5,50,                    
 5,World5,50,                    
-5,World5,50,                    
-5,World5,50, ###################
-5,World5,50, #                 #
+5,World5,50, ##       ##   ##   
+5,World5,50, ############ ######
+5,World5,50, #        ##   ## k#
 5,World5,50, # U               #
 5,World5,50, #                 #
 5,World5,50, #              n  #
 5,World5,50, #                 #
 5,World5,50, #                 #
 5,World5,50, #                 #
-5,World5,50, #                 #
-5,World5,50, ###################
+5,World5,50, #        ##   ##  #
+5,World5,50, ############ ######
+5,World5,50, ##       ##   ##   
 5,World5,50,                    
 5,World5,50,                    
 5,World5,50,                    
 5,World5,50,                    
-5,World5,50,                    
 5,World5,51,                    
 5,World5,51,                    
 5,World5,51,                    
 5,World5,51,                    
 5,World5,51,                    
 5,World5,51,                    
-5,World5,51,  FFFFFFFFFFFFFFFFF 
-5,World5,51,  FFFFFFFFFFFFFFFFF 
-5,World5,51,  FFFFFFFFFFFFFFFFF 
-5,World5,51,  FFFFFFFFFFFFFFFFF 
-5,World5,51,  FFFFFFFFFFFFFFFFF 
-5,World5,51,  FFFFFFFFFFFFFFFFF 
-5,World5,51,  FFFFFFFFFFFFFFFFF 
-5,World5,51,  FFFFFFFFFFFFFFFFF 
+5,World5,51,  FFFFFFFFFF   FFFF 
+5,World5,51,  FFFFFFFFFF   FFFF 
+5,World5,51,  FFFFFFFFFF   FFFF 
+5,World5,51,  FFFFFFFFF    FFFF 
+5,World5,51,  FFFFFFFFF    FFFF 
+5,World5,51,  FFFFFFFFFF   FFFF 
+5,World5,51,  FFFFFFFFFF   FFFF 
+5,World5,51,  FFFFFFFFFF   FFFF 
 5,World5,51,                    
 5,World5,51,                    
 5,World5,51,                    

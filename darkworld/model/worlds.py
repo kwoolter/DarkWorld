@@ -295,6 +295,24 @@ class WorldBuilder():
 
     def load_moving_objects(self):
 
+        # World 5
+        world = self.get_world(5)
+
+        for i in range(0,2):
+
+            new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
+            new_monster.set_pos((12*32, (9+i)*32, 51))
+
+            ai = AIBot(new_monster, world)
+            instructions = [(World3D.EAST, 128, False),
+                            (World3D.DUMMY, 50, False),
+                            (World3D.WEST, 128, False),
+                            (World3D.DUMMY, 50, False)
+                            ]
+            ai.set_instructions(instructions)
+
+            world.add_monster(new_monster, World3D.DUMMY, ai)
+
 
         # World 10
         world = self.get_world(10)
@@ -368,7 +386,7 @@ class WorldBuilder():
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR)}
 
         new_world_id = 1
-        new_world_properties = ("Tutorial World 1", "default", (66, 300, 0), (528, 240, 0), switch_groups)
+        new_world_properties = ("Tutorial World 1", "tutorial", (66, 300, 0), (528, 240, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 2
@@ -376,7 +394,7 @@ class WorldBuilder():
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.AND)}
 
         new_world_id += 1
-        new_world_properties = ("Tutorial World 2", "default", (66, 300, 0), (528, 240, 0), switch_groups)
+        new_world_properties = ("Tutorial World 2", "tutorial", (66, 300, 0), (528, 240, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 3
@@ -384,7 +402,7 @@ class WorldBuilder():
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR)}
 
         new_world_id += 1
-        new_world_properties = ("Tutorial World 3", "default", (66, 300, 0), (528, 240, 0), switch_groups)
+        new_world_properties = ("Tutorial World 3", "tutorial", (66, 300, 0), (528, 240, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 4
@@ -392,13 +410,13 @@ class WorldBuilder():
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.AND)}
 
         new_world_id +=1
-        new_world_properties = ("Tutorial World 4", "default", (66, 300, 0), (528, 240, 0), switch_groups)
+        new_world_properties = ("Tutorial World 4", "tutorial", (66, 300, 0), (528, 240, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 5
 
         new_world_id +=1
-        new_world_properties = ("Tutorial World 5", "default", (80, 286, 10), (474, 300, 40), None)
+        new_world_properties = ("Tutorial World 5", "tutorial", (80, 306, 10), (474, 300, 40), None)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 10
