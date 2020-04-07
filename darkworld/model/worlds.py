@@ -296,8 +296,8 @@ class WorldBuilder():
     def load_moving_objects(self):
 
 
-        # World 1
-        world = self.get_world(1)
+        # World 10
+        world = self.get_world(10)
 
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
         new_monster.set_pos((256, 320, 79))
@@ -318,8 +318,8 @@ class WorldBuilder():
         world.add_monster(new_monster, World3D.UP)
 
 
-        # World 2
-        world = self.get_world(2)
+        # World 20
+        world = self.get_world(20)
 
         # Monster 1 - moving block
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
@@ -363,18 +363,55 @@ class WorldBuilder():
         # - player exit pos
         # - switch group settings
 
-
         # World 1
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR)}
+
+        new_world_id = 1
+        new_world_properties = ("Tutorial World 1", "default", (66, 300, 0), (528, 240, 0), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
+        # World 2
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.AND)}
+
+        new_world_id += 1
+        new_world_properties = ("Tutorial World 2", "default", (66, 300, 0), (528, 240, 0), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
+        # World 3
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR)}
+
+        new_world_id += 1
+        new_world_properties = ("Tutorial World 3", "default", (66, 300, 0), (528, 240, 0), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
+        # World 4
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.AND)}
+
+        new_world_id +=1
+        new_world_properties = ("Tutorial World 4", "default", (66, 300, 0), (528, 240, 0), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
+        # World 5
+
+        new_world_id +=1
+        new_world_properties = ("Tutorial World 5", "default", (80, 286, 10), (474, 300, 40), None)
+        self.world_properties[new_world_id] = new_world_properties
+
+        # World 10
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE3, SwitchGroup.OR),
             Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.AND)}
 
-        new_world_id = 1
+        new_world_id = 10
         new_world_properties = ("Welcome World", "default", (224, 254, 0), (102, 244, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
 
-        # World 2
+        # World 20
 
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE3, SwitchGroup.OR),
@@ -383,13 +420,13 @@ class WorldBuilder():
             Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.TILE4, SwitchGroup.OR)
         }
 
-        new_world_id = 2
+        new_world_id = 20
         new_world_properties = ("The Test", "World2", (560, 112, 0), (104, 48, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
-        # World 3
+        # World 30
 
-        new_world_id = 3
+        new_world_id = 30
         new_world_properties = ("The Next Test", "test", (504, 558, 150), (50, 100, 170), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
@@ -705,12 +742,13 @@ class World3D:
         if world_properties is not None:
             self.name, self.skin, self.player_start_pos, self.player_exit_pos, switch_group_settings = world_properties
 
-            for switch_id, settings in switch_group_settings.items():
-                from_object, to_object, type = settings
-                self.add_switch_group(SwitchGroup(name=switch_id,
-                                                  from_object_name=from_object,
-                                                  to_object_name=to_object,
-                                                  type = type))
+            if switch_group_settings is not None:
+                for switch_id, settings in switch_group_settings.items():
+                    from_object, to_object, type = settings
+                    self.add_switch_group(SwitchGroup(name=switch_id,
+                                                      from_object_name=from_object,
+                                                      to_object_name=to_object,
+                                                      type = type))
 
         #  Set the switch tiles based on the initial output of the switches
         for switch_group in self.switch_groups.values():

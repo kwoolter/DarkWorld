@@ -1,420 +1,660 @@
 ID,Name,Layer,Layout
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,150,FFFFFFFFFFFFFFFFFFFF
-1,World1,149,####################
-1,World1,149,#+   ::           ^#
-1,World1,149,#     D           k#
-1,World1,149,#     :            #
-1,World1,149,#    ::     $  l   #
-1,World1,149,#:::::             #
-1,World1,149,#;;;;;             #
-1,World1,149,#    ;   #         #
-1,World1,149,#    ;;;;#         #
-1,World1,149,#  ^     #  $     c#
-1,World1,149,# ^K^             ##
-1,World1,149,#            #######
-1,World1,149,#       LLL  #    ##
-1,World1,149,#       LLL  #     #
-1,World1,149,#      $LLL  # ^   #
-1,World1,149,#            D K^  #
-1,World1,149,#            # ^   #
-1,World1,149,#            #     #
-1,World1,149,#           ###   ^#
-1,World1,149,####################
-1,World1,110,                    
-1,World1,110,                    
-1,World1,110,          ffff      
-1,World1,110,        ffffffff    
-1,World1,110,        ffffffff    
-1,World1,110,        ffffffff    
-1,World1,110,        fff__fff    
-1,World1,110,       fff __ fff   
-1,World1,110,       fff ~~ fff   
-1,World1,110,       fff ff fff   
-1,World1,110,           ff       
-1,World1,110,                    
-1,World1,110,                    
-1,World1,110,                    
-1,World1,110,                    
-1,World1,110,                    
-1,World1,110,                    
-1,World1,110,                    
-1,World1,110,                    
-1,World1,110,                    
-1,World1,109,                    
-1,World1,109,         ######     
-1,World1,109,       ###S   ###   
-1,World1,109,       #       s#   
-1,World1,109,       #        #   
-1,World1,109,       #        #   
-1,World1,109,      ##        ##  
-1,World1,109,      #         S#  
-1,World1,109,      #          #  
-1,World1,109,      #         s#  
-1,World1,109,      #### $$ ####  
-1,World1,109,                    
-1,World1,109,                    
-1,World1,109,                    
-1,World1,109,                    
-1,World1,109,                    
-1,World1,109,                    
-1,World1,109,                    
-1,World1,109,                    
-1,World1,109,                    
-1,World1,80,                    
-1,World1,80,                    
-1,World1,80,                    
-1,World1,80,                    
-1,World1,80,                    
-1,World1,80,                    
-1,World1,80,                    
-1,World1,80,       O f          
-1,World1,80,         f          
-1,World1,80,       fff          
-1,World1,80,      ffff          
-1,World1,80,      fffff         
-1,World1,80,      fffff         
-1,World1,80,      ffffff        
-1,World1,80,       ffffff       
-1,World1,80,       ffffff       
-1,World1,80,         fff        
-1,World1,80,                    
-1,World1,80,                    
-1,World1,80,                    
-1,World1,79,                    
-1,World1,79,                    
-1,World1,79,                    
-1,World1,79,                    
-1,World1,79,                    
-1,World1,79,                    
-1,World1,79,      #####         
-1,World1,79,      #   #         
-1,World1,79,      #   #         
-1,World1,79,     ####@#         
-1,World1,79,     #b^  #B        
-1,World1,79,     #    ^B        
-1,World1,79,     #     B        
-1,World1,79,     #^    B##      
-1,World1,79,     ##  ^  b#      
-1,World1,79,      #     b#      
-1,World1,79,      ###b t##      
-1,World1,79,        #####       
-1,World1,79,                    
-1,World1,79,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,    **              
-1,World1,50, ****  ***          
-1,World1,50, **** *****         
-1,World1,50, **********         
-1,World1,50, **** *****         
-1,World1,50,    *  ***          
-1,World1,50,       ***          
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,50,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,     K#####         
-1,World1,49,###  ##b b##        
-1,World1,49,#n   #     #        
-1,World1,49,#    D     #        
-1,World1,49,###  #     #        
-1,World1,49,     ##^ ^##        
-1,World1,49,      #   #         
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,49,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,     ~~~~           
-1,World1,10,                   
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-1,World1,10,                    
-2,World2,11,                    
-2,World2,11, FFF             FF 
-2,World2,11, FFFF            FF 
-2,World2,11, FFF             FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                 FF 
-2,World2,11,                FFF 
-2,World2,11,               FFFF 
-2,World2,11,                FFF 
-2,World2,11,                    
-2,World2,10,#####           ####
-2,World2,10,#n  ##          #p #
-2,World2,10,#               #  #
-2,World2,10,#   ##          #  #
-2,World2,10,#####           #  #
-2,World2,10,                #  #
-2,World2,10,                #  #
-2,World2,10,                #  #
-2,World2,10,                #  #
-2,World2,10,                #  #
-2,World2,10,                #  #
-2,World2,10,                #  #
-2,World2,10,                #  #
-2,World2,10,                #  #
-2,World2,10,                #  #
-2,World2,10,               ##  #
-2,World2,10,              ##   #
-2,World2,10,                   #
-2,World2,10,              ##   #
-2,World2,10,               #####
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,     *****          
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                   
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,                    
-2,World2,36,           *****    
-2,World2,36,                    
-2,World2,35,                    
-2,World2,35,     :::::          
-2,World2,35,                    
-2,World2,35,     :::::          
-2,World2,35,                    
-2,World2,35,                    
-2,World2,35,                    
-2,World2,35,                    
-2,World2,35,                    
-2,World2,35,                   
-2,World2,35,                    
-2,World2,35,                    
-2,World2,35,                    
-2,World2,35,                    
-2,World2,35,                    
-2,World2,35,                    
-2,World2,35,           :::::    
-2,World2,35,                    
-2,World2,35,           :::::    
-2,World2,35,                    
-2,World2,66,                    
-2,World2,66,         fff        
-2,World2,66,         fff        
-2,World2,66,         fff        
-2,World2,66,         fff        
-2,World2,66,                    
-2,World2,66,                    
-2,World2,66,                    
-2,World2,66,  f                 
-2,World2,66,  f                
-2,World2,66,  f                 
-2,World2,66,  f                 
-2,World2,66,  f                 
-2,World2,66,  f       ~         
-2,World2,66,  f                 
-2,World2,66, fff     fff        
-2,World2,66, fff     fff        
-2,World2,66, fff     fff        
-2,World2,66,         fff        
-2,World2,66,                    
-2,World2,65,        ;;;;;       
-2,World2,65,        ;   ;       
-2,World2,65,            ;       
-2,World2,65,            ;       
-2,World2,65,            ;       
-2,World2,65,           ;;       
-2,World2,65,                    
-2,World2,65,                    
-2,World2,65,## #                
-2,World2,65,## #               
-2,World2,65,#S #                
-2,World2,65,## #                
-2,World2,65,## #                
-2,World2,65,## #                
-2,World2,65,## #       ;;       
-2,World2,65,#           ;       
-2,World2,65,#           ;       
-2,World2,65,#s          ;       
-2,World2,65,####    ;s  ;       
-2,World2,65,        ;;;;;       
-2,World2,120,::::::::::::        
-2,World2,120,:X   ?    x:        
-2,World2,120,:          :        
-2,World2,120,:   ::::   :        
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,         k          
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,120,                    
-2,World2,121,                    
-2,World2,121, ffffffffff         
-2,World2,121, ffffffffff         
-2,World2,121, fff    fff         
-2,World2,121,  f      f          
-2,World2,121,  f      .          
-2,World2,121,  _      .          
-2,World2,121,         .          
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,121,                    
-2,World2,199,####################
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#        +         #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,#                  #
-2,World2,199,####################
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-2,World2,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,200,FFFFFFFFFFFFFFFFFFFF
-3,World3,199,####################
-3,World3,199,#n                k#
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#       bb         #
-3,World3,199,#       BB         #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                  #
-3,World3,199,#                p #
-3,World3,199,#K                 #
-3,World3,199,####################
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,150,FFFFFFFFFFFFFFFFFFFF
+10,World1,149,####################
+10,World1,149,#+   ::           ^#
+10,World1,149,#     D           k#
+10,World1,149,#     :            #
+10,World1,149,#    ::     $  l   #
+10,World1,149,#:::::             #
+10,World1,149,#;;;;;             #
+10,World1,149,#    ;   #         #
+10,World1,149,#    ;;;;#         #
+10,World1,149,#  ^     #  $     c#
+10,World1,149,# ^K^             ##
+10,World1,149,#            #######
+10,World1,149,#       LLL  #    ##
+10,World1,149,#       LLL  #     #
+10,World1,149,#      $LLL  # ^   #
+10,World1,149,#            D K^  #
+10,World1,149,#            # ^   #
+10,World1,149,#            #     #
+10,World1,149,#           ###   ^#
+10,World1,149,####################
+10,World1,110,                    
+10,World1,110,                    
+10,World1,110,          ffff      
+10,World1,110,        ffffffff    
+10,World1,110,        ffffffff    
+10,World1,110,        ffffffff    
+10,World1,110,        fff__fff    
+10,World1,110,       fff __ fff   
+10,World1,110,       fff ~~ fff   
+10,World1,110,       fff ff fff   
+10,World1,110,           ff       
+10,World1,110,                    
+10,World1,110,                    
+10,World1,110,                    
+10,World1,110,                    
+10,World1,110,                    
+10,World1,110,                    
+10,World1,110,                    
+10,World1,110,                    
+10,World1,110,                    
+10,World1,109,                    
+10,World1,109,         ######     
+10,World1,109,       ###S   ###   
+10,World1,109,       #       s#   
+10,World1,109,       #        #   
+10,World1,109,       #        #   
+10,World1,109,      ##        ##  
+10,World1,109,      #         S#  
+10,World1,109,      #          #  
+10,World1,109,      #         s#  
+10,World1,109,      #### $$ ####  
+10,World1,109,                    
+10,World1,109,                    
+10,World1,109,                    
+10,World1,109,                    
+10,World1,109,                    
+10,World1,109,                    
+10,World1,109,                    
+10,World1,109,                    
+10,World1,109,                    
+10,World1,80,                    
+10,World1,80,                    
+10,World1,80,                    
+10,World1,80,                    
+10,World1,80,                    
+10,World1,80,                    
+10,World1,80,                    
+10,World1,80,       O f          
+10,World1,80,         f          
+10,World1,80,       fff          
+10,World1,80,      ffff          
+10,World1,80,      fffff         
+10,World1,80,      fffff         
+10,World1,80,      ffffff        
+10,World1,80,       ffffff       
+10,World1,80,       ffffff       
+10,World1,80,         fff        
+10,World1,80,                    
+10,World1,80,                    
+10,World1,80,                    
+10,World1,79,                    
+10,World1,79,                    
+10,World1,79,                    
+10,World1,79,                    
+10,World1,79,                    
+10,World1,79,                    
+10,World1,79,      #####         
+10,World1,79,      #   #         
+10,World1,79,      #   #         
+10,World1,79,     ####@#         
+10,World1,79,     #b^  #B        
+10,World1,79,     #    ^B        
+10,World1,79,     #     B        
+10,World1,79,     #^    B##      
+10,World1,79,     ##  ^  b#      
+10,World1,79,      #     b#      
+10,World1,79,      ###b t##      
+10,World1,79,        #####       
+10,World1,79,                    
+10,World1,79,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,    **              
+10,World1,50, ****  ***          
+10,World1,50, **** *****         
+10,World1,50, **********         
+10,World1,50, **** *****         
+10,World1,50,    *  ***          
+10,World1,50,       ***          
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,50,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,     K#####         
+10,World1,49,###  ##b b##        
+10,World1,49,#n   #     #        
+10,World1,49,#    D     #        
+10,World1,49,###  #     #        
+10,World1,49,     ##^ ^##        
+10,World1,49,      #   #         
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,49,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,     ~~~~           
+10,World1,10,                   
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+10,World1,10,                    
+20,World2,11,                    
+20,World2,11, FFF             FF 
+20,World2,11, FFFF            FF 
+20,World2,11, FFF             FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                 FF 
+20,World2,11,                FFF 
+20,World2,11,               FFFF 
+20,World2,11,                FFF 
+20,World2,11,                    
+20,World2,10,#####           ####
+20,World2,10,#n  ##          #p #
+20,World2,10,#               #  #
+20,World2,10,#   ##          #  #
+20,World2,10,#####           #  #
+20,World2,10,                #  #
+20,World2,10,                #  #
+20,World2,10,                #  #
+20,World2,10,                #  #
+20,World2,10,                #  #
+20,World2,10,                #  #
+20,World2,10,                #  #
+20,World2,10,                #  #
+20,World2,10,                #  #
+20,World2,10,                #  #
+20,World2,10,               ##  #
+20,World2,10,              ##   #
+20,World2,10,                   #
+20,World2,10,              ##   #
+20,World2,10,               #####
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,     *****          
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                   
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,                    
+20,World2,36,           *****    
+20,World2,36,                    
+20,World2,35,                    
+20,World2,35,     :::::          
+20,World2,35,                    
+20,World2,35,     :::::          
+20,World2,35,                    
+20,World2,35,                    
+20,World2,35,                    
+20,World2,35,                    
+20,World2,35,                    
+20,World2,35,                   
+20,World2,35,                    
+20,World2,35,                    
+20,World2,35,                    
+20,World2,35,                    
+20,World2,35,                    
+20,World2,35,                    
+20,World2,35,           :::::    
+20,World2,35,                    
+20,World2,35,           :::::    
+20,World2,35,                    
+20,World2,66,                    
+20,World2,66,         fff        
+20,World2,66,         fff        
+20,World2,66,         fff        
+20,World2,66,         fff        
+20,World2,66,                    
+20,World2,66,                    
+20,World2,66,                    
+20,World2,66,  f                 
+20,World2,66,  f                
+20,World2,66,  f                 
+20,World2,66,  f                 
+20,World2,66,  f                 
+20,World2,66,  f       ~         
+20,World2,66,  f                 
+20,World2,66, fff     fff        
+20,World2,66, fff     fff        
+20,World2,66, fff     fff        
+20,World2,66,         fff        
+20,World2,66,                    
+20,World2,65,        ;;;;;       
+20,World2,65,        ;   ;       
+20,World2,65,            ;       
+20,World2,65,            ;       
+20,World2,65,            ;       
+20,World2,65,           ;;       
+20,World2,65,                    
+20,World2,65,                    
+20,World2,65,## #                
+20,World2,65,## #               
+20,World2,65,#S #                
+20,World2,65,## #                
+20,World2,65,## #                
+20,World2,65,## #                
+20,World2,65,## #       ;;       
+20,World2,65,#           ;       
+20,World2,65,#           ;       
+20,World2,65,#s          ;       
+20,World2,65,####    ;s  ;       
+20,World2,65,        ;;;;;       
+20,World2,120,::::::::::::        
+20,World2,120,:X   ?    x:        
+20,World2,120,:          :        
+20,World2,120,:   ::::   :        
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,         k          
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,120,                    
+20,World2,121,                    
+20,World2,121, ffffffffff         
+20,World2,121, ffffffffff         
+20,World2,121, fff    fff         
+20,World2,121,  f      f          
+20,World2,121,  f      .          
+20,World2,121,  _      .          
+20,World2,121,         .          
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,121,                    
+20,World2,199,####################
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#        +         #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,#                  #
+20,World2,199,####################
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+20,World2,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,200,FFFFFFFFFFFFFFFFFFFF
+30,World3,199,####################
+30,World3,199,#n                k#
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#       bb         #
+30,World3,199,#       BB         #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                  #
+30,World3,199,#                p #
+30,World3,199,#K                 #
+30,World3,199,####################
+1,World1,20,                    
+1,World1,20,                    
+1,World1,20,                    
+1,World1,20,                    
+1,World1,20,                    
+1,World1,20,####################
+1,World1,20,#                  #
+1,World1,20,#      S           #
+1,World1,20,#         k        #
+1,World1,20,#               n  #
+1,World1,20,#                  #
+1,World1,20,#                  #
+1,World1,20,#      S           #
+1,World1,20,#                  #
+1,World1,20,####################
+1,World1,20,                    
+1,World1,20,                    
+1,World1,20,                    
+1,World1,20,                    
+1,World1,20,                    
+1,World1,21,                    
+1,World1,21,                    
+1,World1,21,                    
+1,World1,21,                    
+1,World1,21,                    
+1,World1,21,                    
+1,World1,21, FFFFFFFFFFF___FFFF 
+1,World1,21, FFFFFFFFFFF___FFFF 
+1,World1,21, FFFFFFFFFFF___FFFF 
+1,World1,21, FFFFFFFFFFF___FFFF 
+1,World1,21, FFFFFFFFFFF___FFFF 
+1,World1,21, FFFFFFFFFFF___FFFF 
+1,World1,21, FFFFFFFFFFF___FFFF 
+1,World1,21, FFFFFFFFFFF___FFFF 
+1,World1,21,                    
+1,World1,21,                    
+1,World1,21,                    
+1,World1,21,                    
+1,World1,21,                    
+1,World1,21,                    
+2,World2,20,                    
+2,World2,20,                    
+2,World2,20,                    
+2,World2,20,                    
+2,World2,20,                    
+2,World2,20,####################
+2,World2,20,#                  #
+2,World2,20,#      S           #
+2,World2,20,#         k        #
+2,World2,20,#               n  #
+2,World2,20,#                  #
+2,World2,20,#                  #
+2,World2,20,#      S           #
+2,World2,20,#                  #
+2,World2,20,####################
+2,World2,20,                    
+2,World2,20,                    
+2,World2,20,                    
+2,World2,20,                    
+2,World2,20,                    
+2,World2,21,                    
+2,World2,21,                    
+2,World2,21,                    
+2,World2,21,                    
+2,World2,21,                    
+2,World2,21,                    
+2,World2,21, FFFFFFFFFFF___FFFF 
+2,World2,21, FFFFFFFFFFF___FFFF 
+2,World2,21, FFFFFFFFFFF___FFFF 
+2,World2,21, FFFFFFFFFFF___FFFF 
+2,World2,21, FFFFFFFFFFF___FFFF 
+2,World2,21, FFFFFFFFFFF___FFFF 
+2,World2,21, FFFFFFFFFFF___FFFF 
+2,World2,21, FFFFFFFFFFF___FFFF 
+2,World2,21,                    
+2,World2,21,                    
+2,World2,21,                    
+2,World2,21,                    
+2,World2,21,                    
+2,World2,21,                    
+3,World3,20,                    
+3,World3,20,                    
+3,World3,20,                    
+3,World3,20,                    
+3,World3,20,                    
+3,World3,20,####################
+3,World3,20,##      #         ##
+3,World3,20,#      S#S         #
+3,World3,20,#                  #
+3,World3,20,#         k     n  #
+3,World3,20,#                  #
+3,World3,20,#                  #
+3,World3,20,#      S#S         #
+3,World3,20,##      #         ##
+3,World3,20,####################
+3,World3,20,                    
+3,World3,20,                    
+3,World3,20,                    
+3,World3,20,                    
+3,World3,20,                    
+3,World3,21,                    
+3,World3,21,                    
+3,World3,21,                    
+3,World3,21,                    
+3,World3,21,                    
+3,World3,21,                    
+3,World3,21, FFFFFFFFFFF___FFFF 
+3,World3,21, FFFFFFFFFFF___FFFF 
+3,World3,21, FFFFFFFFFFF___FFFF 
+3,World3,21, FFFFFFFFFFF___FFFF 
+3,World3,21, FFFFFFFFFFF___FFFF 
+3,World3,21, FFFFFFFFFFF___FFFF 
+3,World3,21, FFFFFFFFFFF___FFFF 
+3,World3,21, FFFFFFFFFFF___FFFF 
+3,World3,21,                    
+3,World3,21,                    
+3,World3,21,                    
+3,World3,21,                    
+3,World3,21,                    
+3,World3,21,                    
+4,World4,20,                    
+4,World4,20,                    
+4,World4,20,                    
+4,World4,20,                    
+4,World4,20,                    
+4,World4,20,####################
+4,World4,20,##      #         ##
+4,World4,20,#      S#S         #
+4,World4,20,#                  #
+4,World4,20,#         k     n  #
+4,World4,20,#                  #
+4,World4,20,#                  #
+4,World4,20,#      S#S         #
+4,World4,20,##      #         ##
+4,World4,20,####################
+4,World4,20,                    
+4,World4,20,                    
+4,World4,20,                    
+4,World4,20,                    
+4,World4,20,                    
+4,World4,21,                    
+4,World4,21,                    
+4,World4,21,                    
+4,World4,21,                    
+4,World4,21,                    
+4,World4,21,                    
+4,World4,21, FFFFFFFFFFF___FFFF 
+4,World4,21, FFFFFFFFFFF___FFFF 
+4,World4,21, FFFFFFFFFFF___FFFF 
+4,World4,21, FFFFFFFFFFF___FFFF 
+4,World4,21, FFFFFFFFFFF___FFFF 
+4,World4,21, FFFFFFFFFFF___FFFF 
+4,World4,21, FFFFFFFFFFF___FFFF 
+4,World4,21, FFFFFFFFFFF___FFFF 
+4,World4,21,                    
+4,World4,21,                    
+4,World4,21,                    
+4,World4,21,                    
+4,World4,21,                    
+4,World4,21,                    
+5,World5,10,                    
+5,World5,10,                    
+5,World5,10,                    
+5,World5,10,                    
+5,World5,10,                    
+5,World5,10,########            
+5,World5,10,#                   
+5,World5,10,#                   
+5,World5,10,#                   
+5,World5,10,#                   
+5,World5,10,#                   
+5,World5,10,# p                 
+5,World5,10,#                   
+5,World5,10,#                   
+5,World5,10,########            
+5,World5,10,                    
+5,World5,10,                    
+5,World5,10,                    
+5,World5,10,                    
+5,World5,10,                    
+5,World5,11,                    
+5,World5,11,                    
+5,World5,11,                    
+5,World5,11,                    
+5,World5,11,                    
+5,World5,11,                    
+5,World5,11, FFFFFFF            
+5,World5,11, Fu FFFF            
+5,World5,11, F  FFFF            
+5,World5,11, FFFFFFF            
+5,World5,11, FFFFFFF            
+5,World5,11, FFFFFFF            
+5,World5,11, FFFFFFF            
+5,World5,11, FFFFFFF            
+5,World5,11,                    
+5,World5,11,                    
+5,World5,11,                    
+5,World5,11,                    
+5,World5,11,                    
+5,World5,11,                    
+5,World5,50,                    
+5,World5,50,                    
+5,World5,50,                    
+5,World5,50,                    
+5,World5,50,                    
+5,World5,50, ###################
+5,World5,50, #                 #
+5,World5,50, # U               #
+5,World5,50, #                 #
+5,World5,50, #              n  #
+5,World5,50, #                 #
+5,World5,50, #                 #
+5,World5,50, #                 #
+5,World5,50, #                 #
+5,World5,50, ###################
+5,World5,50,                    
+5,World5,50,                    
+5,World5,50,                    
+5,World5,50,                    
+5,World5,50,                    
+5,World5,51,                    
+5,World5,51,                    
+5,World5,51,                    
+5,World5,51,                    
+5,World5,51,                    
+5,World5,51,                    
+5,World5,51,  FFFFFFFFFFFFFFFFF 
+5,World5,51,  FFFFFFFFFFFFFFFFF 
+5,World5,51,  FFFFFFFFFFFFFFFFF 
+5,World5,51,  FFFFFFFFFFFFFFFFF 
+5,World5,51,  FFFFFFFFFFFFFFFFF 
+5,World5,51,  FFFFFFFFFFFFFFFFF 
+5,World5,51,  FFFFFFFFFFFFFFFFF 
+5,World5,51,  FFFFFFFFFFFFFFFFF 
+5,World5,51,                    
+5,World5,51,                    
+5,World5,51,                    
+5,World5,51,                    
+5,World5,51,                    
+5,World5,51,                    

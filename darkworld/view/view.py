@@ -95,10 +95,10 @@ class ImageManager:
             model.Objects.TRAP_DISABLE: "trap_disable.png",
             model.Objects.KEY: "key2.png",
             model.Objects.BOSS_KEY: "key4.png",
-            model.Objects.TILE1: "tile4.png",
-            model.Objects.TILE2: "tile10.png",
+            model.Objects.TILE1: "tile1.png",
+            model.Objects.TILE2: "tile2.png",
             model.Objects.TILE3: "tile3.png",
-            model.Objects.TILE4: "tile3.png",
+            model.Objects.TILE4: "tile4.png",
             model.Objects.TELEPORT: ("teleport_00.png","teleport_01.png","teleport_02.png"),
             model.Objects.HOLE: "down shoot.png",
             model.Objects.EXIT_NEXT: "exit_green.png",
@@ -113,6 +113,8 @@ class ImageManager:
             model.Objects.SWITCH_4: ("switch1.png", "switch0.png"),
             model.Objects.LIQUID1: "liquid3.png",
             model.Objects.LIQUID2: "liquid2.png",
+            model.Objects.LADDER_UP: "ladder2.png",
+            model.Objects.LADDER_DOWN: "ladder1.png",
 
         })
 
@@ -177,6 +179,9 @@ class ImageManager:
         for i in range(0, 5):
             self.sprite_sheets["token{0}.png".format(i)] = (sheet_file_name, (i * 8, 0, 8, 8))
 
+        sheet_file_name = "ladders_sheet.png"
+        for i in range(0, 3):
+            self.sprite_sheets["ladder{0}.png".format(i)] = (sheet_file_name, (0, i * 32, 32, 32))
 
         sheet_file_name = "switches_sheet.png"
         for i in range(0, 2):

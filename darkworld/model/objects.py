@@ -40,4 +40,5 @@ class Objects:
     SWITCH_TILE4 = "switch tile 4"
     LIQUID1 = "liquid1"
     LIQUID2 = "liquid2"
-
+    LADDER_UP = "ladder up"
+    LADDER_DOWN = "ladder down"

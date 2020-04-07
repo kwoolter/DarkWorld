@@ -16,7 +16,7 @@ class DWModel():
 
         self.world_factory = None
         self.world = None
-        self.current_world_id = -1
+        self.current_world_id = 0
 
         self.player = None
         self.inventory = {}
@@ -35,7 +35,7 @@ class DWModel():
                                   opos=(size * 9, size * 9, 1),
                                   osize=(size, size, 1))
 
-        self.move_world(2)
+        self.move_world(5)
 
     def print(self):
         print("Printing {0} model...".format(self.name))
@@ -117,6 +117,9 @@ class DWModel():
                     if self.world.player.is_inside(object):
                         print("Teleporting...")
                         self.world.move_player_to_start()
+
+                elif object.name == Objects.LADDER_UP:
+                    self.world.move_player_to_start()
 
                 elif object.name == Objects.TREASURE_CHEST:
                     req_obj = Objects.KEY
