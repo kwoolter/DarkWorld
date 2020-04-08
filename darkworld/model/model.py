@@ -35,7 +35,7 @@ class DWModel():
                                   opos=(size * 9, size * 9, 1),
                                   osize=(size, size, 1))
 
-        self.move_world(5)
+        self.move_world(8)
 
     def print(self):
         print("Printing {0} model...".format(self.name))
@@ -56,6 +56,10 @@ class DWModel():
             self.world.state = World3D.PLAYER_FALLING
         else:
             self.world.state = World3D.PLAYER_MOVING
+
+        if self.world.is_player_dead() is True:
+            print("Player died")
+            self.move_world(self.current_world_id)
 
     def get_next_event(self):
         next_event = None
@@ -130,12 +134,21 @@ class DWModel():
                     else:
                         print("You don't have required object {0}".format(req_obj))
 
-                elif object.name == Objects.DOOR:
+                elif object.name == Objects.DOOR1:
                     req_obj = Objects.KEY
                     if self.have_inventory_object(req_obj) is True:
                         print("Using {0} to open {1}...".format(req_obj, object.name))
                         self.use_inventory_object(req_obj)
-                        self.swap_world_object(object, Objects.DOOR_OPEN)
+                        self.swap_world_object(object, Objects.DOOR1_OPEN)
+                    else:
+                        print("You don't have required object {0}".format(req_obj))
+
+                elif object.name == Objects.DOOR2:
+                    req_obj = Objects.KEY
+                    if self.have_inventory_object(req_obj) is True:
+                        print("Using {0} to open {1}...".format(req_obj, object.name))
+                        self.use_inventory_object(req_obj)
+                        self.swap_world_object(object, Objects.DOOR2_OPEN)
                     else:
                         print("You don't have required object {0}".format(req_obj))
 
@@ -198,8 +211,8 @@ class DWModel():
 
         print("Moving from world {0} to world {1}".format(self.current_world_id, new_world_id))
 
-        if self.current_world_id == new_world_id:
-            return
+        # if self.current_world_id == new_world_id:
+        #     return
 
         new_world = self.world_factory.get_world(new_world_id)
 
@@ -209,7 +222,7 @@ class DWModel():
                 self.world.delete_player()
 
             self.world = new_world
-            self.world.add_player(self.player, start_pos = (self.current_world_id < new_world_id))
+            self.world.add_player(self.player, start_pos = (self.current_world_id <= new_world_id))
             self.current_world_id = new_world_id
             moved = True
         else:

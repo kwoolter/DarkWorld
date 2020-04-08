@@ -24,15 +24,12 @@ class RPGObject3D(object):
                  collectable: bool = False,
                  switchable: bool = False,
                  switch = False,
-                 state=None):
+                 state=False):
 
         self.tick_count = 0
         self.name = name
         self.type = type
         self.state = state
-
-        if switchable is True:
-            self.state = False
 
         # Position and size
         ox, oy, oz = opos
@@ -52,7 +49,7 @@ class RPGObject3D(object):
 
 
     def __str__(self):
-        return "{0} type({1}) pos({2})".format(self.name, self.type, self.xyz)
+        return "{0} type({1}) pos({2}) id({3})".format(self.name, self.type, self.xyz, id(self))
 
     def tick(self):
         self.tick_count += 1
@@ -150,8 +147,6 @@ class RPGObject3D(object):
     def get_pos(self):
         return (self._rect.x, self._rect.y, self._z)
 
-
-
 class SwitchGroup:
 
     # Type of switch combinations supported
@@ -173,7 +168,15 @@ class SwitchGroup:
         self._old_output = None
         self.outputs = { False:from_object_name, True: to_object_name, None : "????" }
         self.type = type
-        self.switches = {}
+        self.switch_objects = []
+
+    @property
+    def switches(self):
+        return self.switch_objects
+
+    @switches.setter
+    def switches(self, new_switches):
+        self.switch_objects = new_switches
 
     def set_from_to(self, from_object_name : str, to_object_name : str):
         self.outputs[False] = from_object_name
@@ -181,48 +184,39 @@ class SwitchGroup:
 
     def has_changed_state(self):
         new_state = self.output()
-        if self._old_output != new_state:
-            return True
-        else:
-            return False
+        return self._old_output != new_state
 
     def add_switch(self, new_switch, value : bool = False):
 
-        new_switch_id = str(new_switch.xyz)
+        if new_switch not in self.switch_objects:
+            self.switch_objects.append(new_switch)
 
         if value not in (True, False):
             value = False
 
-        if new_switch_id not in self.switches.keys():
-            self.switch(new_switch, value)
-        else:
-            pass
-            print("Already got switch with id = {0}".format(new_switch_id))
+        new_switch.state = value
 
     def remove_switch(self, old_switch):
 
-        old_switch_id = str(old_switch.xyz)
+        if old_switch in self.switch_objects:
+            self.switch_objects.remove(old_switch)
 
-        if old_switch_id in self.switches.keys():
-            del self.switches[old_switch_id]
-
-    def switch(self, switch, value = None):
-        switch_id = str(switch.xyz)
+    def switch(self, switch_object, value = None):
 
         self._old_output = self.output()
 
-        if switch_id not in self.switches.keys():
-            self.switches[switch_id] = False
+        if switch_object not in self.switch_objects:
+            #print("trying to switch an object not in this group {0}".format(self.name))
+            self.add_switch(switch_object, switch_object.state)
 
         if value is None:
-            self.switches[switch_id] = not self.switches[switch_id]
-        else:
-            self.switches[switch_id] = value
+            value = not switch_object.state
+
+        switch_object.state = value
 
         if self.type == SwitchGroup.AND_LINKED:
-            value = self.switches[switch_id]
-            for switch_id in self.switches.keys():
-                self.switches[switch_id] = value
+            for switch_object in self.switch_objects:
+                switch_object.state = value
 
         return self.output()
 
@@ -233,12 +227,13 @@ class SwitchGroup:
         and_result = True
         xor_result = False
 
-        for switch_state in self.switches.values():
+        for switch in self.switch_objects:
+            switch_state = switch.state
             or_result = or_result or switch_state
             and_result = and_result and switch_state
             xor_result = abs(xor_result - switch_state) > 0
 
-        if self.type == SwitchGroup.AND:
+        if self.type in (SwitchGroup.AND, SwitchGroup.AND_LINKED):
             result = and_result
 
         elif self.type == SwitchGroup.NAND:
@@ -261,10 +256,11 @@ class SwitchGroup:
     def print(self):
         print("Switch group name='{0}': type=({1}), switches={2}, output={3}".format(self.name,
                                                                               self.type,
-                                                                              len(self.switches.keys()),
+                                                                              len(self.switches),
                                                                               self.output()))
 
-        print("swithes:{0}".format(str(self.switches.values())))
+        for obj in self.switch_objects:
+            print("\tswitch:{0}={1}".format(str(obj), obj.state))
 
 class WorldBuilder():
     FLOOR_LAYOUT_FILE_NAME = "_floor_layouts.csv"
@@ -313,6 +309,49 @@ class WorldBuilder():
 
             world.add_monster(new_monster, World3D.DUMMY, ai)
 
+        # World 8
+        world = self.get_world(8)
+
+        for i in range(0,2):
+
+            new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
+            new_monster.set_pos((3*32, (9+i)*32, 21))
+
+            ai = AIBot(new_monster, world)
+            instructions = [(World3D.EAST, 32*15, True),
+                            (World3D.DUMMY, 50, False),
+                            (World3D.WEST, 32*15, True),
+                            (World3D.DUMMY, 50, False)
+                            ]
+            ai.set_instructions(instructions)
+
+            world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
+        new_monster.set_pos((17*32, 8*32, 21))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.DOWN, 32*5, True),
+                        (World3D.DUMMY, 50, False),
+                        (World3D.UP, 32*5, True),
+                        (World3D.DUMMY, 50, False)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
+        new_monster.set_pos((17*32, (11)*32, 21))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.DOWN, 32*5, True),
+                        (World3D.DUMMY, 50, False),
+                        (World3D.UP, 32*5, True),
+                        (World3D.DUMMY, 50, False)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
 
         # World 10
         world = self.get_world(10)
@@ -391,7 +430,7 @@ class WorldBuilder():
 
         # World 2
         switch_groups = {
-            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.AND)}
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.AND_LINKED)}
 
         new_world_id += 1
         new_world_properties = ("Tutorial World 2", "tutorial", (66, 300, 0), (528, 240, 0), switch_groups)
@@ -414,10 +453,33 @@ class WorldBuilder():
         self.world_properties[new_world_id] = new_world_properties
 
         # World 5
+        new_world_id +=1
+        new_world_properties = ("Tutorial World 5", "tutorial2", (80, 306, 10), (474, 300, 40), None)
+        self.world_properties[new_world_id] = new_world_properties
+
+        # World 6
+        new_world_id += 1
+        new_world_properties = ("Tutorial World 6", "tutorial2", (66, 300, 0), (528, 358, 20), None)
+        self.world_properties[new_world_id] = new_world_properties
+
+        # World 7
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.KEY, SwitchGroup.AND)}
 
         new_world_id +=1
-        new_world_properties = ("Tutorial World 5", "tutorial", (80, 306, 10), (474, 300, 40), None)
+        new_world_properties = ("Tutorial World {0}".format(new_world_id), "tutorial2", (66, 300, 0), (528, 358, 20), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
+
+        # World 8
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.NAND),
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.WALL2, SwitchGroup.XNOR),
+            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.WALL3, SwitchGroup.NOR)}
+
+        new_world_id +=1
+        new_world_properties = ("Tutorial World {0}".format(new_world_id), "tutorial2", (50, 104, 20), (528, 358, 20), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
 
         # World 10
         switch_groups = {
@@ -509,7 +571,7 @@ class WorldLayoutLoader():
                     if object_code != WorldLayoutLoader.EMPTY_OBJECT_CODE:
                         new_floor_object = WorldObjectLoader.get_object_copy_by_code(object_code)
                         new_floor_object.set_pos((x,y,floor_layer))
-                        new_world.add_object3D(new_floor_object)
+                        new_world.add_object3D(new_floor_object, do_copy=False)
                     x += WorldLayoutLoader.DEFAULT_OBJECT_WIDTH
 
                 y += WorldLayoutLoader.DEFAULT_OBJECT_DEPTH
@@ -644,6 +706,10 @@ class World3D:
                                                                 self.depth)
 
     @property
+    def max_plane_depth(self):
+        return max(self.planes.keys())
+
+    @property
     def rect(self):
         return pygame.Rect(0, 0, self.width, self.height)
 
@@ -687,7 +753,8 @@ class World3D:
 
         if new_switch_group.name in self.switch_groups.keys():
             print("Already got a switch group with id {0}".format(new_switch_group.name))
-            new_switch_group.switches = copy.deepcopy(self.switch_groups[new_switch_group.name].switches)
+            for switch in self.switch_groups[new_switch_group.name].switches:
+                new_switch_group.add_switch(switch)
 
         self.switch_groups[new_switch_group.name] = new_switch_group
 
@@ -695,6 +762,8 @@ class World3D:
 
         if new_object.name not in self.switch_groups.keys():
             self.add_switch_group(SwitchGroup(name=new_object.name, from_object_name=new_object.name))
+
+        print("adding a switch object".format(str(new_object)))
 
         self.switch_groups[new_object.name].add_switch(new_object)
 
@@ -718,16 +787,16 @@ class World3D:
         for bot in self.bots:
             bot.tick()
 
-        for monster in self.monsters.keys():
-            if override_vector is None:
-                vector = self.monsters[monster]
-            else:
-                vector = override_vector
-
-            self.move_object(monster, vector)
-            if monster.has_moved() is False and reverse is True:
-                self.monsters[monster] = np.multiply(vector, World3D.INVERSE)
-                #print("Change from {0} to {1}".format(vector, self.monsters[monster]))
+        # for monster in self.monsters.keys():
+        #     if override_vector is None:
+        #         vector = self.monsters[monster]
+        #     else:
+        #         vector = override_vector
+        #
+        #     self.move_object(monster, vector)
+        #     if monster.has_moved() is False and reverse is True:
+        #         self.monsters[monster] = np.multiply(vector, World3D.INVERSE)
+        #         #print("Change from {0} to {1}".format(vector, self.monsters[monster]))
 
     def delete_player(self):
 
@@ -746,6 +815,16 @@ class World3D:
     def is_valid_pos(self, pos):
         x, y, z = pos
         return self.is_valid_xyz(x, y, z)
+
+    def is_player_dead(self):
+
+        dead = False
+
+        if self.player.z >= (self.depth - 50):
+            dead = True
+            print("dead")
+
+        return dead
 
     def initialise(self, world_properties=None):
 
@@ -772,6 +851,9 @@ class World3D:
         for switch_group in self.switch_groups.values():
             output = switch_group.output()
             self.swap_objects_by_name(target_object_name=switch_group.outputs[not output], new_object_name = switch_group.outputs[output])
+
+        # Set the end of the world to be the biggest plane depth + 100
+        self.depth = max(self.planes.keys()) + 100
 
         self.print()
 
@@ -966,24 +1048,26 @@ class World3D:
 
         return output
 
-    def set_switch_object(self, object, state=None):
+    def set_switch_object(self, object, new_state=None):
 
-        object.tick()
+        #bject.tick()
 
-        if object.state is None:
-            object.state = False
-
-        if state is None:
-            object.state = not object.state
-        else:
-            object.state =  state
+        # if object.state not in (True, False):
+        #     object.state = False
+        #
+        # if state is None:
+        #     object.state = not object.state
+        # else:
+        #     object.state = state
 
         if object.name in self.switch_groups.keys():
             switch_group = self.switch_groups[object.name]
-            output = switch_group.switch(object, state)
+            output = switch_group.switch(object, new_state)
             if switch_group.has_changed_state() is True:
                 print("swapping")
                 self.swap_objects_by_name(target_object_name=switch_group.outputs[not output], new_object_name = switch_group.outputs[output])
+        else:
+            print("I don't have a switch group called {0} in this world".format(object.name))
 
     def print(self):
 
@@ -993,9 +1077,14 @@ class World3D:
         for switch_group in self.switch_groups.values():
             switch_group.print()
 
-
         for bot in self.bots:
             print(str(bot))
+
+
+        for plane_objects in self.planes.values():
+            for obj in plane_objects:
+                if obj.is_switch is True:
+                    print("Swicth: {0}".format(str(obj)))
 
 
 class AIBot:

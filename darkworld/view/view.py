@@ -89,8 +89,8 @@ class ImageManager:
             #model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE: ("token0.png", "token1.png", "token2.png", "token3.png"),
             model.Objects.TREASURE_CHEST: "treasure_chest.png",
-            model.Objects.DOOR: "door.png",
-            model.Objects.DOOR_OPEN: "door_open.png",
+            model.Objects.DOOR1: "door.png",
+            model.Objects.DOOR1_OPEN: "door_open.png",
             model.Objects.TRAP: "trap.png",
             model.Objects.TRAP_DISABLE: "trap_disable.png",
             model.Objects.KEY: "key2.png",
@@ -128,6 +128,10 @@ class ImageManager:
             model.Objects.TILE1: "tile4.png",
             model.Objects.MONSTER1: "tile3.png",
             model.Objects.MONSTER2: "winter_tiles0.png",
+            model.Objects.SWITCH_1: ("switch0.png", "switch3.png"),
+            model.Objects.SWITCH_2: ("switch1.png", "switch2.png"),
+            model.Objects.SWITCH_3: ("switch0.png", "switch3.png"),
+            model.Objects.SWITCH_4: ("switch1.png", "switch2.png"),
         })
 
         ImageManager.skins[new_skin_name] = new_skin
@@ -142,10 +146,43 @@ class ImageManager:
             model.Objects.TILE1: "tile20.png",
             model.Objects.MONSTER1: "tile20.png",
             model.Objects.MONSTER2: "tile20.png",
+            model.Objects.SWITCH_1: ("switch0.png", "switch5.png"),
+            model.Objects.SWITCH_2: ("switch1.png", "switch4.png"),
+            model.Objects.SWITCH_3: ("switch0.png", "switch5.png"),
+            model.Objects.SWITCH_4: ("switch1.png", "switch4.png"),
+            model.Objects.DOOR1: "door0.png",
+            model.Objects.DOOR1_OPEN: "door1.png",
         })
 
         ImageManager.skins[new_skin_name] = new_skin
 
+        new_skin_name = "tutorial2"
+        new_skin = (new_skin_name, {
+
+            # model.Objects.TILE1: "hieroglyph_light2.png",
+            # model.Objects.TILE2: "hieroglyph_light0.png",
+            # model.Objects.TILE3: "hieroglyph_light1.png",
+            model.Objects.WALL1: "hieroglyph_light5.png",
+            model.Objects.WALL2: "hieroglyph_light4.png",
+            model.Objects.WALL3: "hieroglyph_light3.png",
+            model.Objects.FAKE_WALL: "hieroglyph_light6.png",
+            model.Objects.TILE1: "hieroglyph_dark2.png",
+            model.Objects.TILE2: "hieroglyph_dark0.png",
+            model.Objects.TILE3: "hieroglyph_dark4.png",
+            model.Objects.TILE4: "hieroglyph_dark6.png",
+            model.Objects.MONSTER1: "hieroglyph_dark1.png",
+            model.Objects.MONSTER2: "hieroglyph_dark1.png",
+            model.Objects.SWITCH_1: ("switch0.png", "switch5.png"),
+            model.Objects.SWITCH_2: ("switch0.png", "switch5.png"),
+            model.Objects.SWITCH_3: ("switch0.png", "switch5.png"),
+            model.Objects.SWITCH_4: ("switch0.png", "switch5.png"),
+            model.Objects.DOOR1: "door0.png",
+            model.Objects.DOOR1_OPEN: "door1.png",
+            model.Objects.DOOR2: "door2.png",
+            model.Objects.DOOR2_OPEN: "door3.png",
+        })
+
+        ImageManager.skins[new_skin_name] = new_skin
 
     def get_skin_image(self, tile_name: str, skin_name: str = DEFAULT_SKIN, tick=0, width: int = 32, height: int = 32):
 
@@ -198,8 +235,28 @@ class ImageManager:
             self.sprite_sheets["ladder{0}.png".format(i)] = (sheet_file_name, (0, i * 32, 32, 32))
 
         sheet_file_name = "switches_sheet.png"
-        for i in range(0, 2):
+        for i in range(0, 6):
             self.sprite_sheets["switch{0}.png".format(i)] = (sheet_file_name, (i * 32, 0, 32, 32))
+
+        sheet_file_name = "doors_sheet.png"
+        for i in range(0, 4):
+            self.sprite_sheets["door{0}.png".format(i)] = (sheet_file_name, (i * 32, 0, 32, 32))
+
+
+        sheet_file_name = "hieroglyph_sheet2.png"
+        i = 0
+        for y in range(0,4):
+            for x in range(0, 4):
+                self.sprite_sheets["hieroglyph_dark{0}.png".format(i)] = (sheet_file_name, (x * 33, y * 33, 32, 32))
+                i+=1
+
+        sheet_file_name = "hieroglyph_sheet3.png"
+        i = 0
+        for y in range(0,4):
+            for x in range(0, 4):
+                self.sprite_sheets["hieroglyph_light{0}.png".format(i)] = (sheet_file_name, (x * 33, y * 33, 32, 32))
+                i+=1
+
 
         sheet_file_name = "winter_sheet2.png"
         for i in range(0, 5):
@@ -325,6 +382,7 @@ class DWWorldView(View):
 
         # What are the contraints to the view position
         self.max_view_pos = np.array(max_view_pos)
+        #self.max_view_pos = np.maximum(np.array(max_view_pos), np.array(([0,0,self.model.world.depth + self.camera_distance])))
         self.min_view_pos = np.array(min_view_pos)
         if view_pos is None:
             view_pos = np.add(self.min_view_pos, self.max_view_pos)
@@ -385,7 +443,7 @@ class DWWorldView(View):
             for pos, obj in objs_at_d:
 
                 if obj.is_switch is True:
-                    tick_count = obj.tick_count
+                    tick_count = obj.state
                 elif obj.name in (model.Objects.PLAYER):
                     tick_count = obj.tick_count // 10
                 else:
@@ -471,10 +529,10 @@ class ModelToView3D():
         self.infinity = 500
 
         # How much space around the view do we want to add extra objects?
-        self.view_padding = 256
+        self.view_padding = 128
 
         #  Add perspective to the position of objects in the view
-        self.projection = ModelToView3D.PARALLEL
+        #self.projection = ModelToView3D.PARALLEL
         self.projection = ModelToView3D.PERSPECTIVE
 
     def get_object_list(self, view_pos, view_width, view_height, view_depth):
@@ -488,6 +546,8 @@ class ModelToView3D():
         for z in self.model.world.planes.keys():
 
             # Get the list of objects from the model that are at this plane...
+            #objects_at_z = sorted(self.model.world.planes[z], key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
+            #objects_at_z = self.model.world.planes[z].sort(key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
             objects_at_z = self.model.world.planes[z]
 
             # For each object in the list...

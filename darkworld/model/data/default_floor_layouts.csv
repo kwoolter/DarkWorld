@@ -658,3 +658,223 @@ ID,Name,Layer,Layout
 5,World5,51,                    
 5,World5,51,                    
 5,World5,51,                    
+6,World6,20,                    
+6,World6,20,                    
+6,World6,20,                    
+6,World6,20,                    
+6,World6,20,                    
+6,World6,20,####################
+6,World6,20,#      #    #      #
+6,World6,20,# p    @    #      #
+6,World6,20,#      #    #      #
+6,World6,20,#      #    #   n  #
+6,World6,20,#      # k  #      #
+6,World6,20,#      #    #      #
+6,World6,20,#      #    @      #
+6,World6,20,#      #    #      #
+6,World6,20,####################
+6,World6,20,                    
+6,World6,20,                    
+6,World6,20,                    
+6,World6,20,                    
+6,World6,20,                    
+6,World6,21,                    
+6,World6,21,                    
+6,World6,21,                    
+6,World6,21,                    
+6,World6,21,                    
+6,World6,21,                    
+6,World6,21, FFFFFFFFFFFFFFFFFF 
+6,World6,21, FFFFFFFFFFFFFFFFFF 
+6,World6,21, FFFFFFFFFFFFFFFFFF 
+6,World6,21, FFFFFFFFFFFFFFFFFF 
+6,World6,21, FFFFFFFFFFFFFFFFFF 
+6,World6,21, FFFFFFFFFFFFFFFFFF 
+6,World6,21, FFFFFFFFFFFFFFFFFF 
+6,World6,21, FFFFFFFFFFFFFFFFFF 
+6,World6,21,                    
+6,World6,21,                    
+6,World6,21,                    
+6,World6,21,                    
+6,World6,21,                    
+6,World6,21,                    
+7,World7,20,                    
+7,World7,20,                    
+7,World7,20,                    
+7,World7,20,                    
+7,World7,20,                    
+7,World7,20,####################
+7,World7,20,#      #      S#K  #
+7,World7,20,# p    @       #   #
+7,World7,20,#      #       #   #
+7,World7,20,#      #       D   #
+7,World7,20,#      #       ##E##
+7,World7,20,#      #       #   #
+7,World7,20,#      @       #kn #
+7,World7,20,#_     #      S#   #
+7,World7,20,####################
+7,World7,20,                    
+7,World7,20,                    
+7,World7,20,                    
+7,World7,20,                    
+7,World7,20,                    
+7,World7,21,                    
+7,World7,21,                    
+7,World7,21,                    
+7,World7,21,                    
+7,World7,21,                    
+7,World7,21,                    
+7,World7,21, FFFFFFFFFFFFFFFFFF 
+7,World7,21, FFFFFFFFFFFFFFFFFF 
+7,World7,21, FFFFFFFFFFFFFFFFFF 
+7,World7,21, FFFFFFFFFFFFFFFFFF 
+7,World7,21, FFFFFFFFFFFFFFFFFF 
+7,World7,21, FFFFFFFFFFFFFFFFFF 
+7,World7,21, **FFFFFFFFFFFFFFFF 
+7,World7,21, **FFFFFFFFFFFFFFFF 
+7,World7,21,                    
+7,World7,21,                    
+7,World7,21,                    
+7,World7,21,                    
+7,World7,21,                    
+7,World7,21,                    
+8,World8,20,####          ######
+8,World8,20,#p #          #   s#
+8,World8,20,#  #          ~    #
+8,World8,20,#  #          #    #
+8,World8,20,#  #          #    #
+8,World8,20,#  #                
+8,World8,20,#  #                
+8,World8,20,#  #                
+8,World8,20,#  ##             ::
+8,World8,20,#                 ::
+8,World8,20,#                 ::
+8,World8,20,#  ##             ::
+8,World8,20,#  #                
+8,World8,20,#  #                
+8,World8,20,# S#                
+8,World8,20,#  ?          #    #
+8,World8,20,#  #          #    #
+8,World8,20,#n #          ~    #
+8,World8,20,#  #          #   s#
+8,World8,20,####          ######
+8,World8,21,                    
+8,World8,21, ff            ffff 
+8,World8,21, ff           fffff 
+8,World8,21, ff            ffff 
+8,World8,21, ff            ffff 
+8,World8,21, ff                 
+8,World8,21, ff                 
+8,World8,21, ff                 
+8,World8,21, ff                 
+8,World8,21, ff _            f  
+8,World8,21, ff _            f  
+8,World8,21, ff                 
+8,World8,21, ff                 
+8,World8,21, ff                 
+8,World8,21, ff                 
+8,World8,21, ff            ffff 
+8,World8,21, ff            ffff 
+8,World8,21, ff           fffff 
+8,World8,21, ff            ffff 
+8,World8,21,                    
+8,World8,50,####################
+8,World8,50,#U                 #
+8,World8,50,#                  #
+8,World8,50,#                  #
+8,World8,50,#                  #
+8,World8,50,                    
+8,World8,50,                    
+8,World8,50,                    
+8,World8,50,                    
+8,World8,50,                    
+8,World8,50,                    
+8,World8,50,                    
+8,World8,50,                    
+8,World8,50,                    
+8,World8,50,                    
+8,World8,50,##                 #
+8,World8,50,##                 #
+8,World8,50,#x                 #
+8,World8,50,##                 #
+8,World8,50,####################
+8,World8,51,                    
+8,World8,51, ffffffffffffffffff 
+8,World8,51, ffffffffffffffffff 
+8,World8,51, ffffffff88ffffffff 
+8,World8,51, ffffffff88ffffffff 
+8,World8,51,                    
+8,World8,51,                    
+8,World8,51,                    
+8,World8,51,                    
+8,World8,51,                    
+8,World8,51,                    
+8,World8,51,                    
+8,World8,51,                    
+8,World8,51,                    
+8,World8,51,                    
+8,World8,51, ffffffff88ffffffff 
+8,World8,51, ffffffff88ffffffff 
+8,World8,51, ffffffffffffffffff 
+8,World8,51, ffffffffffffffffff 
+8,World8,51,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                 k  
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,  U                 
+8,World8,90,                    
+8,World8,90,                    
+8,World8,90,                    
+8,World8,91,                    
+8,World8,91,         ffffff8888 
+8,World8,91,         ffffff8888 
+8,World8,91,         ffffff8888 
+8,World8,91,         ff    8888 
+8,World8,91,         ff         
+8,World8,91,         ff         
+8,World8,91,                    
+8,World8,91,                    
+8,World8,91,                    
+8,World8,91,                    
+8,World8,91,                    
+8,World8,91,                    
+8,World8,91,         ff         
+8,World8,91,         ff         
+8,World8,91, 8888    ff         
+8,World8,91, 8888ffffff         
+8,World8,91, 8888ffffff         
+8,World8,91, 8888ffffff         
+8,World8,91,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,         88         
+8,World8,101,        8888        
+8,World8,101,        8888        
+8,World8,101,         88         
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
+8,World8,101,                    
