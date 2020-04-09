@@ -30,12 +30,15 @@ class DWModel():
 
         size = 30
 
-        self.player = RPGObject3D(type=7,
-                                  name=Objects.PLAYER,
-                                  opos=(size * 9, size * 9, 1),
-                                  osize=(size, size, 1))
+        # self.player = RPGObject3D(type=7,
+        #                           name=Objects.PLAYER,
+        #                           opos=(size * 9, size * 9, 1),
+        #                           osize=(size, size, 1))
 
-        self.move_world(8)
+        self.player = WorldObjectLoader.get_object_copy_by_name(Objects.PLAYER)
+        self.player.is_player = True
+
+        self.move_world(9)
 
     def print(self):
         print("Printing {0} model...".format(self.name))

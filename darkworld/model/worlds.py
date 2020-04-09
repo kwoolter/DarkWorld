@@ -14,6 +14,9 @@ class RPGObject3D(object):
     TOUCH_FIELD_X = 4
     TOUCH_FIELD_Y = 4
 
+    TYPE_PLAYER = "player"
+    TYPE_MONSTER = "monster"
+
     def __init__(self, name: str,
                  type: int = 0,
                  opos=(0, 0, 0),
@@ -46,6 +49,7 @@ class RPGObject3D(object):
         self.is_collectable = collectable
         self.is_switch = switch
         self.is_switchable = switchable
+        self.is_player = False
 
 
     def __str__(self):
@@ -478,6 +482,13 @@ class WorldBuilder():
 
         new_world_id +=1
         new_world_properties = ("Tutorial World {0}".format(new_world_id), "tutorial2", (50, 104, 20), (528, 358, 20), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
+
+        # World 9
+
+        new_world_id +=1
+        new_world_properties = ("Tutorial World {0}".format(new_world_id), "tutorial2", (66, 300, 0), (528, 240, 0), None)
         self.world_properties[new_world_id] = new_world_properties
 
 

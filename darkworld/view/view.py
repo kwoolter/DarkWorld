@@ -78,9 +78,15 @@ class ImageManager:
             model.Objects.WALL2: "winter_tiles2.png",
             model.Objects.WALL3: "winter_tiles3.png",
             model.Objects.FAKE_WALL: "wall.png",
+            model.Objects.BOOK: "rpg_sprite2-5.png",
+            model.Objects.SCROLL: "rpg_sprite0-5.png",
+            model.Objects.ENEMY1: "rpg_sprite5-15.png",
+            model.Objects.ENEMY2: "rpg_sprite6-15.png",
             model.Objects.BLOCK1: "block1.png",
             model.Objects.BLOCK2: "block2.png",
             model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
+            model.Objects.HELMET1: "rpg_sprite2-10.png",
+            model.Objects.HELMET2: "rpg_sprite3-10.png",
             model.Objects.MONSTER1: "bear.png",
             model.Objects.MONSTER2: "winter_tiles0.png",
             model.Objects.BIG_MONSTER1: "bear.png",
@@ -89,6 +95,8 @@ class ImageManager:
             #model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE: ("token0.png", "token1.png", "token2.png", "token3.png"),
             model.Objects.TREASURE_CHEST: "treasure_chest.png",
+            model.Objects.DECOR1: "rpg_sprite0-13.png",
+            model.Objects.DECOR2: "rpg_sprite1-13.png",
             model.Objects.DOOR1: "door.png",
             model.Objects.DOOR1_OPEN: "door_open.png",
             model.Objects.TRAP: "trap.png",
@@ -163,23 +171,32 @@ class ImageManager:
             # model.Objects.TILE2: "hieroglyph_light0.png",
             # model.Objects.TILE3: "hieroglyph_light1.png",
             model.Objects.WALL1: "hieroglyph_light5.png",
+            model.Objects.WALL1: "rpg_sprite8-1.png",
             model.Objects.WALL2: "hieroglyph_light4.png",
             model.Objects.WALL3: "hieroglyph_light3.png",
             model.Objects.FAKE_WALL: "hieroglyph_light6.png",
+            model.Objects.BLOCK1: "rpg_sprite7-1.png",
+            model.Objects.BLOCK2: "rpg_sprite6-1.png",
             model.Objects.TILE1: "hieroglyph_dark2.png",
             model.Objects.TILE2: "hieroglyph_dark0.png",
             model.Objects.TILE3: "hieroglyph_dark4.png",
             model.Objects.TILE4: "hieroglyph_dark6.png",
+            model.Objects.TREASURE: "rpg_sprite1-12.png",
+            model.Objects.TREASURE_CHEST: ("rpg_sprite2-3.png","rpg_sprite3-3.png"),
             model.Objects.MONSTER1: "hieroglyph_dark1.png",
             model.Objects.MONSTER2: "hieroglyph_dark1.png",
             model.Objects.SWITCH_1: ("switch0.png", "switch5.png"),
             model.Objects.SWITCH_2: ("switch0.png", "switch5.png"),
             model.Objects.SWITCH_3: ("switch0.png", "switch5.png"),
             model.Objects.SWITCH_4: ("switch0.png", "switch5.png"),
-            model.Objects.DOOR1: "door0.png",
-            model.Objects.DOOR1_OPEN: "door1.png",
-            model.Objects.DOOR2: "door2.png",
-            model.Objects.DOOR2_OPEN: "door3.png",
+            model.Objects.DOOR1: "rpg_sprite2-2.png",
+            model.Objects.DOOR1_OPEN: None,
+            model.Objects.DOOR2: "rpg_sprite1-2.png",
+            model.Objects.DOOR2_OPEN: None,
+            model.Objects.LADDER_UP: "ladder3.png",
+            model.Objects.KEY: "rpg_sprite7-3.png",
+            model.Objects.BOSS_KEY: "rpg_sprite9-3.png",
+
         })
 
         ImageManager.skins[new_skin_name] = new_skin
@@ -231,7 +248,7 @@ class ImageManager:
             self.sprite_sheets["token{0}.png".format(i)] = (sheet_file_name, (i * 8, 0, 8, 8))
 
         sheet_file_name = "ladders_sheet.png"
-        for i in range(0, 3):
+        for i in range(0, 4):
             self.sprite_sheets["ladder{0}.png".format(i)] = (sheet_file_name, (0, i * 32, 32, 32))
 
         sheet_file_name = "switches_sheet.png"
@@ -257,6 +274,11 @@ class ImageManager:
                 self.sprite_sheets["hieroglyph_light{0}.png".format(i)] = (sheet_file_name, (x * 33, y * 33, 32, 32))
                 i+=1
 
+
+        sheet_file_name = "rpg_sheet_gold.png"
+        for y in range(0,21):
+            for x in range(0, 10):
+                self.sprite_sheets["rpg_sprite{0}-{1}.png".format(x,y)] = (sheet_file_name, (x * 32, y * 32, 32, 32))
 
         sheet_file_name = "winter_sheet2.png"
         for i in range(0, 5):
