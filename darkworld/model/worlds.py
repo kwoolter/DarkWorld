@@ -291,7 +291,14 @@ class WorldBuilder():
 
         self.load_world_properties()
         self.load_moving_objects()
+        self.load_npcs()
 
+
+    def load_npcs(self):
+
+        world = self.get_world(9)
+        world.add_npc(name="Rosie", object_id=Objects.NPC1, xyz=(1 * 32,  1 * 32, 50))
+        world.add_npc(name="Skids", object_id=Objects.NPC2, xyz=(18 * 32,  1 * 32, 50))
 
     def load_moving_objects(self):
 
@@ -738,6 +745,7 @@ class World3D:
         self.planes = {}
         self.monsters = {}
         self.bots = []
+        self._npcs = {}
         self.switch_groups = {}
 
         self.player = None
@@ -817,6 +825,23 @@ class World3D:
             self.move_player_to_xyz(self.player_exit_pos)
         return
 
+    def add_npc(self, name : str, object_id : str, xyz : tuple):
+        new_npc = WorldObjectLoader.get_object_copy_by_name(object_id)
+        new_npc.set_pos(xyz)
+        self.add_object3D(new_npc, do_copy=False)
+        self._npcs[object_id] = name
+
+    def get_npc_name(self, object_id : str):
+        if object_id in self._npcs.keys():
+            return self._npcs[object_id]
+        else:
+            return None
+
+    def talk_to_npc(self, npc_id):
+        npc_name = self.get_npc_name(npc_id)
+        if npc_name is not None:
+            print("talk to {0}".format(npc_name))
+
     def add_monster(self, new_monster, move_vector, ai = None):
         self.monsters[new_monster] = move_vector
         if ai is not None:
@@ -827,17 +852,6 @@ class World3D:
 
         for bot in self.bots:
             bot.tick()
-
-        # for monster in self.monsters.keys():
-        #     if override_vector is None:
-        #         vector = self.monsters[monster]
-        #     else:
-        #         vector = override_vector
-        #
-        #     self.move_object(monster, vector)
-        #     if monster.has_moved() is False and reverse is True:
-        #         self.monsters[monster] = np.multiply(vector, World3D.INVERSE)
-        #         #print("Change from {0} to {1}".format(vector, self.monsters[monster]))
 
     def delete_player(self):
 

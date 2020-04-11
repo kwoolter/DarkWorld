@@ -1,13 +1,13 @@
 import collections
 import os
+from darkworld.model.RPGConversations import *
 
 from darkworld.model.worlds import *
+from darkworld.model.events import *
 
 class DWModel():
 
     DATA_FILES_DIR = os.path.dirname(__file__) + "\\data\\"
-
-
 
     def __init__(self, name: str):
         self.name = name
@@ -19,6 +19,7 @@ class DWModel():
         self.current_world_id = 0
 
         self.player = None
+        self._conversations = None
         self.inventory = {}
 
     def initialise(self):
@@ -27,6 +28,9 @@ class DWModel():
         self.world_factory = WorldBuilder(DWModel.DATA_FILES_DIR)
         self.world_factory.initialise()
         self.world = self.world_factory.get_world(self.current_world_id)
+
+        self._conversations = ConversationFactory(DWModel.DATA_FILES_DIR + "conversations.xml")
+        self._conversations.load()
 
         size = 30
 
@@ -59,6 +63,9 @@ class DWModel():
         if len(self.world.touching_objects(self.player, distance = 0, filter=World3D.ENEMIES)) > 0:
             print("Hit enemy")
             print("Player died")
+            self.events.add_event(Event(type=Event.GAME,
+                                        name=Event.DEAD,
+                                        description="{0} has died".format(self.player.name)))
             self.move_world(self.current_world_id)
 
         # Gravity tries to make the player fall
@@ -99,7 +106,9 @@ class DWModel():
                             self.use_inventory_object(req_obj)
                             print(str(self.world))
                     else:
-                        print("You don't have required object {0}".format(req_obj))
+                        self.events.add_event(Event(type=Event.GAME,
+                                                    name=Event.ACTION_FAILED,
+                                                    description="You don't have required object {0}".format(req_obj)))
 
             elif object.name == Objects.EXIT_PREVIOUS:
                 if self.world.player.is_inside(object):
@@ -115,8 +124,19 @@ class DWModel():
             elif object.name == Objects.TRAP:
                 if self.world.player.is_colliding(object):
                     print("Ouch...")
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.LOSE_HEALTH,
+                                                description="You hit {0}".format(object.name)))
+
                     self.world.delete_object3D(object)
 
+    def talk_to_npc(self, npc_id : str):
+        npc_name = self.world.get_npc_name(npc_id)
+        conversation = self._conversations.get_conversation(npc_name)
+        text = conversation.get_next_line().text
+        print("{0}: '{1}'".format(npc_name, text))
+        self.events.add_event(
+            Event(type="xxx", name="yyyy", description="{0}: '{1}'".format(npc_name, text)))
 
     def interact(self):
 
@@ -184,6 +204,9 @@ class DWModel():
                 #     #self.world.swap_objects_by_name(Objects.TILE1, Objects.SWITCH_TILE)
                 #     print("Switching {0}".format(object))
 
+                elif object.name in (Objects.NPC1, Objects.NPC2):
+                    self.talk_to_npc(object.name)
+
                 else:
                     self.collect_inventory_object(object)
                     self.delete_world_object(object)
@@ -241,6 +264,9 @@ class DWModel():
 
         return moved
 
+
+    def get_conversation(self, npc_name : str):
+        return self._conversations.get_conversation(npc_name)
 
     def end(self):
         pass

@@ -91,6 +91,8 @@ class ImageManager:
             model.Objects.MAP: "rpg_sprite1-5.png",
             model.Objects.MONSTER1: "bear.png",
             model.Objects.MONSTER2: "winter_tiles0.png",
+            model.Objects.NPC1: "rpg_sprite_bw0-15.png",
+            model.Objects.NPC2: "rpg_sprite_bw1-15.png",
             model.Objects.BIG_MONSTER1: "bear.png",
             model.Objects.BIG_MONSTER2: "winter_tiles0.png",
             model.Objects.BOMB: "rpg_sprite2-8.png",
@@ -286,6 +288,13 @@ class ImageManager:
             for x in range(0, 10):
                 self.sprite_sheets["rpg_sprite{0}-{1}.png".format(x,y)] = (sheet_file_name, (x * 32, y * 32, 32, 32))
 
+
+        sheet_file_name = "rpg_sheet_bw.png"
+        for y in range(0,21):
+            for x in range(0, 10):
+                self.sprite_sheets["rpg_sprite_bw{0}-{1}.png".format(x,y)] = (sheet_file_name, (x * 32, y * 32, 32, 32))
+
+
         sheet_file_name = "winter_sheet2.png"
         for i in range(0, 5):
             self.sprite_sheets["winter_tiles{0}.png".format(i)] = (sheet_file_name, (i * 119, 1, 96, 96))
@@ -328,6 +337,7 @@ class DWMainFrame(View):
         # Create a view for rendering the model of the current world
         # Define how far away the camera is allowed to follow the player by setting min and max positions
         self.world_view = DWWorldView(self.model, min_view_pos = (200, -200, -350), max_view_pos = (800, 800, 400))
+        self.text_box = DWTextBox("Hello World")
 
 
     def initialise(self):
@@ -352,15 +362,15 @@ class DWMainFrame(View):
             print(str(err))
 
         self.world_view.initialise()
+        self.text_box.initialise()
 
     def print(self):
 
         print("Printing Dark Work view...")
         self.world_view.print()
+        self.text_box.print()
 
     def draw(self):
-
-        # self.surface.fill((255,0,255))
 
         pane_rect = self.surface.get_rect()
 
@@ -370,6 +380,14 @@ class DWMainFrame(View):
         self.world_view.draw()
         self.surface.blit(self.world_view.surface, (x, y))
 
+        x = 10
+        y= 20
+
+        if self.text_box.is_visible is True:
+            self.text_box.draw()
+            self.surface.blit(self.text_box.surface, (x, y))
+
+
     def update(self):
         pygame.display.update()
 
@@ -378,6 +396,12 @@ class DWMainFrame(View):
 
     def tick(self):
         self.world_view.tick()
+        self.text_box.tick()
+
+    def process_event(self, new_event: model.Event):
+        self.world_view.process_event(new_event)
+        self.text_box.process_event(new_event)
+
 
     def move_view(self, direction):
 
@@ -385,8 +409,6 @@ class DWMainFrame(View):
 
 
 class DWWorldView(View):
-
-    RESOURCES_DIR = os.path.dirname(__file__) + "\\resources\\"
 
     def __init__(self, model : model.DWModel, min_view_pos, max_view_pos, view_pos = None):
 
@@ -623,3 +645,69 @@ class ModelToView3D():
 
         return objects
 
+
+class DWTextBox(View):
+
+    def __init__(self, model : str):
+
+        super(DWTextBox, self).__init__()
+
+        # Connect to the model
+        self.model = model
+        self.surface = None
+        self.width = 100
+        self.height = 300
+        self.margin = 4
+        self.padding = 4
+        self.skin = "default"
+        self.fg = Colours.WHITE
+        self.bg = Colours.BLACK
+        self.timer = self.tick_count
+        self.life_time_ticks = 10
+
+    @property
+    def is_visible(self):
+        return self.tick_count < (self.timer + self.life_time_ticks)
+
+    def initialise(self):
+
+        super(DWTextBox, self).initialise()
+
+        print("Initialising {0}".format(__class__))
+        self.surface = pygame.Surface((self.width, self.height))
+
+        self.border_rect = (self.padding,
+                            self.padding,
+                            self.width-2*self.padding,
+                            self.height-2*self.padding)
+
+        self.text_rect =  (self.padding + self.margin,
+                           self.padding + self.margin,
+                           self.width-2*(self.padding + self.margin),
+                           self.height-2*(self.padding + self.padding))
+
+    def print(self):
+        print("Printing Dark Work Text Box view...")
+
+    def process_event(self, new_event: model.Event):
+        self.model = new_event.description
+        self.timer = self.tick_count
+
+    def draw(self):
+
+        if self.tick_count > (self.timer + self.life_time_ticks):
+            return
+
+        self.surface.fill(Colours.BLACK)
+
+        pygame.draw.rect(self.surface,
+                         Colours.WHITE,
+                         self.border_rect,
+                         2)
+
+        drawText(surface=self.surface,
+                 text=self.model,
+                 rect = self.text_rect,
+                 font=pygame.font.SysFont(pygame.font.get_default_font(), 16),
+                 color=self.fg,
+                 bkg=self.bg)

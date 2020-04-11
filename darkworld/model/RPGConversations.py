@@ -1,12 +1,11 @@
 __author__ = 'KeithW'
 
 from xml.dom.minidom import *
-
-from .RPGCheck import *
 from .RPGXMLUtilities import *
+import logging
 
 
-class ConversationLine(RPGCheck):
+class ConversationLine(object):
 
     NOT_ATTEMPTED = 0
     SUCCEEDED = 1
@@ -15,11 +14,15 @@ class ConversationLine(RPGCheck):
 
     def __init__(self, text : str):
 
-        super(ConversationLine, self).__init__(text, "ConversationLine")
-
         self.text = text
+        self.completed = False
 
+    def is_completed(self):
+        return self.completed
 
+    def attempt(self):
+        self.completed = True
+        return self.completed
 
 class Conversation(object):
 
@@ -32,37 +35,24 @@ class Conversation(object):
     def add_line(self, new_line : ConversationLine):
         self._lines.append(new_line)
 
-    def is_available(self, character : Character):
-
-        available = False
-
-        for line in self._lines:
-            if line.is_available(character):
-                available = True
-                break
-        return available
-
-    def is_completed(self, character : Character):
+    def is_completed(self):
 
         completed = True
 
         for line in self._lines:
-            if line.is_completed(character) is False:
+            if line.is_completed() is False:
                 completed = False
                 break
 
         return completed
 
     # Get the next line in the conversation
-    def get_next_line(self, character : Character):
+    def get_next_line(self):
 
         # If this conversation has been completed...
-        if self.is_completed(character):
+        if self.is_completed():
             # then just pick a line at random that is still available
-            while True:
-                line = self._lines[random.randint(0,len(self._lines)-1)]
-                if line.is_available(character):
-                    break
+            line = self._lines[random.randint(0,len(self._lines)-1)]
 
         # Else cycle through the lines in sequence
         else:
@@ -125,7 +115,7 @@ class ConversationFactory(object):
 
             logging.info("%s.load(): Loading Conversation for NPC '%s'...", __class__, new_conversation.owner)
 
-            # Next get a list of all of the challenges
+            # Next get a list of all of the lines
             lines = conversation.getElementsByTagName("line")
 
             # For each line...
@@ -140,27 +130,9 @@ class ConversationFactory(object):
 
                 logging.info("%s.load(): Loading line '%s'...", __class__, new_line.text)
 
-                # Now collect all of the pre-requisites for this line and add them to the line
-                stat_group = line.getElementsByTagName("pre_requisites")
-                if len(stat_group) > 0:
-                    stats =xml_get_stat_list(stat_group[0])
-                    for stat in stats:
-                        new_line.add_pre_requisite(stat)
-                        logging.info("%s.load: loading pre-req %s", __class__, str(stat))
-
-                # Now collect all of the rewards for this line and add them to the line
-                stat_group = line.getElementsByTagName("rewards")
-                if len(stat_group) > 0:
-                    stats =xml_get_stat_list(stat_group[0])
-                    for stat in stats:
-                        new_line.add_reward(stat)
-                        logging.info("%s.load: loading reward %s", __class__, str(stat))
-
-                logging.info("%s.load(): Loaded new Line '%s'", __class__, str(new_line))
-
             logging.info("%s.load(): Conversation '%s' loaded", __class__, new_conversation.owner)
 
-            # Add the new quest to the dictionary
+            # Add the new conversation to the dictionary
             self._conversations[new_conversation.owner] = new_conversation
 
         self._dom.unlink()

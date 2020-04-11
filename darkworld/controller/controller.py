@@ -66,7 +66,7 @@ class DWController:
                 if event.type == model.Event.QUIT:
                     loop = False
 
-                event = self.game.get_next_event()
+                event = self.m.get_next_event()
 
             # Loop to process pygame events
             for event in pygame.event.get():
@@ -92,6 +92,10 @@ class DWController:
                         self.v.world_view.m2v.infinity += 10
                     elif event.key == K_F10:
                         self.v.world_view.m2v.infinity -= 10
+                    elif event.key == K_q:
+
+                        text = self.m.get_conversation("Rosie").get_next_line().text
+                        self.v.text_box.model = text
 
                 elif event.type == QUIT:
                     loop = False

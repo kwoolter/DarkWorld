@@ -33,6 +33,8 @@ class Objects:
     MAP = "map"
     MONSTER1 = "monster1"
     MONSTER2 = "monster2"
+    NPC1 = "NPC1"
+    NPC2 = "NPC2"
     PLAYER = "player"
     PLAYER = "player"
     POTION1 = "potion1"
