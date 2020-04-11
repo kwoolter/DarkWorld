@@ -357,6 +357,35 @@ class WorldBuilder():
 
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
+
+        # World 9
+        world = self.get_world(9)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((5*32, 11*32, 50))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.EAST, 32*10, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, False),
+                        (World3D.WEST, 32*10, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, False)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
+        new_monster.set_pos((15*32, 16*32, 50))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.WEST, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, False),
+                        (World3D.EAST, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, False)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
         # World 10
         world = self.get_world(10)
 
@@ -690,6 +719,7 @@ class World3D:
     PLAYER_FALLING = "falling"
 
     SLOW_TILES = (Objects.LIQUID1, Objects.LIQUID2)
+    ENEMIES = (Objects.ENEMY1, Objects.ENEMY2)
 
     def __init__(self, name: str = "default", w: int = 100, h: int = 100, d: int = 100):
 
@@ -1102,12 +1132,18 @@ class AIBot:
 
     MODE_MOVING = "moving"
 
+    INSTRUCTION_FAIL_NOP = "NOP"
+    INSTRUCTION_FAIL_TICK = "TICK"
+    INSTRUCTION_FAIL_SKIP = "SKIP"
+    INSTRUCTION_FAIL_VALID_OPTIONS = (INSTRUCTION_FAIL_NOP, INSTRUCTION_FAIL_SKIP, INSTRUCTION_FAIL_TICK)
+
     def __init__(self, target_object  :RPGObject3D, world : World3D):
         self.target_object = target_object
         self.world = world
         self.instructions = []
         self.current_instruction_id = 0
         self.current_instruction_ticks = 0
+        self.loop = False
         self.mode = AIBot.MODE_MOVING
 
     def __str__(self):
@@ -1119,7 +1155,7 @@ class AIBot:
 
         return text
 
-    def set_instructions(self, new_instructions : list, loop = True):
+    def set_instructions(self, new_instructions : list, loop : bool = True):
 
         self.instructions = new_instructions
         self.loop = loop
@@ -1129,22 +1165,38 @@ class AIBot:
         if self.current_instruction_id < len(self.instructions) and self.current_instruction_id >=0:
 
             current_instruction = self.instructions[self.current_instruction_id]
-            action, ticks, skip_on_fail = current_instruction
+            action, ticks, action_on_fail = current_instruction
 
+            # If the next instruction requires an action...
             if action is not None:
+
+                if action_on_fail not in AIBot.INSTRUCTION_FAIL_VALID_OPTIONS:
+                    action_on_fail = AIBot.INSTRUCTION_FAIL_TICK
 
                 self.world.move_object(self.target_object, action)
                 success = self.target_object.has_moved()
 
+            #If no action then success is always true
             else:
                 success = True
 
-            self.current_instruction_ticks += 1
+            # If instruction succeeded...
+            if success is True:
+                self.current_instruction_ticks += 1
+                if self.current_instruction_ticks > ticks:
+                    self.next_instruction()
 
-            if self.current_instruction_ticks > ticks or \
-                (success == False and skip_on_fail == True):
+            # If the instruction failed then determine what to do next based on option
+            else:
+                if action_on_fail == AIBot.INSTRUCTION_FAIL_NOP:
+                    pass
+                elif action_on_fail == AIBot.INSTRUCTION_FAIL_TICK:
+                    self.current_instruction_ticks += 1
+                    if self.current_instruction_ticks > ticks:
+                        self.next_instruction()
+                elif action_on_fail == AIBot.INSTRUCTION_FAIL_SKIP:
+                    self.next_instruction()
 
-                self.next_instruction()
         else:
             pass
             #print("current instruction id {0} not in range".format(self.current_instruction_id))

@@ -52,8 +52,16 @@ class DWModel():
         print("Default Game event process:{0}".format(new_event))
 
     def tick(self):
+
         self.world.tick()
         self.tick_count += 1
+
+        if len(self.world.touching_objects(self.player, distance = 0, filter=World3D.ENEMIES)) > 0:
+            print("Hit enemy")
+            print("Player died")
+            self.move_world(self.current_world_id)
+
+        # Gravity tries to make the player fall
         self.world.move_player(World3D.NORTH)
         if self.world.player.has_changed_planes() is True:
             self.world.state = World3D.PLAYER_FALLING

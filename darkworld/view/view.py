@@ -79,6 +79,7 @@ class ImageManager:
             model.Objects.WALL3: "winter_tiles3.png",
             model.Objects.FAKE_WALL: "wall.png",
             model.Objects.BOOK: "rpg_sprite2-5.png",
+            model.Objects.COINS: "rpg_sprite1-12.png",
             model.Objects.SCROLL: "rpg_sprite0-5.png",
             model.Objects.ENEMY1: "rpg_sprite5-15.png",
             model.Objects.ENEMY2: "rpg_sprite6-15.png",
@@ -87,10 +88,12 @@ class ImageManager:
             model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
             model.Objects.HELMET1: "rpg_sprite2-10.png",
             model.Objects.HELMET2: "rpg_sprite3-10.png",
+            model.Objects.MAP: "rpg_sprite1-5.png",
             model.Objects.MONSTER1: "bear.png",
             model.Objects.MONSTER2: "winter_tiles0.png",
             model.Objects.BIG_MONSTER1: "bear.png",
             model.Objects.BIG_MONSTER2: "winter_tiles0.png",
+            model.Objects.BOMB: "rpg_sprite2-8.png",
             # model.Objects.PLAYER: ("man0.png", "man2.png", "man1.png", "man2.png"),
             #model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE: ("token0.png", "token1.png", "token2.png", "token3.png"),
@@ -111,6 +114,8 @@ class ImageManager:
             model.Objects.HOLE: "down shoot.png",
             model.Objects.EXIT_NEXT: "exit_green.png",
             model.Objects.EXIT_PREVIOUS: "exit_red.png",
+            model.Objects.POTION1: "rpg_sprite5-4.png",
+            model.Objects.POTION2: "rpg_sprite4-4.png",
             model.Objects.SWITCH_TILE1: None,
             model.Objects.SWITCH_TILE2: None,
             model.Objects.SWITCH_TILE3: None,
@@ -119,6 +124,7 @@ class ImageManager:
             model.Objects.SWITCH_2: ("switch1.png", "switch0.png"),
             model.Objects.SWITCH_3: ("switch0.png", "switch1.png"),
             model.Objects.SWITCH_4: ("switch1.png", "switch0.png"),
+            model.Objects.SWORD: "rpg_sprite9-5.png",
             model.Objects.LIQUID1: "liquid3.png",
             model.Objects.LIQUID2: "liquid2.png",
             model.Objects.LADDER_UP: "ladder2.png",
@@ -181,8 +187,8 @@ class ImageManager:
             model.Objects.TILE2: "hieroglyph_dark0.png",
             model.Objects.TILE3: "hieroglyph_dark4.png",
             model.Objects.TILE4: "hieroglyph_dark6.png",
-            model.Objects.TREASURE: "rpg_sprite1-12.png",
-            model.Objects.TREASURE_CHEST: ("rpg_sprite2-3.png","rpg_sprite3-3.png"),
+            model.Objects.TREASURE: "rpg_sprite7-12.png",
+            model.Objects.TREASURE_CHEST: "rpg_sprite2-3.png",
             model.Objects.MONSTER1: "hieroglyph_dark1.png",
             model.Objects.MONSTER2: "hieroglyph_dark1.png",
             model.Objects.SWITCH_1: ("switch0.png", "switch5.png"),
@@ -523,6 +529,18 @@ class DWWorldView(View):
                  rect=text_rect,
                  font=pygame.font.SysFont(pygame.font.get_default_font(), 12),
                  bkg=Colours.DARK_GREY)
+
+
+        msg = "  {0}  ".format(self.model.world.name)
+        # text_rect = (200, 10, 300, 60)
+        # drawText(surface=self.surface,
+        #          text=msg,
+        #          color=Colours.WHITE,
+        #          rect=text_rect,
+        #          font=pygame.font.SysFont(pygame.font.get_default_font(), 14),
+        #          bkg=Colours.DARK_GREY)
+
+        draw_text(surface=self.surface,msg=msg, x=self.width/2, y=20, size=32, fg_colour=Colours.WHITE, bg_colour=Colours.BLACK)
 
     def set_view(self, new_view_pos):
         # Set the position of the camera applying the minimum and maximum constraints of where is is allowed to go
