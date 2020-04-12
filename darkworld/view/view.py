@@ -208,6 +208,23 @@ class ImageManager:
 
         ImageManager.skins[new_skin_name] = new_skin
 
+        new_skin_name = "dungeon"
+        new_skin = (new_skin_name, {
+            model.Objects.DECOR1: "rpg_sprite_bw0-13.png",
+            model.Objects.DECOR2: "rpg_sprite_bw8-12.png",
+            model.Objects.LADDER_DOWN: "ladder4.png",
+            model.Objects.LADDER_UP: "ladder3.png",
+            model.Objects.NPC1: "rpg_sprite_bw5-14.png",
+            model.Objects.TILE1: "tile4.png",
+            model.Objects.TILE2: "wall2.png",
+            model.Objects.WALL1: "winter_tiles0.png",
+            model.Objects.WALL2: "winter_tiles3.png",
+            model.Objects.WALL3: "winter_tiles2.png",
+            model.Objects.FAKE_WALL: "winter_tiles0.png",
+        })
+
+        ImageManager.skins[new_skin_name] = new_skin
+
     def get_skin_image(self, tile_name: str, skin_name: str = DEFAULT_SKIN, tick=0, width: int = 32, height: int = 32):
 
         if skin_name not in ImageManager.skins.keys():
@@ -255,7 +272,7 @@ class ImageManager:
             self.sprite_sheets["token{0}.png".format(i)] = (sheet_file_name, (i * 8, 0, 8, 8))
 
         sheet_file_name = "ladders_sheet.png"
-        for i in range(0, 4):
+        for i in range(0, 5):
             self.sprite_sheets["ladder{0}.png".format(i)] = (sheet_file_name, (0, i * 32, 32, 32))
 
         sheet_file_name = "switches_sheet.png"

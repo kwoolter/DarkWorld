@@ -41,7 +41,7 @@ class DWModel():
         self.player = WorldObjectLoader.get_object_copy_by_name(Objects.PLAYER)
         self.player.is_player = True
 
-        self.move_world(8)
+        self.move_world(100)
 
     def print(self):
         print("Printing {0} model...".format(self.name))
@@ -168,6 +168,9 @@ class DWModel():
 
                 elif object.name == Objects.LADDER_UP:
                     self.world.move_player_to_start()
+
+                elif object.name == Objects.LADDER_DOWN:
+                    self.world.move_player(World3D.NORTH * 2)
 
                 elif object.name == Objects.TREASURE_CHEST:
                     req_obj = Objects.KEY

@@ -59,6 +59,23 @@
             <text>...mmm...</text>
         </line>
     </conversation>
+        <conversation id="The Jalier:100">
+        <npc_name>The Jailer</npc_name>
+        <world_id>100</world_id>
+        <linear>True</linear>
+        <line id="1">
+            <text>A visitor! Welcome to my dungeon!</text>
+        </line>
+        <line id="2">
+            <text>These dark cells hold many secrets and the dead are not revealing them in a hurry!</text>
+        </line>
+        <line id="3">
+            <text>Many traps and illusions</text>
+        </line>
+        <line id="4">
+            <text>Head down deeper into the dungeon at your peril!  Who knows if there  is a way back up?</text>
+        </line>
+    </conversation>
     <conversation id="Rosie">
         <npc_name>Rosie</npc_name>
         <world_id>9</world_id>

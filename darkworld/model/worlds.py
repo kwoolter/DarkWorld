@@ -310,6 +310,11 @@ class WorldBuilder():
         world.add_npc(name="Rosie", object_id=Objects.NPC1, xyz=(1 * 32,  1 * 32, 50), vanish=True, gift_id=Objects.BOSS_KEY)
         world.add_npc(name="Skids", object_id=Objects.NPC2, xyz=(18 * 32,  1 * 32, 50))
 
+
+        world = self.get_world(100)
+        world.add_npc(name="The Jailer", object_id=Objects.NPC1, xyz=(5 * 32,  12 * 32, 30))
+
+
     def load_moving_objects(self):
 
         # World 5
@@ -582,6 +587,20 @@ class WorldBuilder():
         new_world_properties = ("The Next Test", "test", (504, 558, 150), (50, 100, 170), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
+
+        # World 100
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR),
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.OR),
+            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.TILE3, SwitchGroup.OR),
+            Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.WALL1, SwitchGroup.NAND)}
+
+        new_world_id = 100
+        new_world_properties = ("Dungeon World", "dungeon", (46, 302, 0), (32*5.5, 32*3.5, 0), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
+
+        # Load up all of the proprertis that we have defined
         for id in self.world_properties.keys():
             properties = self.world_properties[id]
             world = self.get_world(id)
