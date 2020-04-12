@@ -109,6 +109,7 @@ class ConversationFactory(object):
 
             # Get the main tags that describe the conversation
             npc_name = xml_get_node_text(conversation, "npc_name")
+            world_id = xml_get_node_text(conversation, "world_id")
             linear = (xml_get_node_text(conversation, "linear") == "True")
 
             # ...and create a basic conversation object
@@ -134,7 +135,7 @@ class ConversationFactory(object):
             logging.info("%s.load(): Conversation '%s' loaded", __class__, new_conversation.owner)
 
             # Add the new conversation to the dictionary
-            self._conversations[new_conversation.owner] = new_conversation
+            self._conversations["{0}:{1}".format(new_conversation.owner,world_id)] = new_conversation
 
         self._dom.unlink()
 

@@ -296,6 +296,16 @@ class WorldBuilder():
 
     def load_npcs(self):
 
+        world = self.get_world(1)
+        world.add_npc(name="The Master", object_id=Objects.NPC1, xyz=(4 * 32,  9 * 32, 20), vanish=True, gift_id=Objects.BOSS_KEY)
+
+        world = self.get_world(5)
+        world.add_npc(name="The Imprisoned One", object_id=Objects.NPC2, xyz=(2 * 32, 13 * 32, 50), vanish=True)
+
+        world = self.get_world(7)
+        world.add_npc(name="The Master", object_id=Objects.NPC1, xyz=(18 * 32,  6 * 32, 20), vanish=True, gift_id=Objects.BOSS_KEY)
+
+
         world = self.get_world(9)
         world.add_npc(name="Rosie", object_id=Objects.NPC1, xyz=(1 * 32,  1 * 32, 50), vanish=True, gift_id=Objects.BOSS_KEY)
         world.add_npc(name="Skids", object_id=Objects.NPC2, xyz=(18 * 32,  1 * 32, 50))
@@ -329,10 +339,24 @@ class WorldBuilder():
             new_monster.set_pos((3*32, (9+i)*32, 21))
 
             ai = AIBot(new_monster, world)
-            instructions = [(World3D.EAST, 32*15, True),
-                            (World3D.DUMMY, 50, False),
-                            (World3D.WEST, 32*15, True),
-                            (World3D.DUMMY, 50, False)
+            instructions = [(World3D.EAST, 32*15, AIBot.INSTRUCTION_FAIL_SKIP),
+                            (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                            (World3D.WEST, 32*15, AIBot.INSTRUCTION_FAIL_SKIP),
+                            (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
+                            ]
+            ai.set_instructions(instructions)
+
+            world.add_monster(new_monster, World3D.DUMMY, ai)
+
+
+            new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
+            new_monster.set_pos((17*32, (9+i)*32, 120))
+
+            ai = AIBot(new_monster, world)
+            instructions = [(World3D.EAST, 32*15, AIBot.INSTRUCTION_FAIL_SKIP),
+                            (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                            (World3D.WEST, 32*15, AIBot.INSTRUCTION_FAIL_SKIP),
+                            (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                             ]
             ai.set_instructions(instructions)
 
@@ -513,8 +537,9 @@ class WorldBuilder():
         # World 8
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.NAND),
-            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.WALL2, SwitchGroup.XNOR),
-            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.WALL3, SwitchGroup.NOR)}
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.WALL1, SwitchGroup.NAND),
+            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.TILE3, SwitchGroup.OR),
+            Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.TILE2, SwitchGroup.NAND)}
 
         new_world_id +=1
         new_world_properties = ("Tutorial World {0}".format(new_world_id), "tutorial2", (50, 104, 20), (528, 358, 20), switch_groups)

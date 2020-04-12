@@ -1,22 +1,67 @@
 <conversations>
-    <conversation id="Imprisoned One">
-        <npc_name>Imprisoned One</npc_name>
+    <conversation id="The Master:1">
+        <npc_name>The Master</npc_name>
+        <world_id>1</world_id>
         <linear>True</linear>
         <line id="1">
-            <text>Welcome to the Forest World!</text>
+            <text>Welcome to Dark World!</text>
         </line>
         <line id="2">
-            <text>How are you enjoying it so far?</text>
+            <text>These first few levels are easy and designed to teach you about this place.</text>
         </line>
         <line id="3">
-            <text>I have lost count of how many years I have been here...</text>
+            <text>Good luck and you will need this to proceeed!</text>
         </line>
         <line id="4">
-            <text>If you go South from here you'll find The Arena.  Beat the Boss and then you get a reward!</text>
+            <text>Bye now...</text>
+        </line>
+    </conversation>
+    <conversation id="The Master:7">
+        <npc_name>The Master</npc_name>
+        <world_id>7</world_id>
+        <linear>True</linear>
+        <line id="1">
+            <text>OK you made it through the introduction.</text>
+        </line>
+        <line id="2">
+            <text>Well done!</text>
+        </line>
+        <line id="3">
+            <text>Hopefully you learned something about this place.</text>
+        </line>
+        <line id="4">
+            <text>You didn't bump into anyone else on your way did you? Perchance?</text>
+        </line>
+        <line id="5">
+            <text>Bye now...</text>
+        </line>
+    </conversation>
+    <conversation id="The Imprisoned One:5">
+        <npc_name>The Imprisoned One</npc_name>
+        <world_id>5</world_id>
+        <linear>True</linear>
+        <line id="1">
+            <text>Huh! Who are you then?</text>
+        </line>
+        <line id="2">
+            <text>Have you been talking to that old fool...The Master?</text>
+        </line>
+        <line id="3">
+            <text>You are wasting your time here. You will never make it!</text>
+        </line>
+        <line id="4">
+            <text>The switches work in different ways to confuse the foolish</text>
+        </line>
+        <line id="5">
+            <text>...and you look like one of them! Ha ha ha ha.</text>
+        </line>
+        <line id="6">
+            <text>...mmm...</text>
         </line>
     </conversation>
     <conversation id="Rosie">
         <npc_name>Rosie</npc_name>
+        <world_id>9</world_id>
         <linear>True</linear>
         <line id="1">
             <text>You made it this far!</text>
@@ -34,20 +79,20 @@
             <text>Good luck and safe travels!</text>
         </line>
         <line id="6">
-            <text>...and take this gift as a sign of my goodwill.  Goodbye....</text>
+            <text>...and take this gift as a sign of my goodwill. Goodbye....</text>
         </line>
     </conversation>
-	<conversation id="Oliver">
+    <conversation id="Oliver">
         <npc_name>Oliver</npc_name>
         <linear>True</linear>
         <line id="1">
             <text>Whoa! Where did you come from?</text>
         </line>
-		<line id="2">
+        <line id="2">
             <text>This is Winter World! Welcome.</text>
         </line>
         <line id="3">
-            <text>Err yeah!  You may have noticed it is pretty cold here!</text>
+            <text>Err yeah! You may have noticed it is pretty cold here!</text>
         </line>
         <line id="4">
             <text>Try not to step on the ice!</text>
@@ -59,7 +104,7 @@
             <text>Go on then! All I have to give you is advice!</text>
         </line>
     </conversation>
-	<conversation id="Skids">
+    <conversation id="Skids">
         <npc_name>Skids</npc_name>
         <linear>True</linear>
         <line id="1">
@@ -68,7 +113,7 @@
         <line id="2">
             <text>Have you collected enough ancient runes to activate the portal?</text>
         </line>
-		<line id="3">
+        <line id="3">
             <text>Go! Leave this world for the next!</text>
         </line>
         <line id="4">
@@ -84,7 +129,7 @@
         <line id="2">
             <text>I don't get many visitors here.</text>
         </line>
-		<line id="3">
+        <line id="3">
             <text>Lots of ancient stuff to explore here!</text>
         </line>
         <line id="4">
@@ -100,7 +145,7 @@
         <line id="2">
             <text>Few have passed this way.</text>
         </line>
-		<line id="3">
+        <line id="3">
             <text>The Desert drives men mad.</text>
         </line>
         <line id="4">
@@ -110,7 +155,7 @@
             <text>Farewell....oh, and this might come in handy, I have little use for it anymore...</text>
         </line>
     </conversation>
-        <conversation id="Golum">
+    <conversation id="Golum">
         <npc_name>Golum</npc_name>
         <linear>True</linear>
         <line id="1">
@@ -119,42 +164,42 @@
         <line id="2">
             <text>What are you looking at, ugly!</text>
         </line>
-		<line id="3">
-            <text>Go on then!  Heal yourself at the Pool of Replenishment.  Don't just stand there.</text>
+        <line id="3">
+            <text>Go on then! Heal yourself at the Pool of Replenishment. Don't just stand there.</text>
         </line>
         <line id="4">
-            <text>Shouldn't you be going off adventuring somewhere else than here!  Off you go!</text>
+            <text>Shouldn't you be going off adventuring somewhere else than here! Off you go!</text>
         </line>
     </conversation>
-        <conversation id="Baylor">
+    <conversation id="Baylor">
         <npc_name>Baylor</npc_name>
         <linear>True</linear>
         <line id="1">
             <text>Here the power of the Elements combine.</text>
         </line>
         <line id="2">
-            <text>The Forces of Nature are great in this ancient Vault.  Air, Fire, Ice and Water!</text>
+            <text>The Forces of Nature are great in this ancient Vault. Air, Fire, Ice and Water!</text>
         </line>
-		<line id="3">
-            <text>What lies beyong here is the Kingdom of the Mad.  Do not go there!</text>
+        <line id="3">
+            <text>What lies beyong here is the Kingdom of the Mad. Do not go there!</text>
         </line>
         <line id="4">
             <text>I can not save you from what lies beyond that portal.</text>
         </line>
         <line id="5">
-            <text>Here! Take this!  It may be your only hope! Goodbye....</text>
+            <text>Here! Take this! It may be your only hope! Goodbye....</text>
         </line>
     </conversation>
     <conversation id="The Wretched">
         <npc_name>The Wretched</npc_name>
         <linear>True</linear>
         <line id="1">
-            <text>Welcome to Chaos.  Why have you come to this place?</text>
+            <text>Welcome to Chaos. Why have you come to this place?</text>
         </line>
         <line id="2">
             <text>I lost my mind many years ago.</text>
         </line>
-		<line id="3">
+        <line id="3">
             <text>I wish I could help you, but you look helpless!</text>
         </line>
         <line id="4">
@@ -164,7 +209,7 @@
             <text>Good luck....you will need it!</text>
         </line>
     </conversation>
-        <conversation id="The Master Thief">
+    <conversation id="The Master Thief">
         <npc_name>The Master Thief</npc_name>
         <linear>True</linear>
         <line id="1">
@@ -173,7 +218,7 @@
         <line id="2">
             <text>Did anyone follow you in here?</text>
         </line>
-		<line id="3">
+        <line id="3">
             <text>Well, I am impressed that you have come this far.</text>
         </line>
         <line id="4">
@@ -192,7 +237,7 @@
         <line id="2">
             <text>Are you sure that you know what you are doing?</text>
         </line>
-		<line id="3">
+        <line id="3">
             <text>No one has got out of here alive.</text>
         </line>
         <line id="4">
@@ -208,8 +253,8 @@
         <line id="2">
             <text>What is your Quest?</text>
         </line>
-		<line id="3">
-            <text>Do you seek the True Grail?  The Sacred Chalice?</text>
+        <line id="3">
+            <text>Do you seek the True Grail? The Sacred Chalice?</text>
         </line>
         <line id="4">
             <text>Let the Great Sword guide you and complete your quest.</text>

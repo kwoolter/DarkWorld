@@ -176,9 +176,6 @@ class ImageManager:
         new_skin_name = "tutorial2"
         new_skin = (new_skin_name, {
 
-            # model.Objects.TILE1: "hieroglyph_light2.png",
-            # model.Objects.TILE2: "hieroglyph_light0.png",
-            # model.Objects.TILE3: "hieroglyph_light1.png",
             model.Objects.WALL1: "hieroglyph_light5.png",
             model.Objects.WALL1: "rpg_sprite8-1.png",
             model.Objects.WALL2: "hieroglyph_light4.png",
@@ -194,6 +191,7 @@ class ImageManager:
             model.Objects.TREASURE_CHEST: "rpg_sprite2-3.png",
             model.Objects.MONSTER1: "hieroglyph_dark1.png",
             model.Objects.MONSTER2: "hieroglyph_dark1.png",
+            model.Objects.NPC2: "rpg_sprite_bw8-14.png",
             model.Objects.SWITCH_1: ("switch0.png", "switch5.png"),
             model.Objects.SWITCH_2: ("switch0.png", "switch5.png"),
             model.Objects.SWITCH_3: ("switch0.png", "switch5.png"),
@@ -657,7 +655,7 @@ class DWTextBox(View):
         self.model = model
         self.surface = None
         self.width = 100
-        self.height = 100
+        self.height = 150
         self.margin = 4
         self.padding = 4
         self.skin = "default"
@@ -707,9 +705,11 @@ class DWTextBox(View):
                          self.border_rect,
                          2)
 
-        drawText(surface=self.surface,
+        text = drawText(surface=self.surface,
                  text=self.model,
                  rect = self.text_rect,
                  font=pygame.font.SysFont(pygame.font.get_default_font(), 16),
                  color=self.fg,
                  bkg=self.bg)
+
+        #print("didn't blit {0}".format(text))

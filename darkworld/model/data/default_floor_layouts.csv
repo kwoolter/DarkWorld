@@ -426,7 +426,7 @@ ID,Name,Layer,Layout
 1,World1,20,####################
 1,World1,20,#                  #
 1,World1,20,#      S           #
-1,World1,20,#         k        #
+1,World1,20,#                  #
 1,World1,20,#               n  #
 1,World1,20,#                  #
 1,World1,20,#                  #
@@ -710,7 +710,7 @@ ID,Name,Layer,Layout
 7,World7,20,#     B#       D   #
 7,World7,20,#     B#       ##E##
 7,World7,20,#     B#  b b  #   #
-7,World7,20,#      @       #kn #
+7,World7,20,#      @       # n #
 7,World7,20,#_     #c     S#   #
 7,World7,20,####################
 7,World7,20,                    
@@ -753,7 +753,7 @@ ID,Name,Layer,Layout
 8,World8,20,#  #                
 8,World8,20,#  #                
 8,World8,20,# S#                
-8,World8,20,#  ?          #    #
+8,World8,20,#  #          #    #
 8,World8,20,#  #          #    #
 8,World8,20,#n #          ~    #
 8,World8,20,#  #          #   s#
@@ -765,12 +765,12 @@ ID,Name,Layer,Layout
 8,World8,21, ff            ffff 
 8,World8,21, ff                 
 8,World8,21, ff                 
-8,World8,21, ff                 
+8,World8,21, ff .               
 8,World8,21, ff                 
 8,World8,21, ff _            f  
 8,World8,21, ff _            f  
 8,World8,21, ff                 
-8,World8,21, ff                 
+8,World8,21, ff .               
 8,World8,21, ff                 
 8,World8,21, ff                 
 8,World8,21, ff            ffff 
@@ -779,7 +779,7 @@ ID,Name,Layer,Layout
 8,World8,21, ff            ffff 
 8,World8,21,                    
 8,World8,50,####################
-8,World8,50,#U                 #
+8,World8,50,#U                X#
 8,World8,50,#                  #
 8,World8,50,#                  #
 8,World8,50,#                  #
@@ -801,8 +801,8 @@ ID,Name,Layer,Layout
 8,World8,51,                    
 8,World8,51, ffffffffffffffffff 
 8,World8,51, ffffffffffffffffff 
-8,World8,51, ffffffff88ffffffff 
-8,World8,51, ffffffff88ffffffff 
+8,World8,51, ffffffff!!ffffffff 
+8,World8,51, ffffffff!!ffffffff 
 8,World8,51,                    
 8,World8,51,                    
 8,World8,51,                    
@@ -813,8 +813,8 @@ ID,Name,Layer,Layout
 8,World8,51,                    
 8,World8,51,                    
 8,World8,51,                    
-8,World8,51, ffffffff88ffffffff 
-8,World8,51, ffffffff88ffffffff 
+8,World8,51, ffffffff!!ffffffff 
+8,World8,51, ffffffff!!ffffffff 
 8,World8,51, ffffffffffffffffff 
 8,World8,51, ffffffffffffffffff 
 8,World8,51,                    
@@ -839,10 +839,10 @@ ID,Name,Layer,Layout
 8,World8,90,                    
 8,World8,90,                    
 8,World8,91,                    
-8,World8,91,         ffffff8888 
-8,World8,91,         ffffff8888 
-8,World8,91,         ffffff8888 
-8,World8,91,         ff    8888 
+8,World8,91,         ffffff!!!! 
+8,World8,91,         ffffff!!!! 
+8,World8,91,         ffffff!!!! 
+8,World8,91,         ff    !!!! 
 8,World8,91,         ff         
 8,World8,91,         ff         
 8,World8,91,                    
@@ -853,31 +853,51 @@ ID,Name,Layer,Layout
 8,World8,91,                    
 8,World8,91,         ff         
 8,World8,91,         ff         
-8,World8,91, 8888    ff         
-8,World8,91, 8888ffffff         
-8,World8,91, 8888ffffff         
-8,World8,91, 8888ffffff         
+8,World8,91, !!!!    ff         
+8,World8,91, !!!!ffffff         
+8,World8,91, !!!!ffffff         
+8,World8,91, !!!!ffffff         
 8,World8,91,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,88
-8,World8,101,8888
-8,World8,101,8888
-8,World8,101,88
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
-8,World8,101,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                  U 
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,119,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,         ??       !!
+8,World8,120,         !!       !!
+8,World8,120,        !!!!    . !!
+8,World8,120,        !!!!    . !!
+8,World8,120,         !!       !!
+8,World8,120,         ??       !!
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
+8,World8,120,                    
 9,World9,50,####################
 9,World9,50,#                  #
 9,World9,50,#                  #
@@ -898,23 +918,23 @@ ID,Name,Layer,Layout
 9,World9,50,#U               n #
 9,World9,50,#                  #
 9,World9,50,####################
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
-9,World9,51, 8888888888888888888
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!
+9,World9,51,!!!!!!!!!!!!!!!!!!!!

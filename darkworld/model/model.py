@@ -41,7 +41,7 @@ class DWModel():
         self.player = WorldObjectLoader.get_object_copy_by_name(Objects.PLAYER)
         self.player.is_player = True
 
-        self.move_world(9)
+        self.move_world(8)
 
     def print(self):
         print("Printing {0} model...".format(self.name))
@@ -132,15 +132,24 @@ class DWModel():
     def talk_to_npc(self, npc_object):
         npc_id = npc_object.name
         npc_name, vanish, gift_id = self.world.get_npc_details(npc_id)
-        conversation = self._conversations.get_conversation(npc_name)
-        next_line = conversation.get_next_line()
-        if next_line.attempt() is True:
-            text = next_line.text
-            if conversation.is_completed() is True and vanish is True:
-                print("{0} vanishes".format(npc_name))
-                self.world.swap_object(npc_object, gift_id)
+        conversation = self._conversations.get_conversation("{0}:{1}".format(npc_name, self.current_world_id))
+        if conversation is not None:
+            next_line = conversation.get_next_line()
+            if next_line.attempt() is True:
+                text = next_line.text
+                if conversation.is_completed() is True and vanish is True:
+                    if gift_id is None:
+                        gift_id = Objects.EMPTY
+                    self.world.swap_object(npc_object, gift_id)
+                self.events.add_event(
+                    Event(type=Event.GAME, name=Event.TALK, description="{0}: '{1}'".format(npc_name, text)))
+            else:
+                self.events.add_event(
+                    Event(type=Event.GAME, name=Event.TALK, description="{0} has nothing to say to you.".format(npc_name)))
+
+        else:
             self.events.add_event(
-                Event(type=Event.GAME, name=Event.TALK, description="{0}: '{1}'".format(npc_name, text)))
+                Event(type=Event.GAME, name=Event.TALK, description="{0} has nothing to say to you.".format(npc_name)))
 
     def interact(self):
 
