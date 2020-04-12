@@ -5,6 +5,7 @@ import os
 import numpy as np
 import logging
 from operator import itemgetter
+from darkworld.model.events import *
 
 class Colours:
     # set up the colours
@@ -81,8 +82,8 @@ class ImageManager:
             model.Objects.BOOK: "rpg_sprite2-5.png",
             model.Objects.COINS: "rpg_sprite1-12.png",
             model.Objects.SCROLL: "rpg_sprite0-5.png",
-            model.Objects.ENEMY1: "rpg_sprite5-15.png",
-            model.Objects.ENEMY2: "rpg_sprite6-15.png",
+            model.Objects.ENEMY1: "rpg_sprite_bw5-15.png",
+            model.Objects.ENEMY2: "rpg_sprite_bw6-15.png",
             model.Objects.BLOCK1: "block1.png",
             model.Objects.BLOCK2: "block2.png",
             model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
@@ -656,7 +657,7 @@ class DWTextBox(View):
         self.model = model
         self.surface = None
         self.width = 100
-        self.height = 300
+        self.height = 100
         self.margin = 4
         self.padding = 4
         self.skin = "default"
@@ -690,15 +691,16 @@ class DWTextBox(View):
         print("Printing Dark Work Text Box view...")
 
     def process_event(self, new_event: model.Event):
-        self.model = new_event.description
-        self.timer = self.tick_count
+        if new_event.name == Event.TALK:
+            self.model = new_event.description
+            self.timer = self.tick_count
 
     def draw(self):
 
         if self.tick_count > (self.timer + self.life_time_ticks):
             return
 
-        self.surface.fill(Colours.BLACK)
+        self.surface.fill(Colours.DARK_GREY)
 
         pygame.draw.rect(self.surface,
                          Colours.WHITE,

@@ -32,11 +32,10 @@ class DWModel():
         self._conversations = ConversationFactory(DWModel.DATA_FILES_DIR + "conversations.xml")
         self._conversations.load()
 
-        size = 30
-
+        # size = 32
+        #
         # self.player = RPGObject3D(type=7,
         #                           name=Objects.PLAYER,
-        #                           opos=(size * 9, size * 9, 1),
         #                           osize=(size, size, 1))
 
         self.player = WorldObjectLoader.get_object_copy_by_name(Objects.PLAYER)
@@ -130,13 +129,18 @@ class DWModel():
 
                     self.world.delete_object3D(object)
 
-    def talk_to_npc(self, npc_id : str):
-        npc_name = self.world.get_npc_name(npc_id)
+    def talk_to_npc(self, npc_object):
+        npc_id = npc_object.name
+        npc_name, vanish, gift_id = self.world.get_npc_details(npc_id)
         conversation = self._conversations.get_conversation(npc_name)
-        text = conversation.get_next_line().text
-        print("{0}: '{1}'".format(npc_name, text))
-        self.events.add_event(
-            Event(type="xxx", name="yyyy", description="{0}: '{1}'".format(npc_name, text)))
+        next_line = conversation.get_next_line()
+        if next_line.attempt() is True:
+            text = next_line.text
+            if conversation.is_completed() is True and vanish is True:
+                print("{0} vanishes".format(npc_name))
+                self.world.swap_object(npc_object, gift_id)
+            self.events.add_event(
+                Event(type=Event.GAME, name=Event.TALK, description="{0}: '{1}'".format(npc_name, text)))
 
     def interact(self):
 
@@ -205,7 +209,7 @@ class DWModel():
                 #     print("Switching {0}".format(object))
 
                 elif object.name in (Objects.NPC1, Objects.NPC2):
-                    self.talk_to_npc(object.name)
+                    self.talk_to_npc(object)
 
                 else:
                     self.collect_inventory_object(object)
@@ -270,47 +274,6 @@ class DWModel():
 
     def end(self):
         pass
-
-
-class Event():
-    # Event Types
-    QUIT = "quit"
-    DEFAULT = "default"
-    STATE = "state"
-    GAME = "game"
-    FLOOR = "floor"
-    BATTLE = "battle"
-
-    # Events
-    TICK = "Tick"
-    PLAYING = "playing"
-    COLLIDE = "collide"
-    INTERACT = "interact"
-    BLOCKED = "blocked"
-    SECRET = "secret"
-    TREASURE = "treasure"
-    DOOR_OPEN = "door opened"
-    DOOR_LOCKED = "door locked"
-    SWITCH = "switch"
-    FOUND_FLAG = "found_flag"
-    KEY = "key"
-    TELEPORT = "teleport"
-    GAIN_HEALTH = "gain health"
-    LOSE_HEALTH = "lose health"
-    NO_AP = "No action points"
-    KILLED_OPPONENT = "killed opponent"
-    MISSED_OPPONENT = "missed opponent"
-    DAMAGE_OPPONENT = "damaged opponent"
-    VICTORY = "victory"
-    NEXT_PLAYER = "next player"
-
-    def __init__(self, name: str, description: str = None, type: str = DEFAULT):
-        self.name = name
-        self.description = description
-        self.type = type
-
-    def __str__(self):
-        return "{0}:{1} ({2})".format(self.name, self.description, self.type)
 
 
 class EventQueue():

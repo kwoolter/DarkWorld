@@ -297,7 +297,7 @@ class WorldBuilder():
     def load_npcs(self):
 
         world = self.get_world(9)
-        world.add_npc(name="Rosie", object_id=Objects.NPC1, xyz=(1 * 32,  1 * 32, 50))
+        world.add_npc(name="Rosie", object_id=Objects.NPC1, xyz=(1 * 32,  1 * 32, 50), vanish=True, gift_id=Objects.BOSS_KEY)
         world.add_npc(name="Skids", object_id=Objects.NPC2, xyz=(18 * 32,  1 * 32, 50))
 
     def load_moving_objects(self):
@@ -371,9 +371,9 @@ class WorldBuilder():
         new_monster.set_pos((5*32, 11*32, 50))
 
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.EAST, 32*10, AIBot.INSTRUCTION_FAIL_TICK),
+        instructions = [(World3D.EAST * 2, 32*10, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DUMMY, 50, False),
-                        (World3D.WEST, 32*10, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.WEST * 2, 32*10, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DUMMY, 50, False)
                         ]
         ai.set_instructions(instructions)
@@ -825,20 +825,20 @@ class World3D:
             self.move_player_to_xyz(self.player_exit_pos)
         return
 
-    def add_npc(self, name : str, object_id : str, xyz : tuple):
+    def add_npc(self, name : str, object_id : str, xyz : tuple, vanish = False, gift_id = None):
         new_npc = WorldObjectLoader.get_object_copy_by_name(object_id)
         new_npc.set_pos(xyz)
         self.add_object3D(new_npc, do_copy=False)
-        self._npcs[object_id] = name
+        self._npcs[object_id] = name, vanish, gift_id
 
-    def get_npc_name(self, object_id : str):
+    def get_npc_details(self, object_id : str):
         if object_id in self._npcs.keys():
             return self._npcs[object_id]
         else:
             return None
 
     def talk_to_npc(self, npc_id):
-        npc_name = self.get_npc_name(npc_id)
+        npc_name, vanish, gift_id = self.get_npc_details(npc_id)
         if npc_name is not None:
             print("talk to {0}".format(npc_name))
 

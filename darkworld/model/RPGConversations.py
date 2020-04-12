@@ -3,6 +3,7 @@ __author__ = 'KeithW'
 from xml.dom.minidom import *
 from .RPGXMLUtilities import *
 import logging
+import random
 
 
 class ConversationLine(object):
