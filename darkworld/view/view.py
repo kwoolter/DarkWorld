@@ -80,15 +80,15 @@ class ImageManager:
             model.Objects.WALL3: "winter_tiles3.png",
             model.Objects.FAKE_WALL: "wall.png",
             model.Objects.BOOK: "rpg_sprite2-5.png",
-            model.Objects.COINS: "rpg_sprite1-12.png",
-            model.Objects.SCROLL: "rpg_sprite0-5.png",
+            model.Objects.COINS: "rpg_sprite_gold1-12.png",
+            model.Objects.SCROLL: "rpg_sprite_gold0-5.png",
             model.Objects.ENEMY1: "rpg_sprite_bw5-15.png",
             model.Objects.ENEMY2: "rpg_sprite_bw6-15.png",
             model.Objects.BLOCK1: "block1.png",
             model.Objects.BLOCK2: "block2.png",
             model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
-            model.Objects.HELMET1: "rpg_sprite2-10.png",
-            model.Objects.HELMET2: "rpg_sprite3-10.png",
+            model.Objects.HELMET1: "rpg_sprite_gold2-10.png",
+            model.Objects.HELMET2: "rpg_sprite_gold3-10.png",
             model.Objects.MAP: "rpg_sprite1-5.png",
             model.Objects.MONSTER1: "bear.png",
             model.Objects.MONSTER2: "winter_tiles0.png",
@@ -101,8 +101,8 @@ class ImageManager:
             #model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE: ("token0.png", "token1.png", "token2.png", "token3.png"),
             model.Objects.TREASURE_CHEST: "treasure_chest.png",
-            model.Objects.DECOR1: "rpg_sprite0-13.png",
-            model.Objects.DECOR2: "rpg_sprite1-13.png",
+            model.Objects.DECOR1: "rpg_sprite_gold0-13.png",
+            model.Objects.DECOR2: "rpg_sprite_gold1-13.png",
             model.Objects.DOOR1: "door.png",
             model.Objects.DOOR1_OPEN: "door_open.png",
             model.Objects.TRAP: "trap.png",
@@ -117,8 +117,8 @@ class ImageManager:
             model.Objects.HOLE: "down shoot.png",
             model.Objects.EXIT_NEXT: "exit_green.png",
             model.Objects.EXIT_PREVIOUS: "exit_red.png",
-            model.Objects.POTION1: "rpg_sprite5-4.png",
-            model.Objects.POTION2: "rpg_sprite4-4.png",
+            model.Objects.POTION1: "rpg_sprite_gold5-4.png",
+            model.Objects.POTION2: "rpg_sprite_gold4-4.png",
             model.Objects.SWITCH_TILE1: None,
             model.Objects.SWITCH_TILE2: None,
             model.Objects.SWITCH_TILE3: None,
@@ -127,7 +127,7 @@ class ImageManager:
             model.Objects.SWITCH_2: ("switch1.png", "switch0.png"),
             model.Objects.SWITCH_3: ("switch0.png", "switch1.png"),
             model.Objects.SWITCH_4: ("switch1.png", "switch0.png"),
-            model.Objects.SWORD: "rpg_sprite9-5.png",
+            model.Objects.SWORD: "rpg_sprite_gold9-5.png",
             model.Objects.LIQUID1: "liquid3.png",
             model.Objects.LIQUID2: "liquid2.png",
             model.Objects.LADDER_UP: "ladder2.png",
@@ -177,12 +177,12 @@ class ImageManager:
         new_skin = (new_skin_name, {
 
             model.Objects.WALL1: "hieroglyph_light5.png",
-            model.Objects.WALL1: "rpg_sprite8-1.png",
+            model.Objects.WALL1: "rpg_sprite_gold8-1.png",
             model.Objects.WALL2: "hieroglyph_light4.png",
             model.Objects.WALL3: "hieroglyph_light3.png",
             model.Objects.FAKE_WALL: "hieroglyph_light6.png",
-            model.Objects.BLOCK1: "rpg_sprite7-1.png",
-            model.Objects.BLOCK2: "rpg_sprite6-1.png",
+            model.Objects.BLOCK1: "rpg_sprite_gold7-1.png",
+            model.Objects.BLOCK2: "rpg_sprite_gold6-1.png",
             model.Objects.TILE1: "hieroglyph_dark2.png",
             model.Objects.TILE2: "hieroglyph_dark0.png",
             model.Objects.TILE3: "hieroglyph_dark4.png",
@@ -196,13 +196,13 @@ class ImageManager:
             model.Objects.SWITCH_2: ("switch0.png", "switch5.png"),
             model.Objects.SWITCH_3: ("switch0.png", "switch5.png"),
             model.Objects.SWITCH_4: ("switch0.png", "switch5.png"),
-            model.Objects.DOOR1: "rpg_sprite2-2.png",
+            model.Objects.DOOR1: "rpg_sprite_gold2-2.png",
             model.Objects.DOOR1_OPEN: None,
-            model.Objects.DOOR2: "rpg_sprite1-2.png",
+            model.Objects.DOOR2: "rpg_sprite_gold1-2.png",
             model.Objects.DOOR2_OPEN: None,
             model.Objects.LADDER_UP: "ladder3.png",
-            model.Objects.KEY: "rpg_sprite7-3.png",
-            model.Objects.BOSS_KEY: "rpg_sprite9-3.png",
+            model.Objects.KEY: "rpg_sprite_gold7-3.png",
+            model.Objects.BOSS_KEY: "rpg_sprite_gold9-3.png",
 
         })
 
@@ -210,11 +210,12 @@ class ImageManager:
 
         new_skin_name = "dungeon"
         new_skin = (new_skin_name, {
-            model.Objects.DECOR1: "rpg_sprite_bw0-13.png",
-            model.Objects.DECOR2: "rpg_sprite_bw8-12.png",
+            model.Objects.DECOR1: "rpg_sprite_gold0-13.png",
+            model.Objects.DECOR2: "rpg_sprite_gold8-12.png",
             model.Objects.LADDER_DOWN: "ladder4.png",
             model.Objects.LADDER_UP: "ladder3.png",
-            model.Objects.NPC1: "rpg_sprite_bw5-14.png",
+            model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
+            model.Objects.NPC1: "rpg_sprite_gold5-14.png",
             model.Objects.TILE1: "tile4.png",
             model.Objects.TILE2: "wall2.png",
             model.Objects.WALL1: "winter_tiles0.png",
@@ -302,7 +303,7 @@ class ImageManager:
         sheet_file_name = "rpg_sheet_gold.png"
         for y in range(0,21):
             for x in range(0, 10):
-                self.sprite_sheets["rpg_sprite{0}-{1}.png".format(x,y)] = (sheet_file_name, (x * 32, y * 32, 32, 32))
+                self.sprite_sheets["rpg_sprite_gold{0}-{1}.png".format(x,y)] = (sheet_file_name, (x * 32, y * 32, 32, 32))
 
 
         sheet_file_name = "rpg_sheet_bw.png"
@@ -403,6 +404,30 @@ class DWMainFrame(View):
             self.text_box.draw()
             self.surface.blit(self.text_box.surface, (x, y))
 
+        if self.model.state != model.DWModel.STATE_PLAYING:
+            msg_box_width = 200
+            msg_box_height = 64
+            msg_rect = pygame.Rect((self.world_view.width - msg_box_width)/2, (self.world_view.height - msg_box_height) /2 , msg_box_width, msg_box_height)
+
+            pygame.draw.rect(self.surface,
+                             Colours.DARK_GREY,
+                             msg_rect,
+                             0)
+
+            pygame.draw.rect(self.surface,
+                             Colours.WHITE,
+                             msg_rect,
+                             2)
+
+            draw_text(surface = self.surface,
+                      msg="{0}".format(self.model.state),
+                      x = self.world_view.width/2,
+                      y = self.world_view.height/2,
+                      size=32,
+                      centre=True,
+                      fg_colour=Colours.WHITE,
+                      bg_colour=Colours.DARK_GREY)
+
 
     def update(self):
         pygame.display.update()
@@ -441,12 +466,12 @@ class DWWorldView(View):
         self.height = 600 * self.object_size_scale
 
         # How far away from the camera are we rendering objects?
-        self.depth = 100
+        self.depth = 60
 
         # How far above the player is the camera?
         self.camera_distance = -20
 
-        # What are the contraints to the view position
+        # What are the constraints to the view position
         self.max_view_pos = np.array(max_view_pos)
         #self.max_view_pos = np.maximum(np.array(max_view_pos), np.array(([0,0,self.model.world.depth + self.camera_distance])))
         self.min_view_pos = np.array(min_view_pos)
@@ -615,13 +640,18 @@ class ModelToView3D():
 
     def get_object_list(self, view_pos, view_width, view_height, view_depth):
 
-        # List for holding the objects that will be visible and whgere they are positions relative to the camera
+        # List for holding the objects that will be visible and where they are positioned relative to the camera
         objects = {}
 
         vx, vy, vz = view_pos
 
-        # for each plane in the model world...
-        for z in self.model.world.planes.keys():
+        # Calculate which planes in the world will be visible from the current camera position
+        visible_planes = np.array(list(self.model.world.planes.keys()))
+        visible_planes = visible_planes[visible_planes >= vz]
+        visible_planes = visible_planes[visible_planes < (vz + view_depth)]
+
+        # for each visible plane in the model world...
+        for z in visible_planes:
 
             # Get the list of objects from the model that are at this plane...
             #objects_at_z = sorted(self.model.world.planes[z], key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
@@ -638,9 +668,9 @@ class ModelToView3D():
                 oh = oy - vy
 
                 # filter out objects that don't fit into the current camera view size (h, w, d)
-                if od < 0 or \
-                        od > view_depth\
-                        or abs(ow) > (view_width + self.view_padding) / 2\
+                # if od < 0 or \
+                #         od > view_depth \
+                if abs(ow) > (view_width + self.view_padding) / 2 \
                         or abs(oh) > (view_height + self.view_padding) / 2:
                     pass
                 # If the object fits into the current view...
@@ -679,7 +709,7 @@ class DWTextBox(View):
         self.fg = Colours.WHITE
         self.bg = Colours.BLACK
         self.timer = self.tick_count
-        self.life_time_ticks = 10
+        self.life_time_ticks = 20
 
     @property
     def is_visible(self):
@@ -706,9 +736,8 @@ class DWTextBox(View):
         print("Printing Dark Work Text Box view...")
 
     def process_event(self, new_event: model.Event):
-        if new_event.name == Event.TALK:
-            self.model = new_event.description
-            self.timer = self.tick_count
+        self.model = new_event.description
+        self.timer = self.tick_count
 
     def draw(self):
 

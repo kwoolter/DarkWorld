@@ -7,8 +7,6 @@ import random
 from .objects import Objects
 
 
-
-
 class RPGObject3D(object):
 
     TOUCH_FIELD_X = 4
@@ -57,7 +55,6 @@ class RPGObject3D(object):
 
     def tick(self):
         self.tick_count += 1
-        #print("{0} ticked to {1}".format(self.name, self.tick_count))
 
     def get_current_object(self):
         return self
@@ -111,8 +108,6 @@ class RPGObject3D(object):
                touch_field.colliderect(other_object.rect)
 
     def is_inside(self, other_object):
-        # b = other_object.rect.contains(self.rect)
-        # print("{0} contains {1} = {2}".format(other_object.name, self.name, b))
 
         return self.z == other_object.z and \
                self != other_object and \
@@ -479,6 +474,30 @@ class WorldBuilder():
         ai.set_instructions(instructions)
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
+        # World 100
+        world = self.get_world(100)
+
+        # Monster #1
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((32*12, 32*7, 60))
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.UP, 6 * 32, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DOWN, 6 * 32, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        # Monster #2
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((32*4, 32*9, 60))
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.EAST, 10 *32, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.WEST, 10 * 32, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
 
     def load_world_properties(self):
 
@@ -592,7 +611,7 @@ class WorldBuilder():
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR),
             Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.OR),
-            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.TILE3, SwitchGroup.OR),
+            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.TILE3, SwitchGroup.XOR),
             Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.WALL1, SwitchGroup.NAND)}
 
         new_world_id = 100
@@ -600,7 +619,7 @@ class WorldBuilder():
         self.world_properties[new_world_id] = new_world_properties
 
 
-        # Load up all of the proprertis that we have defined
+        # Load up all of the properties that we have defined
         for id in self.world_properties.keys():
             properties = self.world_properties[id]
             world = self.get_world(id)
@@ -608,9 +627,12 @@ class WorldBuilder():
                 world.initialise(properties)
 
 
+    def get_world(self, world_name: str, do_copy : bool = False):
 
-    def get_world(self, world_name: str):
-        return self.world_layouts.get_world(world_name)
+        if do_copy is True:
+            return copy.deepcopy(self.world_layouts.get_world(world_name))
+        else:
+            return self.world_layouts.get_world(world_name)
 
 
 class WorldLayoutLoader():
@@ -766,6 +788,12 @@ class World3D:
     HEADINGS = (NORTH, SOUTH, EAST, WEST, UP, DOWN)
 
     # Define states
+    STATE_LOADED = "loaded"
+    STATE_READY = "ready"
+    STATE_PLAYING = "playing"
+    STATE_PAUSED = "paused"
+    STATE_GAME_OVER = "game over"
+
     PLAYER_MOVING = "moving"
     PLAYER_FALLING = "falling"
 
@@ -782,7 +810,8 @@ class World3D:
         self.width = w
         self.height = h
         self.depth = d
-        self.state = World3D.PLAYER_MOVING
+        self.state = World3D.STATE_LOADED
+        self.player_state = World3D.PLAYER_MOVING
         self.tick_count = 0
 
         # World contents
@@ -954,14 +983,29 @@ class World3D:
         # Set the end of the world to be the biggest plane depth + 100
         self.depth = max(self.planes.keys()) + 100
 
+        self.state = World3D.STATE_READY
+
         self.print()
+
+    def pause(self, pause_on = None):
+
+        if pause_on is True:
+            self.state = World3D.STATE_PAUSED
+        elif pause_on is False and self.state == World3D.STATE_PAUSED:
+            self.state = World3D.STATE_PLAYING
+        elif pause_on is None:
+            if self.state == World3D.STATE_PAUSED:
+                self.state = World3D.STATE_PLAYING
+            elif self.state == World3D.STATE_PLAYING:
+                self.state = World3D.STATE_PAUSED
+        print("World state={0}".format(self.state))
 
 
     def tick(self):
+
         self.tick_count += 1
-        #self.move_monsters(World3D.NORTH, reverse=False)
         self.move_monsters()
-        #self.print()
+
 
     def move_player(self, vector):
         self.move_object(self.player, vector)
@@ -997,8 +1041,6 @@ class World3D:
 
         # If we succeeded in moving planes...
         if selected_object.has_changed_planes() is True:
-
-            #print("Object has changed planes from {0} to {1}".format(selected_object.z, selected_object._old_z))
 
             # Get the objects for the new plane
             new_plane = selected_object.z
@@ -1041,6 +1083,7 @@ class World3D:
                 # Adjust the plane data to reflect new position
                 self.delete_object3D(selected_object, selected_object._old_z)
                 self.add_object3D(selected_object, do_copy=False)
+            # Otherwise tick the object to trigger animation.
             else:
                 selected_object.tick()
 

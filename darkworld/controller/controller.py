@@ -11,8 +11,6 @@ from pygame.locals import *
 class DWController:
 
     def __init__(self):
-        print("init")
-
         self.m = model.DWModel("Dark World")
         self.v = view.DWMainFrame(self.m)
 
@@ -28,11 +26,6 @@ class DWController:
         self.v.end()
 
     def run(self):
-
-        print("running")
-
-        self.m.print()
-        self.v.print()
 
         self.move_speed = 2
 
@@ -50,16 +43,11 @@ class DWController:
 
             # Loop to process game events
             event = self.m.get_next_event()
-
             while event is not None:
 
                 try:
-
                     self.m.process_event(event)
                     self.v.process_event(event)
-
-                    print(str(event))
-
                 except Exception as err:
                     print(str(err))
 
@@ -71,60 +59,74 @@ class DWController:
             # Loop to process pygame events
             for event in pygame.event.get():
 
-                # Timer events
-                if event.type == USEREVENT + 1:
+                if self.m.state == model.DWModel.STATE_PLAYING:
 
-                    try:
+                    # Timer events
+                    if event.type == USEREVENT + 1:
+                        try:
+                            self.m.tick()
+                        except Exception as err:
+                            print(str(err))
 
-                        self.m.tick()
+                    # Timer for Computer AI moves
+                    elif event.type == USEREVENT + 2:
+                        self.v.tick()
 
-                    except Exception as err:
-                        print(str(err))
+                    # Key events
+                    elif event.type == KEYUP:
 
-                elif event.type == KEYUP:
-                    if event.key == K_SPACE:
-                        print("interact")
-                        self.m.interact()
-                    elif event.key == K_F12:
-                        self.v.print()
-                        self.m.print()
-                    elif event.key == K_F11:
-                        self.v.world_view.m2v.infinity += 10
-                    elif event.key == K_F10:
-                        self.v.world_view.m2v.infinity -= 10
-                    elif event.key == K_q:
+                        if event.key == K_SPACE:
+                            self.m.interact()
+                        elif event.key == K_ESCAPE:
+                            self.m.pause()
+                        elif event.key == K_F12:
+                            self.v.print()
+                            self.m.print()
+                        elif event.key == K_F11:
+                            self.v.world_view.m2v.infinity += 10
+                        elif event.key == K_F10:
+                            self.v.world_view.m2v.infinity -= 10
 
-                        text = self.m.get_conversation("Rosie").get_next_line().text
-                        self.v.text_box.model = text
+                    keys = pygame.key.get_pressed()
+                    if keys[K_LEFT]:
+                        self.m.move_player(np.array(model.World3D.WEST) * self.move_speed)
+                    elif keys[K_RIGHT]:
+                        self.m.move_player(np.array(model.World3D.EAST) * self.move_speed)
+                    if keys[K_UP]:
+                        self.m.move_player(np.array(model.World3D.DOWN) * self.move_speed)
+                    elif keys[K_DOWN]:
+                        self.m.move_player(np.array(model.World3D.UP) * self.move_speed)
 
-                elif event.type == QUIT:
+                # Process events for when the game is in state READY
+                elif self.m.state == model.DWModel.STATE_READY:
+
+                    # Key events
+                    if event.type == KEYUP:
+                        # Space to start the game
+                        if event.key == K_SPACE:
+                            self.m.start()
+
+                # Process events for when the game is in state PAUSED
+                elif self.m.state == model.DWModel.STATE_PAUSED:
+
+                    # Key events
+                    if event.type == KEYUP:
+                        # Space to unpause the game
+                        if event.key == K_SPACE:
+                            self.m.pause()
+
+                # Process events for when the game is in state GAME_OVER
+                elif self.m.state == model.DWModel.STATE_GAME_OVER:
+
+                    # Key events
+                    if event.type == KEYUP:
+                        # Space to restart the game
+                        if event.key == K_SPACE:
+                            self.m.initialise()
+
+                # Quit event
+                if event.type == QUIT:
                     loop = False
-
-                # Timer for Computer AI moves
-                elif event.type == USEREVENT + 2:
-                    self.v.tick()
-
-            keys = pygame.key.get_pressed()
-            if keys[K_LEFT]:
-
-                self.m.move_player(np.array(model.World3D.WEST) * self.move_speed)
-            elif keys[K_RIGHT]:
-
-                self.m.move_player(np.array(model.World3D.EAST) * self.move_speed)
-
-            if keys[K_UP]:
-
-                self.m.move_player(np.array(model.World3D.DOWN) * self.move_speed)
-            elif keys[K_DOWN]:
-
-                self.m.move_player(np.array(model.World3D.UP) * self.move_speed)
-
-            # if keys[K_q]:
-            #
-            #     self.m.move_player(np.array(model.World3D.NORTH) * 1)
-            # elif keys[K_e]:
-            #
-            #     self.m.move_player(np.array(model.World3D.SOUTH) * 1)
 
             self.v.draw()
             self.v.update()

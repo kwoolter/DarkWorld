@@ -9,10 +9,12 @@ class Event():
     # Event Names
     TICK = "Tick"
     PLAYING = "playing"
+    GAME_OVER = "game over"
     COLLIDE = "collide"
     INTERACT = "interact"
     BLOCKED = "blocked"
     ACTION_FAILED = "action failed"
+    ACTION_SUCCEEDED = "action succeeded"
     DEAD = "dead"
     SECRET = "secret"
     TREASURE = "treasure"
