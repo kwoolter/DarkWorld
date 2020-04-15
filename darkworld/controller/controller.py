@@ -77,6 +77,8 @@ class DWController:
 
                         if event.key == K_SPACE:
                             self.m.interact()
+                        elif event.key == K_i:
+                            self.v.inventory_show()
                         elif event.key == K_ESCAPE:
                             self.m.pause()
                         elif event.key == K_F12:

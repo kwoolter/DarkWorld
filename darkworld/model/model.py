@@ -298,6 +298,10 @@ class DWModel():
                     self.events.add_event(Event(type=Event.GAME,
                                                 name=Event.ACTION_SUCCEEDED,
                                                 description="You found a {0}".format(object.name)))
+
+                    if object.name == Objects.EXTRA_LIFE:
+                        self.player_lives += 1
+
             else:
                 print("Object {0} is not interactable".format(object))
 

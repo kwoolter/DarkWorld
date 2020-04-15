@@ -7,6 +7,7 @@ import logging
 from operator import itemgetter
 from darkworld.model.events import *
 
+
 class Colours:
     # set up the colours
     BLACK = (0, 0, 0)
@@ -58,11 +59,10 @@ class ImageManager:
 
             try:
 
-                #image = pygame.transform.scale(original_image, (width, height))
-
+                # image = pygame.transform.scale(original_image, (width, height))
                 ImageManager.image_cache[image_file_name] = original_image
                 logging.info("Image {0} loaded and scaled to {1}x{2} and cached.".format(filename, width, height))
-                print("Image {0} loaded and scaled to {1}x{2} and cached.".format(filename, width, height))
+
 
             except Exception as err:
                 print(str(err))
@@ -84,6 +84,7 @@ class ImageManager:
             model.Objects.SCROLL: "rpg_sprite_gold0-5.png",
             model.Objects.ENEMY1: "rpg_sprite_bw5-15.png",
             model.Objects.ENEMY2: "rpg_sprite_bw6-15.png",
+            model.Objects.EXTRA_LIFE: "rpg_sprite_gold1-14.png",
             model.Objects.BLOCK1: "block1.png",
             model.Objects.BLOCK2: "block2.png",
             model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
@@ -98,7 +99,7 @@ class ImageManager:
             model.Objects.BIG_MONSTER2: "winter_tiles0.png",
             model.Objects.BOMB: "rpg_sprite2-8.png",
             # model.Objects.PLAYER: ("man0.png", "man2.png", "man1.png", "man2.png"),
-            #model.Objects.TREASURE: "treasure.png",
+            # model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE: ("token0.png", "token1.png", "token2.png", "token3.png"),
             model.Objects.TREASURE_CHEST: "treasure_chest.png",
             model.Objects.DECOR1: "rpg_sprite_gold0-13.png",
@@ -113,7 +114,7 @@ class ImageManager:
             model.Objects.TILE2: "tile2.png",
             model.Objects.TILE3: "tile3.png",
             model.Objects.TILE4: "tile4.png",
-            model.Objects.TELEPORT: ("teleport_00.png","teleport_01.png","teleport_02.png"),
+            model.Objects.TELEPORT: ("teleport_00.png", "teleport_01.png", "teleport_02.png"),
             model.Objects.HOLE: "down shoot.png",
             model.Objects.EXIT_NEXT: "exit_green.png",
             model.Objects.EXIT_PREVIOUS: "exit_red.png",
@@ -218,6 +219,7 @@ class ImageManager:
             model.Objects.NPC1: "rpg_sprite_gold5-14.png",
             model.Objects.TILE1: "tile4.png",
             model.Objects.TILE2: "wall2.png",
+            model.Objects.TREASURE:"rpg_sprite_gold1-12.png",
             model.Objects.WALL1: "winter_tiles0.png",
             model.Objects.WALL2: "winter_tiles3.png",
             model.Objects.WALL3: "winter_tiles2.png",
@@ -263,7 +265,6 @@ class ImageManager:
         for i in range(0, 5):
             self.sprite_sheets["brick{0}.png".format(i)] = (sheet_file_name, (i * 33 + 1, 1, 32, 32))
 
-
         sheet_file_name = "man_sheet.png"
         for i in range(0, 3):
             self.sprite_sheets["man{0}.png".format(i)] = (sheet_file_name, (i * 13, 0, 13, 10))
@@ -284,37 +285,36 @@ class ImageManager:
         for i in range(0, 4):
             self.sprite_sheets["door{0}.png".format(i)] = (sheet_file_name, (i * 32, 0, 32, 32))
 
-
         sheet_file_name = "hieroglyph_sheet2.png"
         i = 0
-        for y in range(0,4):
+        for y in range(0, 4):
             for x in range(0, 4):
                 self.sprite_sheets["hieroglyph_dark{0}.png".format(i)] = (sheet_file_name, (x * 33, y * 33, 32, 32))
-                i+=1
+                i += 1
 
         sheet_file_name = "hieroglyph_sheet3.png"
         i = 0
-        for y in range(0,4):
+        for y in range(0, 4):
             for x in range(0, 4):
                 self.sprite_sheets["hieroglyph_light{0}.png".format(i)] = (sheet_file_name, (x * 33, y * 33, 32, 32))
-                i+=1
-
+                i += 1
 
         sheet_file_name = "rpg_sheet_gold.png"
-        for y in range(0,21):
+        for y in range(0, 21):
             for x in range(0, 10):
-                self.sprite_sheets["rpg_sprite_gold{0}-{1}.png".format(x,y)] = (sheet_file_name, (x * 32, y * 32, 32, 32))
-
+                self.sprite_sheets["rpg_sprite_gold{0}-{1}.png".format(x, y)] = (
+                    sheet_file_name, (x * 32, y * 32, 32, 32))
 
         sheet_file_name = "rpg_sheet_bw.png"
-        for y in range(0,21):
+        for y in range(0, 21):
             for x in range(0, 10):
-                self.sprite_sheets["rpg_sprite_bw{0}-{1}.png".format(x,y)] = (sheet_file_name, (x * 32, y * 32, 32, 32))
-
+                self.sprite_sheets["rpg_sprite_bw{0}-{1}.png".format(x, y)] = (
+                    sheet_file_name, (x * 32, y * 32, 32, 32))
 
         sheet_file_name = "winter_sheet2.png"
         for i in range(0, 5):
             self.sprite_sheets["winter_tiles{0}.png".format(i)] = (sheet_file_name, (i * 119, 1, 96, 96))
+
 
 class View():
     image_manager = ImageManager()
@@ -339,23 +339,22 @@ class View():
     def draw(self):
         pass
 
-class DWMainFrame(View):
 
+class DWMainFrame(View):
     RESOURCES_DIR = os.path.dirname(__file__) + "\\resources\\"
 
-
-    def __init__(self, model : model.DWModel):
+    def __init__(self, model: model.DWModel):
 
         self.model = model
         self.surface = None
-        self.width = 1000
-        self.height = 1000
+        self.width = 700
+        self.height = 700
 
         # Create a view for rendering the model of the current world
         # Define how far away the camera is allowed to follow the player by setting min and max positions
-        self.world_view = DWWorldView(self.model, min_view_pos = (200, -200, -350), max_view_pos = (800, 800, 400))
+        self.world_view = DWWorldView(self.model, min_view_pos=(200, -200, -350), max_view_pos=(800, 800, 400))
+        self.inventory_view = DWInventoryView(self.model)
         self.text_box = DWTextBox("Hello World")
-
 
     def initialise(self):
 
@@ -379,13 +378,21 @@ class DWMainFrame(View):
             print(str(err))
 
         self.world_view.initialise()
+        self.inventory_view.initialise()
         self.text_box.initialise()
 
     def print(self):
 
         print("Printing Dark Work view...")
         self.world_view.print()
+        self.inventory_view.print()
         self.text_box.print()
+
+    def inventory_show(self, view_on = None):
+        if view_on is None:
+            self.inventory_view.is_visible = not self.inventory_view.is_visible
+        else:
+            self.inventory_view.is_visible = view_on
 
     def draw(self):
 
@@ -394,20 +401,37 @@ class DWMainFrame(View):
         x = 0
         y = 0
 
+        # Draw the main view of the world
         self.world_view.draw()
         self.surface.blit(self.world_view.surface, (x, y))
 
         x = 10
-        y= 20
+        y = 20
 
+        # If the text box is active then draw it
         if self.text_box.is_visible is True:
             self.text_box.draw()
             self.surface.blit(self.text_box.surface, (x, y))
 
+        x = 400
+        y = 20
+
+        # If the Inventory view is active then draw it
+        if self.inventory_view.is_visible is True:
+            self.inventory_view.draw()
+            self.surface.blit(self.inventory_view.surface, (x, y))
+
+        # Draw the number of remaining lives
+        img = View.image_manager.get_skin_image(tile_name=model.Objects.PLAYER)
+        for i in range(0, self.model.player_lives):
+            self.surface.blit(img, (i * 32 + 8, self.world_view.surface.get_rect().height - 32))
+
+        # Draw the game state is we are not playing
         if self.model.state != model.DWModel.STATE_PLAYING:
             msg_box_width = 200
             msg_box_height = 64
-            msg_rect = pygame.Rect((self.world_view.width - msg_box_width)/2, (self.world_view.height - msg_box_height) /2 , msg_box_width, msg_box_height)
+            msg_rect = pygame.Rect((self.world_view.width - msg_box_width) / 2,
+                                   (self.world_view.height - msg_box_height) / 2, msg_box_width, msg_box_height)
 
             pygame.draw.rect(self.surface,
                              Colours.DARK_GREY,
@@ -419,15 +443,14 @@ class DWMainFrame(View):
                              msg_rect,
                              2)
 
-            draw_text(surface = self.surface,
+            draw_text(surface=self.surface,
                       msg="{0}".format(self.model.state),
-                      x = self.world_view.width/2,
-                      y = self.world_view.height/2,
+                      x=self.world_view.width / 2,
+                      y=self.world_view.height / 2,
                       size=32,
                       centre=True,
                       fg_colour=Colours.WHITE,
                       bg_colour=Colours.DARK_GREY)
-
 
     def update(self):
         pygame.display.update()
@@ -443,15 +466,13 @@ class DWMainFrame(View):
         self.world_view.process_event(new_event)
         self.text_box.process_event(new_event)
 
-
     def move_view(self, direction):
-
         self.world_view.move_view(direction)
 
 
 class DWWorldView(View):
 
-    def __init__(self, model : model.DWModel, min_view_pos, max_view_pos, view_pos = None):
+    def __init__(self, model: model.DWModel, min_view_pos, max_view_pos, view_pos=None):
 
         super(DWWorldView, self).__init__()
 
@@ -460,12 +481,14 @@ class DWWorldView(View):
 
         self.surface = None
 
-        #  How big a view are we going to render?
+        # Multiplication factor for size of images
         self.object_size_scale = 1.0
+
+        #  How big a view are we going to render?
         self.width = 600 * self.object_size_scale
         self.height = 600 * self.object_size_scale
 
-        # How far away from the camera are we rendering objects?
+        # How far away from the camera are we rendering objects before they disappear?
         self.depth = 60
 
         # How far above the player is the camera?
@@ -473,18 +496,18 @@ class DWWorldView(View):
 
         # What are the constraints to the view position
         self.max_view_pos = np.array(max_view_pos)
-        #self.max_view_pos = np.maximum(np.array(max_view_pos), np.array(([0,0,self.model.world.depth + self.camera_distance])))
+        # self.max_view_pos = np.maximum(np.array(max_view_pos), np.array(([0,0,self.model.world.depth + self.camera_distance])))
         self.min_view_pos = np.array(min_view_pos)
         if view_pos is None:
             view_pos = np.add(self.min_view_pos, self.max_view_pos)
             view_pos = np.divide(view_pos, 2).astype(int)
 
-        # Move the camera to the point
+        # Move the camera to the initial view point
         self.set_view(view_pos)
 
+        # Set up helper class to translate model coordinates to view coordinates
         self.m2v = ModelToView3D(self.model)
         self.infinity = self.m2v.infinity
-
 
     def initialise(self):
 
@@ -498,7 +521,6 @@ class DWWorldView(View):
         print("Printing Dark Work Floor view...")
         print("View Pos = {0}\nPlayer pos = {1}".format(self.view_pos, self.model.world.player.xyz))
 
-
     def draw(self):
 
         # Get what skin we are using for the world that we are drawing
@@ -507,14 +529,14 @@ class DWWorldView(View):
         self.surface.fill(Colours.BLACK)
 
         # Find out where the player currently is
-        vx,vy,vz = self.model.world.get_player_xyz()
+        vx, vy, vz = self.model.world.get_player_xyz()
         pz = vz
 
         # Move the camera relative to the players position
         vz += self.camera_distance
 
         # Set the view at the position
-        self.set_view((vx,vy,vz))
+        self.set_view((vx, vy, vz))
 
         # Get the visible objects at this view point from the model
         objs = self.m2v.get_object_list(self.view_pos,
@@ -547,7 +569,6 @@ class DWWorldView(View):
 
                 # If we got an image...
                 if image is not None:
-
                     # Get the object's position in the view
                     x, y, z = pos
 
@@ -556,32 +577,19 @@ class DWWorldView(View):
                     size_adj = (1 - (d + self.camera_distance) / self.infinity) * self.object_size_scale
                     size_w = int(obj.rect.width * size_adj)
                     size_h = int(obj.rect.height * size_adj)
-                    image = pygame.transform.scale(image ,(size_w, size_h))
+                    image = pygame.transform.scale(image, (size_w, size_h))
 
                     # Change the image's transparency based on how far away from the player's plane it is
                     # Player's plane = opaque (alpha = 255)
                     # Between player and camera - increasing transparency the closer to the camera you get
                     # Beyond the player's plane - increasing levels of transparency
-                    #alpha = 255 * (1 - min((abs(pz-d-vz)*20/self.m2v.infinity, 1)))
-                    alpha = 255 * (1 - min((abs(pz-d-vz)/self.depth, 1)))
+                    # alpha = 255 * (1 - min((abs(pz-d-vz)*20/self.m2v.infinity, 1)))
+                    alpha = 255 * (1 - min((abs(pz - d - vz) / self.depth, 1)))
                     image.set_alpha(alpha)
 
                     # Blit the object image at the appropriate place and size
-                    self.surface.blit(image, (int(x * self.object_size_scale), int(y * self.object_size_scale), size_w, size_h))
-
-
-        # Draw cross hair
-        # cross_hair_size = 0.15
-        #pygame.draw.circle(self.surface, Colours.WHITE, (int(self.width / 2), int(self.height / 2)), 10, 1)
-        # pw = self.model.world.player.rect.width/2
-        # ph = self.model.world.player.rect.height/2
-        # pygame.draw.rect(self.surface,
-        #                  Colours.GOLD,
-        #                  (int(self.width / 2 * (1 - cross_hair_size) + pw),
-        #                   int(self.height / 2 * (1 - cross_hair_size) + ph),
-        #                   int(self.width * cross_hair_size),
-        #                   int(self.height * cross_hair_size)),
-        #                  2)
+                    self.surface.blit(image, (
+                        int(x * self.object_size_scale), int(y * self.object_size_scale), size_w, size_h))
 
         # Draw current view position
         msg = "View Pos={0} : Distances={1} : Tick={2}".format(self.view_pos, str(distance), self.tick_count)
@@ -593,24 +601,15 @@ class DWWorldView(View):
                  font=pygame.font.SysFont(pygame.font.get_default_font(), 12),
                  bkg=Colours.DARK_GREY)
 
-
         msg = "  {0}  ".format(self.model.world.name)
-        # text_rect = (200, 10, 300, 60)
-        # drawText(surface=self.surface,
-        #          text=msg,
-        #          color=Colours.WHITE,
-        #          rect=text_rect,
-        #          font=pygame.font.SysFont(pygame.font.get_default_font(), 14),
-        #          bkg=Colours.DARK_GREY)
-
-        draw_text(surface=self.surface,msg=msg, x=self.width/2, y=20, size=32, fg_colour=Colours.WHITE, bg_colour=Colours.BLACK)
+        draw_text(surface=self.surface, msg=msg, x=self.width / 2, y=20, size=32, fg_colour=Colours.WHITE,
+                  bg_colour=Colours.BLACK)
 
     def set_view(self, new_view_pos):
         # Set the position of the camera applying the minimum and maximum constraints of where is is allowed to go
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
 
     def move_view(self, direction):
-
         new_view_pos = np.add(self.view_pos, direction)
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
 
@@ -635,7 +634,7 @@ class ModelToView3D():
         self.view_padding = 128
 
         #  Add perspective to the position of objects in the view
-        #self.projection = ModelToView3D.PARALLEL
+        # self.projection = ModelToView3D.PARALLEL
         self.projection = ModelToView3D.PERSPECTIVE
 
     def get_object_list(self, view_pos, view_width, view_height, view_depth):
@@ -654,22 +653,20 @@ class ModelToView3D():
         for z in visible_planes:
 
             # Get the list of objects from the model that are at this plane...
-            #objects_at_z = sorted(self.model.world.planes[z], key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
-            #objects_at_z = self.model.world.planes[z].sort(key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
+            # objects_at_z = sorted(self.model.world.planes[z], key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
+            # objects_at_z = self.model.world.planes[z].sort(key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
             objects_at_z = self.model.world.planes[z]
 
             # For each object in the list...
             for obj in objects_at_z:
 
                 # Calculate where the object's position is relative to the current camera view point
-                ox,oy,oz = obj.xyz
+                ox, oy, oz = obj.xyz
                 od = oz - vz
                 ow = ox - vx
                 oh = oy - vy
 
                 # filter out objects that don't fit into the current camera view size (h, w, d)
-                # if od < 0 or \
-                #         od > view_depth \
                 if abs(ow) > (view_width + self.view_padding) / 2 \
                         or abs(oh) > (view_height + self.view_padding) / 2:
                     pass
@@ -682,25 +679,28 @@ class ModelToView3D():
 
                     # Add the object's adjusted position and the object itself to our collection of objects in this plane
                     objects[od].append(((
-                            ow * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE)) + (view_width / 2),
-                            oh * (1 - od / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE)) + (view_height / 2),
-                            od),
-                        obj))
-
-            #objects[od] = sorted(objects[od], key=itemgetter(2, 1))
+                                            ow * (1 - od / self.infinity * (
+                                                    self.projection == ModelToView3D.PERSPECTIVE)) + (
+                                                    view_width / 2),
+                                            oh * (1 - od / self.infinity * (
+                                                    self.projection == ModelToView3D.PERSPECTIVE)) + (
+                                                    view_height / 2),
+                                            od),
+                                        obj))
 
         return objects
 
 
 class DWTextBox(View):
 
-    def __init__(self, model : str):
-
+    def __init__(self, model: str):
         super(DWTextBox, self).__init__()
 
         # Connect to the model
         self.model = model
         self.surface = None
+
+        # Properties of the text box
         self.width = 100
         self.height = 150
         self.margin = 4
@@ -716,7 +716,6 @@ class DWTextBox(View):
         return self.tick_count < (self.timer + self.life_time_ticks)
 
     def initialise(self):
-
         super(DWTextBox, self).initialise()
 
         print("Initialising {0}".format(__class__))
@@ -724,13 +723,13 @@ class DWTextBox(View):
 
         self.border_rect = (self.padding,
                             self.padding,
-                            self.width-2*self.padding,
-                            self.height-2*self.padding)
+                            self.width - 2 * self.padding,
+                            self.height - 2 * self.padding)
 
-        self.text_rect =  (self.padding + self.margin,
-                           self.padding + self.margin,
-                           self.width-2*(self.padding + self.margin),
-                           self.height-2*(self.padding + self.padding))
+        self.text_rect = (self.padding + self.margin,
+                          self.padding + self.margin,
+                          self.width - 2 * (self.padding + self.margin),
+                          self.height - 2 * (self.padding + self.padding))
 
     def print(self):
         print("Printing Dark Work Text Box view...")
@@ -740,7 +739,6 @@ class DWTextBox(View):
         self.timer = self.tick_count
 
     def draw(self):
-
         if self.tick_count > (self.timer + self.life_time_ticks):
             return
 
@@ -752,10 +750,95 @@ class DWTextBox(View):
                          2)
 
         text = drawText(surface=self.surface,
-                 text=self.model,
-                 rect = self.text_rect,
-                 font=pygame.font.SysFont(pygame.font.get_default_font(), 16),
-                 color=self.fg,
-                 bkg=self.bg)
+                        text=self.model,
+                        rect=self.text_rect,
+                        font=pygame.font.SysFont(pygame.font.get_default_font(), 16),
+                        color=self.fg,
+                        bkg=self.bg)
 
-        #print("didn't blit {0}".format(text))
+        # print("didn't blit {0}".format(text))
+
+
+class DWInventoryView(View):
+
+    def __init__(self, model: model.DWModel):
+        super(DWInventoryView, self).__init__()
+
+        # Connect to the model
+        self.model = model
+        self.surface = None
+
+        # Properties of the text box
+        self.width = 100
+        self.height = 150
+        self.margin = 4
+        self.padding = 4
+        self.skin = "default"
+        self.fg = Colours.WHITE
+        self.bg = Colours.BLACK
+        self.timer = self.tick_count
+        self.life_time_ticks = 20
+        self.is_visible = False
+
+    def initialise(self):
+        super(DWInventoryView, self).initialise()
+
+        print("Initialising {0}".format(__class__))
+        self.surface = pygame.Surface((self.width, self.height))
+
+        self.border_rect = pygame.Rect(self.padding,
+                            self.padding,
+                            self.width - 2 * self.padding,
+                            self.height - 2 * self.padding)
+
+        self.text_rect = pygame.Rect(self.padding + self.margin,
+                          self.padding + self.margin,
+                          self.width - 2 * (self.padding + self.margin),
+                          self.height - 2 * (self.padding + self.padding))
+
+    def print(self):
+        print("Printing Dark Work Inventory view...")
+
+    def process_event(self, new_event: model.Event):
+        self.model = new_event.description
+        self.timer = self.tick_count
+
+    def draw(self):
+
+        self.surface.fill(Colours.DARK_GREY)
+
+        if self.is_visible is False:
+            return
+
+        # Get what skin we are using for the world that we are drawing
+        self.skin = self.model.world.skin
+
+        pygame.draw.rect(self.surface,
+                         Colours.WHITE,
+                         self.border_rect,
+                         2)
+
+        x = self.text_rect.centerx
+        y = self.text_rect.y + 8
+        size = 14
+        icon_size = 20
+
+        text = "Inventory:"
+        draw_text(surface=self.surface, msg=text, x=x, y=y, size=18,
+                  fg_colour=Colours.WHITE, bg_colour=Colours.DARK_GREY, centre=True)
+
+        x = self.text_rect.x + 20
+
+        for item, count in self.model.inventory.items():
+
+            y += size + 1
+
+            img = View.image_manager.get_skin_image(tile_name=item, skin_name=self.skin)
+            img = pygame.transform.scale(img, (icon_size,icon_size))
+            self.surface.blit(img, (self.text_rect.x, y-8))
+
+            text = "{0} ({1})".format(item, count)
+            draw_text(surface=self.surface, msg=text, x=x, y=y, size=size,
+                      fg_colour=Colours.WHITE, bg_colour=Colours.DARK_GREY, centre=False)
+
+
