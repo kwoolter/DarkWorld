@@ -27,34 +27,43 @@ class DWModel():
         self.current_world_id = 0
 
         self.player = None
+        self.player_lives = 0
         self._conversations = None
         self.inventory = {}
-
-
-        self.player_lives = 0
 
     def initialise(self):
         print("Initialising {0}:{1}".format(self.name, __class__))
 
         self.world_factory = WorldBuilder(DWModel.DATA_FILES_DIR)
         self.world_factory.initialise()
+        self.world_ids = self.world_factory.get_world_names()
+        self.current_world_id = self.world_ids[0]
         self.world = self.world_factory.get_world(self.current_world_id)
 
         self._conversations = ConversationFactory(DWModel.DATA_FILES_DIR + "conversations.xml")
         self._conversations.load()
-
-        # size = 32
-        #
-        # self.player = RPGObject3D(type=7,
-        #                           name=Objects.PLAYER,
-        #                           osize=(size, size, 1))
 
         self.player = WorldObjectLoader.get_object_copy_by_name(Objects.PLAYER)
         self.player.is_player = True
         self.player_lives = 3
         self.state = DWModel.STATE_READY
 
-        self.move_world(100, do_copy=True)
+        self.current_world_id = 8
+        self.move_world(self.current_world_id, do_copy=True)
+
+    def get_next_world_id(self):
+        idx = self.world_ids.index(self.current_world_id)
+        if idx == len(self.world_ids):
+            idx = 0
+        else:
+            idx += 1
+
+        return self.world_ids[idx]
+
+    def get_previous_world_id(self):
+        idx = self.world_ids.index(self.current_world_id)
+        idx = max(idx - 1, 0)
+        return self.world_ids[idx]
 
     def start(self):
         self.state = DWModel.STATE_PLAYING
@@ -74,7 +83,6 @@ class DWModel():
             elif self.state == DWModel.STATE_PLAYING:
                 self.state = DWModel.STATE_PAUSED
 
-        print("Model state={0}".format(self.state))
 
         self.events.add_event(Event(type=Event.GAME,
                                     name=Event.PLAYING,
@@ -103,7 +111,6 @@ class DWModel():
 
             if len(self.world.touching_objects(self.player, distance = 0, filter=World3D.ENEMIES)) > 0:
                 print("Hit enemy")
-                print("Player died")
                 self.player_died()
             else:
 
@@ -115,7 +122,6 @@ class DWModel():
                     self.world.player_state = World3D.PLAYER_MOVING
 
                 if self.world.is_player_dead() is True:
-                    print("Player died")
                     self.player_died()
 
     def get_next_event(self):
@@ -138,27 +144,7 @@ class DWModel():
 
             for object in touching_objects:
 
-                if object.name == Objects.EXIT_NEXT:
-                    req_obj = Objects.BOSS_KEY
-                    if self.world.player.is_inside(object):
-                        if self.have_inventory_object(req_obj) is True:
-                            print("Using {0} to go to next world...".format(req_obj))
-                            if self.move_world(self.current_world_id + 1) is True:
-                                self.use_inventory_object(req_obj)
-                                print(str(self.world))
-                        else:
-                            self.events.add_event(Event(type=Event.GAME,
-                                                        name=Event.ACTION_FAILED,
-                                                        description="You don't have required object {0}".format(req_obj)))
-
-                elif object.name == Objects.EXIT_PREVIOUS:
-                    if self.world.player.is_inside(object):
-                        print("Going back to previous world...")
-                        if self.move_world(self.current_world_id - 1) is True:
-                            self.use_inventory_object(Objects.BOSS_KEY, count=-1)
-                            print(str(self.world))
-
-                elif object.name == Objects.HOLE:
+                if object.name == Objects.HOLE:
                     print("Falling...")
                     self.move_player((0,0,-2))
 
@@ -172,6 +158,7 @@ class DWModel():
                         self.world.delete_object3D(object)
 
     def talk_to_npc(self, npc_object):
+
         npc_id = npc_object.name
         npc_name, vanish, gift_id = self.world.get_npc_details(npc_id)
         conversation = self._conversations.get_conversation("{0}:{1}".format(npc_name, self.current_world_id))
@@ -201,12 +188,33 @@ class DWModel():
 
             if object.is_interactable is True:
 
-                print("Interacting with {0}".format(str(object)))
 
                 if object.name == Objects.TELEPORT:
                     if self.world.player.is_inside(object):
-                        print("Teleporting...")
                         self.world.move_player_to_start()
+                        self.events.add_event(Event(type=Event.GAME,
+                                                    name=Event.ACTION_SUCCEEDED,
+                                                    description="You activate the teleport..."))
+
+                elif object.name == Objects.EXIT_NEXT:
+                    req_obj = Objects.BOSS_KEY
+                    if self.world.player.is_inside(object):
+                        if self.have_inventory_object(req_obj) is True:
+                            print("Using {0} to go to next world...".format(req_obj))
+
+                            if self.move_world(self.get_next_world_id()) is True:
+                                self.use_inventory_object(req_obj)
+                                print(str(self.world))
+                        else:
+                            self.events.add_event(Event(type=Event.GAME,
+                                                        name=Event.ACTION_FAILED,
+                                                        description="You don't have {0}".format(req_obj)))
+
+                elif object.name == Objects.EXIT_PREVIOUS:
+                    if self.world.player.is_inside(object):
+                        print("Going back to previous world...")
+                        if self.move_world(self.get_previous_world_id()) is True:
+                            self.use_inventory_object(Objects.BOSS_KEY, count=-1)
 
                 elif object.name == Objects.LADDER_UP:
                     self.events.add_event(Event(type=Event.GAME,
@@ -297,7 +305,7 @@ class DWModel():
                     self.delete_world_object(object)
                     self.events.add_event(Event(type=Event.GAME,
                                                 name=Event.ACTION_SUCCEEDED,
-                                                description="You found a {0}".format(object.name)))
+                                                description="You found {0}".format(object.name)))
 
                     if object.name == Objects.EXTRA_LIFE:
                         self.player_lives += 1
@@ -323,7 +331,13 @@ class DWModel():
 
     def use_inventory_object(self, object_name : str, count = 1):
         if object_name in self.inventory.keys():
-                self.inventory[object_name] -= count
+            self.inventory[object_name] -= count
+
+            if self.inventory[object_name] <= 0:
+                del self.inventory[object_name]
+
+        else:
+            self.inventory[object_name] = -count
 
     def delete_world_object(self, old_object):
         self.world.delete_object3D(old_object)
@@ -365,6 +379,11 @@ class DWModel():
             self.world.add_player(self.player, start_pos = (self.current_world_id <= new_world_id))
             self.current_world_id = new_world_id
             moved = True
+
+            self.events.add_event(Event(type=Event.GAME,
+                                        name=Event.ACTION_SUCCEEDED,
+                                        description="Welcome to {0} world".format(self.world.name)))
+
         else:
             print("Can't find new world {0}".format(new_world_id))
 

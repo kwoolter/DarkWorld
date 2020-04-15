@@ -585,7 +585,7 @@ ID,Name,Layer,Layout
 5,World5,10,                    
 5,World5,10,########            
 5,World5,10,#                   
-5,World5,10,#                   
+5,World5,10,# u                 
 5,World5,10,#                   
 5,World5,10,#                   
 5,World5,10,#                   
@@ -605,8 +605,8 @@ ID,Name,Layer,Layout
 5,World5,11,                    
 5,World5,11,                    
 5,World5,11, FFFFFFF            
-5,World5,11, Fu FFFF            
-5,World5,11, F  FFFF            
+5,World5,11, FFFFFFF            
+5,World5,11, FFFFFFF            
 5,World5,11, FFFFFFF            
 5,World5,11, FFFFFFF            
 5,World5,11, FFFFFFF            
@@ -625,7 +625,7 @@ ID,Name,Layer,Layout
 5,World5,50, ##       ##   ##   
 5,World5,50, ############ ######
 5,World5,50, #        ##   ## k#
-5,World5,50, # U               #
+5,World5,50, #U                #
 5,World5,50, #                 #
 5,World5,50, #              n  #
 5,World5,50, #                 #

@@ -79,7 +79,7 @@ class ImageManager:
             model.Objects.WALL2: "winter_tiles2.png",
             model.Objects.WALL3: "winter_tiles3.png",
             model.Objects.FAKE_WALL: "wall.png",
-            model.Objects.BOOK: "rpg_sprite2-5.png",
+            model.Objects.BOOK: "rpg_sprite_gold2-5.png",
             model.Objects.COINS: "rpg_sprite_gold1-12.png",
             model.Objects.SCROLL: "rpg_sprite_gold0-5.png",
             model.Objects.ENEMY1: "rpg_sprite_bw5-15.png",
@@ -90,18 +90,18 @@ class ImageManager:
             model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
             model.Objects.HELMET1: "rpg_sprite_gold2-10.png",
             model.Objects.HELMET2: "rpg_sprite_gold3-10.png",
-            model.Objects.MAP: "rpg_sprite1-5.png",
+            model.Objects.MAP: "rpg_sprite_gold1-5.png",
             model.Objects.MONSTER1: "bear.png",
             model.Objects.MONSTER2: "winter_tiles0.png",
             model.Objects.NPC1: "rpg_sprite_bw0-15.png",
             model.Objects.NPC2: "rpg_sprite_bw1-15.png",
             model.Objects.BIG_MONSTER1: "bear.png",
             model.Objects.BIG_MONSTER2: "winter_tiles0.png",
-            model.Objects.BOMB: "rpg_sprite2-8.png",
+            model.Objects.BOMB: "rpg_sprite_gold2-8.png",
             # model.Objects.PLAYER: ("man0.png", "man2.png", "man1.png", "man2.png"),
             # model.Objects.TREASURE: "treasure.png",
             model.Objects.TREASURE: ("token0.png", "token1.png", "token2.png", "token3.png"),
-            model.Objects.TREASURE_CHEST: "treasure_chest.png",
+            model.Objects.TREASURE_CHEST: "rpg_sprite_gold2-3.png",
             model.Objects.DECOR1: "rpg_sprite_gold0-13.png",
             model.Objects.DECOR2: "rpg_sprite_gold1-13.png",
             model.Objects.DOOR1: "door.png",
@@ -154,8 +154,6 @@ class ImageManager:
 
         ImageManager.skins[new_skin_name] = new_skin
 
-        ImageManager.skins[new_skin_name] = new_skin
-
         new_skin_name = "tutorial"
         new_skin = (new_skin_name, {
 
@@ -164,10 +162,13 @@ class ImageManager:
             model.Objects.TILE1: "tile20.png",
             model.Objects.MONSTER1: "tile20.png",
             model.Objects.MONSTER2: "tile20.png",
+            model.Objects.NPC1: "rpg_sprite_gold0-15.png",
+            model.Objects.NPC2: "rpg_sprite_gold1-15.png",
             model.Objects.SWITCH_1: ("switch0.png", "switch5.png"),
             model.Objects.SWITCH_2: ("switch1.png", "switch4.png"),
             model.Objects.SWITCH_3: ("switch0.png", "switch5.png"),
             model.Objects.SWITCH_4: ("switch1.png", "switch4.png"),
+            model.Objects.TREASURE: "rpg_sprite_gold7-12.png",
             model.Objects.DOOR1: "door0.png",
             model.Objects.DOOR1_OPEN: "door1.png",
         })
@@ -188,22 +189,24 @@ class ImageManager:
             model.Objects.TILE2: "hieroglyph_dark0.png",
             model.Objects.TILE3: "hieroglyph_dark4.png",
             model.Objects.TILE4: "hieroglyph_dark6.png",
-            model.Objects.TREASURE: "rpg_sprite7-12.png",
-            model.Objects.TREASURE_CHEST: "rpg_sprite2-3.png",
+            model.Objects.TREASURE: "rpg_sprite_bw7-12.png",
+            model.Objects.TREASURE_CHEST: "rpg_sprite_bw2-3.png",
             model.Objects.MONSTER1: "hieroglyph_dark1.png",
             model.Objects.MONSTER2: "hieroglyph_dark1.png",
+            model.Objects.NPC1: "rpg_sprite_bw0-15.png",
             model.Objects.NPC2: "rpg_sprite_bw8-14.png",
-            model.Objects.SWITCH_1: ("switch0.png", "switch5.png"),
-            model.Objects.SWITCH_2: ("switch0.png", "switch5.png"),
-            model.Objects.SWITCH_3: ("switch0.png", "switch5.png"),
-            model.Objects.SWITCH_4: ("switch0.png", "switch5.png"),
+            model.Objects.SWITCH_1: ("switch7.png", "switch6.png"),
+            model.Objects.SWITCH_2: ("switch7.png", "switch6.png"),
+            model.Objects.SWITCH_3: ("switch9.png", "switch8.png"),
+            model.Objects.SWITCH_4: ("switch9.png", "switch8.png"),
             model.Objects.DOOR1: "rpg_sprite_gold2-2.png",
             model.Objects.DOOR1_OPEN: None,
             model.Objects.DOOR2: "rpg_sprite_gold1-2.png",
             model.Objects.DOOR2_OPEN: None,
             model.Objects.LADDER_UP: "ladder3.png",
-            model.Objects.KEY: "rpg_sprite_gold7-3.png",
-            model.Objects.BOSS_KEY: "rpg_sprite_gold9-3.png",
+            model.Objects.LADDER_DOWN: "ladder4.png",
+            model.Objects.KEY: "rpg_sprite_bw7-3.png",
+            model.Objects.BOSS_KEY: "rpg_sprite_bw9-3.png",
 
         })
 
@@ -219,7 +222,7 @@ class ImageManager:
             model.Objects.NPC1: "rpg_sprite_gold5-14.png",
             model.Objects.TILE1: "tile4.png",
             model.Objects.TILE2: "wall2.png",
-            model.Objects.TREASURE:"rpg_sprite_gold1-12.png",
+            model.Objects.TREASURE: "rpg_sprite_gold1-12.png",
             model.Objects.WALL1: "winter_tiles0.png",
             model.Objects.WALL2: "winter_tiles3.png",
             model.Objects.WALL3: "winter_tiles2.png",
@@ -278,7 +281,7 @@ class ImageManager:
             self.sprite_sheets["ladder{0}.png".format(i)] = (sheet_file_name, (0, i * 32, 32, 32))
 
         sheet_file_name = "switches_sheet.png"
-        for i in range(0, 6):
+        for i in range(0, 10):
             self.sprite_sheets["switch{0}.png".format(i)] = (sheet_file_name, (i * 32, 0, 32, 32))
 
         sheet_file_name = "doors_sheet.png"
@@ -343,12 +346,14 @@ class View():
 class DWMainFrame(View):
     RESOURCES_DIR = os.path.dirname(__file__) + "\\resources\\"
 
+    TRANSPARENT = (0, 255, 0)
+
     def __init__(self, model: model.DWModel):
 
         self.model = model
         self.surface = None
-        self.width = 700
-        self.height = 700
+        self.width = 600
+        self.height = 600
 
         # Create a view for rendering the model of the current world
         # Define how far away the camera is allowed to follow the player by setting min and max positions
@@ -388,7 +393,7 @@ class DWMainFrame(View):
         self.inventory_view.print()
         self.text_box.print()
 
-    def inventory_show(self, view_on = None):
+    def inventory_show(self, view_on=None):
         if view_on is None:
             self.inventory_view.is_visible = not self.inventory_view.is_visible
         else:
@@ -405,16 +410,16 @@ class DWMainFrame(View):
         self.world_view.draw()
         self.surface.blit(self.world_view.surface, (x, y))
 
-        x = 10
-        y = 20
+        x = 4
+        y = 4
 
         # If the text box is active then draw it
         if self.text_box.is_visible is True:
             self.text_box.draw()
             self.surface.blit(self.text_box.surface, (x, y))
 
-        x = 400
-        y = 20
+        x = self.world_view.width - self.inventory_view.width - 4
+        y = 4
 
         # If the Inventory view is active then draw it
         if self.inventory_view.is_visible is True:
@@ -426,7 +431,7 @@ class DWMainFrame(View):
         for i in range(0, self.model.player_lives):
             self.surface.blit(img, (i * 32 + 8, self.world_view.surface.get_rect().height - 32))
 
-        # Draw the game state is we are not playing
+        # Draw the game state if we are not playing
         if self.model.state != model.DWModel.STATE_PLAYING:
             msg_box_width = 200
             msg_box_height = 64
@@ -489,7 +494,7 @@ class DWWorldView(View):
         self.height = 600 * self.object_size_scale
 
         # How far away from the camera are we rendering objects before they disappear?
-        self.depth = 60
+        self.depth = 65
 
         # How far above the player is the camera?
         self.camera_distance = -20
@@ -706,6 +711,7 @@ class DWTextBox(View):
         self.margin = 4
         self.padding = 4
         self.skin = "default"
+        self.text_size = 16
         self.fg = Colours.WHITE
         self.bg = Colours.BLACK
         self.timer = self.tick_count
@@ -720,6 +726,16 @@ class DWTextBox(View):
 
         print("Initialising {0}".format(__class__))
         self.surface = pygame.Surface((self.width, self.height))
+        self.surface.set_colorkey((0, 255, 0))
+        self.font = pygame.font.SysFont(pygame.font.get_default_font(), self.text_size)
+
+        self.set_size()
+
+    def set_size(self):
+
+        # get the height of the font
+        fontHeight = self.font.size("Tg")[1]
+        self.height = max(len(self.model) * fontHeight / 6, fontHeight * 4)
 
         self.border_rect = (self.padding,
                             self.padding,
@@ -742,22 +758,26 @@ class DWTextBox(View):
         if self.tick_count > (self.timer + self.life_time_ticks):
             return
 
-        self.surface.fill(Colours.DARK_GREY)
+        self.surface.fill((0, 255, 0))
+
+        self.set_size()
+
+        pygame.draw.rect(self.surface,
+                         Colours.DARK_GREY,
+                         self.border_rect,
+                         0)
 
         pygame.draw.rect(self.surface,
                          Colours.WHITE,
                          self.border_rect,
                          2)
 
-        text = drawText(surface=self.surface,
-                        text=self.model,
-                        rect=self.text_rect,
-                        font=pygame.font.SysFont(pygame.font.get_default_font(), 16),
-                        color=self.fg,
-                        bkg=self.bg)
-
-        # print("didn't blit {0}".format(text))
-
+        drawText(surface=self.surface,
+                 text=self.model,
+                 rect=self.text_rect,
+                 font=self.font,
+                 color=self.fg,
+                 bkg=self.bg)
 
 class DWInventoryView(View):
 
@@ -770,14 +790,14 @@ class DWInventoryView(View):
 
         # Properties of the text box
         self.width = 100
-        self.height = 150
+        self.height = 300
+        self.icon_size = 24
+        self.text_size = 14
         self.margin = 4
         self.padding = 4
-        self.skin = "default"
+        self.skin = ImageManager.DEFAULT_SKIN
         self.fg = Colours.WHITE
         self.bg = Colours.BLACK
-        self.timer = self.tick_count
-        self.life_time_ticks = 20
         self.is_visible = False
 
     def initialise(self):
@@ -785,27 +805,32 @@ class DWInventoryView(View):
 
         print("Initialising {0}".format(__class__))
         self.surface = pygame.Surface((self.width, self.height))
+        self.surface.set_colorkey((0, 255, 0))
+        self.set_size()
+
+    def set_size(self):
+
+        self.height = 32
+        self.height += len(self.model.inventory.keys()) * self.icon_size
 
         self.border_rect = pygame.Rect(self.padding,
-                            self.padding,
-                            self.width - 2 * self.padding,
-                            self.height - 2 * self.padding)
+                                       self.padding,
+                                       self.width - 2 * self.padding,
+                                       self.height - 2 * self.padding)
 
         self.text_rect = pygame.Rect(self.padding + self.margin,
-                          self.padding + self.margin,
-                          self.width - 2 * (self.padding + self.margin),
-                          self.height - 2 * (self.padding + self.padding))
+                                     self.padding + self.margin,
+                                     self.width - 2 * (self.padding + self.margin),
+                                     self.height - 2 * (self.padding + self.padding))
 
     def print(self):
         print("Printing Dark Work Inventory view...")
 
-    def process_event(self, new_event: model.Event):
-        self.model = new_event.description
-        self.timer = self.tick_count
-
     def draw(self):
 
-        self.surface.fill(Colours.DARK_GREY)
+        self.surface.fill((0, 255, 0))
+
+        self.set_size()
 
         if self.is_visible is False:
             return
@@ -814,31 +839,34 @@ class DWInventoryView(View):
         self.skin = self.model.world.skin
 
         pygame.draw.rect(self.surface,
+                         Colours.DARK_GREY,
+                         self.border_rect,
+                         0)
+
+        pygame.draw.rect(self.surface,
                          Colours.WHITE,
                          self.border_rect,
                          2)
 
         x = self.text_rect.centerx
         y = self.text_rect.y + 8
-        size = 14
-        icon_size = 20
 
         text = "Inventory:"
         draw_text(surface=self.surface, msg=text, x=x, y=y, size=18,
                   fg_colour=Colours.WHITE, bg_colour=Colours.DARK_GREY, centre=True)
 
-        x = self.text_rect.x + 20
+        y -= 2
+        x = self.text_rect.x + self.icon_size
 
         for item, count in self.model.inventory.items():
 
-            y += size + 1
+            if count > 0:
+                y += self.icon_size
 
-            img = View.image_manager.get_skin_image(tile_name=item, skin_name=self.skin)
-            img = pygame.transform.scale(img, (icon_size,icon_size))
-            self.surface.blit(img, (self.text_rect.x, y-8))
+                img = View.image_manager.get_skin_image(tile_name=item, skin_name=self.skin)
+                img = pygame.transform.scale(img, (self.icon_size, self.icon_size))
+                self.surface.blit(img, (self.text_rect.x, y - int(self.icon_size / 2)))
 
-            text = "{0} ({1})".format(item, count)
-            draw_text(surface=self.surface, msg=text, x=x, y=y, size=size,
-                      fg_colour=Colours.WHITE, bg_colour=Colours.DARK_GREY, centre=False)
-
-
+                text = "{0} x {1}".format(item, count)
+                draw_text(surface=self.surface, msg=text, x=x, y=y + 6 - int(self.icon_size / 4), size=self.text_size,
+                          fg_colour=Colours.WHITE, bg_colour=Colours.DARK_GREY, centre=False)

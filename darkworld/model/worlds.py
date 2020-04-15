@@ -634,6 +634,8 @@ class WorldBuilder():
         else:
             return self.world_layouts.get_world(world_name)
 
+    def get_world_names(self):
+         return self.world_layouts.get_world_names()
 
 class WorldLayoutLoader():
     world_layouts = {}
@@ -695,6 +697,9 @@ class WorldLayoutLoader():
         else:
             print("Couldn't find world {0}".format(world_name))
             return None
+
+    def get_world_names(self):
+        return sorted(list(self.world_layouts.keys()))
 
     def print(self):
         print("{0} world layouts loaded".format(len(self.world_layouts.keys())))
