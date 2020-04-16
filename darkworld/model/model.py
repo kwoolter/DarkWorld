@@ -48,7 +48,7 @@ class DWModel():
         self.player_lives = 3
         self.state = DWModel.STATE_READY
 
-        self.current_world_id = 8
+        self.current_world_id = 20
         self.move_world(self.current_world_id, do_copy=True)
 
     def get_next_world_id(self):

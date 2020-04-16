@@ -321,10 +321,10 @@ class WorldBuilder():
             new_monster.set_pos((12*32, (9+i)*32, 51))
 
             ai = AIBot(new_monster, world)
-            instructions = [(World3D.EAST, 128, False),
-                            (World3D.DUMMY, 50, False),
-                            (World3D.WEST, 128, False),
-                            (World3D.DUMMY, 50, False)
+            instructions = [(World3D.EAST, 128, AIBot.INSTRUCTION_FAIL_SKIP),
+                            (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                            (World3D.WEST, 128, AIBot.INSTRUCTION_FAIL_SKIP),
+                            (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                             ]
             ai.set_instructions(instructions)
 
@@ -366,10 +366,10 @@ class WorldBuilder():
         new_monster.set_pos((17*32, 8*32, 21))
 
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.DOWN, 32*5, True),
-                        (World3D.DUMMY, 50, False),
-                        (World3D.UP, 32*5, True),
-                        (World3D.DUMMY, 50, False)
+        instructions = [(World3D.DOWN, 32*5, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.UP, 32*5, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                         ]
         ai.set_instructions(instructions)
 
@@ -379,10 +379,10 @@ class WorldBuilder():
         new_monster.set_pos((17*32, (11)*32, 21))
 
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.DOWN, 32*5, True),
-                        (World3D.DUMMY, 50, False),
-                        (World3D.UP, 32*5, True),
-                        (World3D.DUMMY, 50, False)
+        instructions = [(World3D.DOWN, 32*5, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.UP, 32*5, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                         ]
         ai.set_instructions(instructions)
 
@@ -409,9 +409,9 @@ class WorldBuilder():
 
         ai = AIBot(new_monster, world)
         instructions = [(World3D.WEST, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
-                        (World3D.DUMMY, 50, False),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.EAST, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
-                        (World3D.DUMMY, 50, False)
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                         ]
         ai.set_instructions(instructions)
 
@@ -424,19 +424,27 @@ class WorldBuilder():
         new_monster.set_pos((256, 320, 79))
 
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.DOWN, 30, False),(World3D.UP, 30, False)]
+        instructions = [(World3D.DOWN, 30, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.UP, 30, AIBot.INSTRUCTION_FAIL_SKIP)]
         ai.set_instructions(instructions)
 
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.EAST * 2, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.WEST * 2, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
+                        ]
+        ai.set_instructions(instructions)
 
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
         new_monster.set_pos((240, 416, 79))
-        world.add_monster(new_monster, World3D.EAST)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
 
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
         new_monster.set_pos((120, 524, 149))
-        world.add_monster(new_monster, World3D.UP)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
 
 
         # World 20
@@ -446,7 +454,10 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
         new_monster.set_pos((10*32, 14*32, 66))
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.DOWN, 1000, True), (World3D.DUMMY, 50, False),(World3D.UP, 1000, True), (World3D.DUMMY, 50, False)]
+        instructions = [(World3D.DOWN, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.UP, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)]
         ai.set_instructions(instructions)
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
@@ -454,14 +465,14 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
         new_monster.set_pos((200, 544, 66))
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.EAST, 1000, True),
-                        (World3D.DUMMY, 50, False),
-                        (World3D.WEST, 1000, True),
-                        (World3D.DUMMY, 50, False),
-                        (World3D.DOWN, 32*5, True),
-                        (World3D.DUMMY, 50, False),
-                        (World3D.UP, 32*5, True),
-                        (World3D.DUMMY, 50, False),
+        instructions = [(World3D.EAST, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.WEST, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DOWN, 32*5, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.UP, 32*5, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         ]
         ai.set_instructions(instructions)
         world.add_monster(new_monster, World3D.DUMMY, ai)
@@ -470,7 +481,10 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.BIG_MONSTER2)
         new_monster.set_pos((48, 196, 70))
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.NORTH, 1000, True), (World3D.DUMMY, 50, False),(World3D.SOUTH, 1000, True), (World3D.DUMMY, 10, False)]
+        instructions = [(World3D.NORTH, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.SOUTH, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 10, AIBot.INSTRUCTION_FAIL_TICK)]
         ai.set_instructions(instructions)
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
@@ -603,7 +617,7 @@ class WorldBuilder():
         # World 30
 
         new_world_id = 30
-        new_world_properties = ("The Next Test", "test", (504, 558, 150), (50, 100, 170), switch_groups)
+        new_world_properties = ("The Next Test", "World2", (504, 558, 150), (50, 100, 170), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
 
