@@ -143,7 +143,10 @@ class ImageManager:
 
             model.Objects.WALL1: "brick2.png",
             model.Objects.FAKE_WALL: "brick2.png",
-            model.Objects.TILE1: "tile4.png",
+            model.Objects.TILE1: "tile3.png",
+            model.Objects.TILE2: "tile3.png",
+            model.Objects.TILE3: "tile3.png",
+            model.Objects.TILE4: "tile3.png",
             model.Objects.MONSTER1: "tile3.png",
             model.Objects.MONSTER2: "winter_tiles0.png",
             model.Objects.SWITCH_1: ("switch0.png", "switch3.png"),

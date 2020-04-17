@@ -48,7 +48,7 @@ class DWModel():
         self.player_lives = 3
         self.state = DWModel.STATE_READY
 
-        self.current_world_id = 20
+        self.current_world_id = 100
         self.move_world(self.current_world_id, do_copy=True)
 
     def get_next_world_id(self):
@@ -346,6 +346,8 @@ class DWModel():
         self.events.add_event(Event(type=Event.GAME,
                                     name=Event.DEAD,
                                     description="{0} has died".format(self.player.name)))
+
+        self.delete_world_object(self.player)
         self.move_world(self.current_world_id, do_copy = True)
         self.player_lives -= 1
         self.state = DWModel.STATE_READY

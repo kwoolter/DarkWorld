@@ -583,30 +583,25 @@ class WorldBuilder():
         new_world_properties = ("Tutorial World {0}".format(new_world_id), "tutorial2", (50, 104, 20), (528, 358, 20), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
-
         # World 9
-
         new_world_id +=1
         new_world_properties = ("Tutorial World {0}".format(new_world_id), "tutorial2", (66, 300, 0), (528, 240, 0), None)
         self.world_properties[new_world_id] = new_world_properties
 
-
         # World 10
         switch_groups = {
-            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE3, SwitchGroup.OR),
-            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE3, SwitchGroup.AND)}
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR),
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.AND)}
 
         new_world_id = 10
         new_world_properties = ("Welcome World", "default", (224, 254, 0), (102, 244, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
-
         # World 20
-
         switch_groups = {
-            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE3, SwitchGroup.OR),
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR),
             Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.XNOR),
-            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.TILE1, SwitchGroup.AND),
+            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.TILE3, SwitchGroup.AND),
             Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.TILE4, SwitchGroup.OR)
         }
 
@@ -615,11 +610,9 @@ class WorldBuilder():
         self.world_properties[new_world_id] = new_world_properties
 
         # World 30
-
         new_world_id = 30
         new_world_properties = ("The Next Test", "World2", (504, 558, 150), (50, 100, 170), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
-
 
         # World 100
         switch_groups = {
@@ -631,7 +624,6 @@ class WorldBuilder():
         new_world_id = 100
         new_world_properties = ("Dungeon World", "dungeon", (46, 302, 0), (32*5.5, 32*3.5, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
-
 
         # Load up all of the properties that we have defined
         for id in self.world_properties.keys():
