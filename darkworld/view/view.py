@@ -88,8 +88,8 @@ class ImageManager:
             model.Objects.BLOCK1: "block1.png",
             model.Objects.BLOCK2: "block2.png",
             #model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
-            model.Objects.PLAYER: ("knight0.png","knight1.png","knight2.png","knight3.png"),
-            model.Objects.PLAYER2: ("knight4.png", "knight5.png", "knight6.png", "knight7.png"),
+            model.Objects.PLAYER: ("knight_bw0.png","knight_bw1.png","knight_bw2.png","knight_bw3.png"),
+            model.Objects.PLAYER2: ("knight_bw4.png", "knight_bw5.png", "knight_bw6.png", "knight_bw7.png"),
             model.Objects.HELMET1: "rpg_sprite_gold2-10.png",
             model.Objects.HELMET2: "rpg_sprite_gold3-10.png",
             model.Objects.MAP: "rpg_sprite_gold1-5.png",
@@ -144,6 +144,8 @@ class ImageManager:
         new_skin = (new_skin_name, {
 
             model.Objects.WALL1: "brick2.png",
+            model.Objects.ENEMY1: "rpg_sprite_bw5-15.png",
+            model.Objects.ENEMY2: "rpg_sprite_bw6-15.png",
             model.Objects.FAKE_WALL: "brick2.png",
             model.Objects.TILE1: "tile3.png",
             model.Objects.TILE2: "tile3.png",
@@ -163,10 +165,14 @@ class ImageManager:
         new_skin = (new_skin_name, {
 
             model.Objects.WALL1: "wall.png",
+            model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
+            model.Objects.ENEMY2: "rpg_sprite_gold6-15.png",
             model.Objects.FAKE_WALL: "wall.png",
             model.Objects.TILE1: "tile20.png",
             model.Objects.MONSTER1: "tile20.png",
             model.Objects.MONSTER2: "tile20.png",
+            model.Objects.PLAYER: ("knight_light0.png", "knight_light1.png", "knight_light2.png", "knight_light3.png"),
+            model.Objects.PLAYER2: ("knight_light4.png", "knight_light5.png", "knight_light6.png", "knight_light7.png"),
             model.Objects.NPC1: "rpg_sprite_gold0-15.png",
             model.Objects.NPC2: "rpg_sprite_gold1-15.png",
             model.Objects.SWITCH_1: ("switch0.png", "switch5.png"),
@@ -183,6 +189,8 @@ class ImageManager:
         new_skin_name = "tutorial2"
         new_skin = (new_skin_name, {
 
+            model.Objects.ENEMY1: "rpg_sprite_bw5-15.png",
+            model.Objects.ENEMY2: "rpg_sprite_bw6-15.png",
             model.Objects.WALL1: "hieroglyph_light5.png",
             model.Objects.WALL1: "rpg_sprite_gold8-1.png",
             model.Objects.WALL2: "hieroglyph_light4.png",
@@ -325,7 +333,12 @@ class ImageManager:
 
         sheet_file_name = "knights.png"
         for i in range(0, 8):
-            self.sprite_sheets["knight{0}.png".format(i)] = (sheet_file_name, (i * 32 + 4,0,24,32))
+            self.sprite_sheets["knight_bw{0}.png".format(i)] = (sheet_file_name, (i * 32 + 4,0,24,32))
+
+
+        sheet_file_name = "knights2.png"
+        for i in range(0, 8):
+            self.sprite_sheets["knight_light{0}.png".format(i)] = (sheet_file_name, (i * 32 + 4,0,24,32))
 
 
 class View():

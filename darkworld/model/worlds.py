@@ -314,6 +314,64 @@ class WorldBuilder():
 
     def load_moving_objects(self):
 
+        # World 3
+        world = self.get_world(3)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((15 * 32, 6  * 32, 20))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.UP, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DOWN, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        # World 4
+        world = self.get_world(4)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((15 * 32, 6  * 32, 20))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.UP * 2, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DOWN * 2, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((11 * 32, 13  * 32, 20))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.UP * 2, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DOWN * 2, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
+        new_monster.set_pos((11 * 32, int(9.5  * 32), 20))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.WEST, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.EAST, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+
         # World 5
         world = self.get_world(5)
 
@@ -332,8 +390,47 @@ class WorldBuilder():
 
             world.add_monster(new_monster, World3D.DUMMY, ai)
 
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
+        new_monster.set_pos((11 * 32, 7  * 32, 50))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.UP, 32 * 6, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DOWN, 32 * 6, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
         # World 8
         world = self.get_world(8)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
+        new_monster.set_pos((3 * 32, 17  * 32, 50))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.EAST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.WEST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
+        new_monster.set_pos((3 * 32, 2  * 32, 50))
+
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.EAST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.WEST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
+                        ]
+        ai.set_instructions(instructions)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
 
         for i in range(0,2):
 
