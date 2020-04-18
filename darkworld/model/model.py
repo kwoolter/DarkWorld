@@ -30,6 +30,7 @@ class DWModel():
         self.player_lives = 0
         self._conversations = None
         self.inventory = {}
+        self.inventory_copy = copy.deepcopy(self.inventory)
 
     def initialise(self):
         print("Initialising {0}:{1}".format(self.name, __class__))
@@ -38,17 +39,20 @@ class DWModel():
         self.world_factory.initialise()
         self.world_ids = self.world_factory.get_world_names()
         self.current_world_id = self.world_ids[0]
-        self.world = self.world_factory.get_world(self.current_world_id)
+        #self.world = self.world_factory.get_world(self.current_world_id)
 
         self._conversations = ConversationFactory(DWModel.DATA_FILES_DIR + "conversations.xml")
         self._conversations.load()
+        self._conversations.reset()
 
         self.player = WorldObjectLoader.get_object_copy_by_name(Objects.PLAYER)
         self.player.is_player = True
         self.player_lives = 3
+        self.inventory = {}
+        self.inventory_copy = copy.deepcopy(self.inventory)
         self.state = DWModel.STATE_READY
 
-        self.current_world_id = 100
+        self.current_world_id = 1
         self.move_world(self.current_world_id, do_copy=True)
 
     def get_next_world_id(self):
@@ -202,9 +206,13 @@ class DWModel():
                         if self.have_inventory_object(req_obj) is True:
                             print("Using {0} to go to next world...".format(req_obj))
 
-                            if self.move_world(self.get_next_world_id()) is True:
+                            if self.move_world(self.get_next_world_id(), do_copy=True) is True:
+                                # Use the boss key
                                 self.use_inventory_object(req_obj)
-                                print(str(self.world))
+
+                                # Take a snap shot of what the player has at the start of the world
+                                self.inventory_copy = copy.deepcopy(self.inventory)
+
                         else:
                             self.events.add_event(Event(type=Event.GAME,
                                                         name=Event.ACTION_FAILED,
@@ -215,6 +223,8 @@ class DWModel():
                         print("Going back to previous world...")
                         if self.move_world(self.get_previous_world_id()) is True:
                             self.use_inventory_object(Objects.BOSS_KEY, count=-1)
+                            # Take a snap shot of what the player has at the start of the world
+                            self.inventory_copy = copy.deepcopy(self.inventory)
 
                 elif object.name == Objects.LADDER_UP:
                     self.events.add_event(Event(type=Event.GAME,
@@ -346,8 +356,15 @@ class DWModel():
         self.events.add_event(Event(type=Event.GAME,
                                     name=Event.DEAD,
                                     description="{0} has died".format(self.player.name)))
-
+        # Delete the player from the current world
         self.delete_world_object(self.player)
+
+        # Restore player's inventory to what it was when we arrived in this world
+        self.inventory = copy.deepcopy(self.inventory_copy)
+
+        # Reset ALL conversations
+        self._conversations.reset()
+
         self.move_world(self.current_world_id, do_copy = True)
         self.player_lives -= 1
         self.state = DWModel.STATE_READY

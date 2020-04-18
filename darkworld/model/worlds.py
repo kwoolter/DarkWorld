@@ -73,6 +73,10 @@ class RPGObject3D(object):
         return (int(self._rect.x), int(self._rect.y), int(self._z))
 
     @property
+    def dxdydz(self):
+        return (int(self._rect.x - self._old_rect.x), int(self._rect.y - self._old_rect.y), int(self._z - self._old_z))
+
+    @property
     def old_xyz(self):
         return (int(self._old_rect.x), int(self._old_rect.y), int(self._old_z))
 
@@ -300,11 +304,9 @@ class WorldBuilder():
         world = self.get_world(7)
         world.add_npc(name="The Master", object_id=Objects.NPC1, xyz=(18 * 32,  6 * 32, 20), vanish=True, gift_id=Objects.BOSS_KEY)
 
-
         world = self.get_world(9)
         world.add_npc(name="Rosie", object_id=Objects.NPC1, xyz=(1 * 32,  1 * 32, 50), vanish=True, gift_id=Objects.BOSS_KEY)
         world.add_npc(name="Skids", object_id=Objects.NPC2, xyz=(18 * 32,  1 * 32, 50))
-
 
         world = self.get_world(100)
         world.add_npc(name="The Jailer", object_id=Objects.NPC1, xyz=(5 * 32,  12 * 32, 30))
@@ -527,7 +529,7 @@ class WorldBuilder():
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR)}
 
         new_world_id = 1
-        new_world_properties = ("Tutorial World 1", "tutorial", (66, 300, 0), (528, 240, 0), switch_groups)
+        new_world_properties = ("Welcome to Dark World", "tutorial", (66, 300, 0), (528, 240, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 2
@@ -921,10 +923,10 @@ class World3D:
         else:
             return None
 
-    def talk_to_npc(self, npc_id):
-        npc_name, vanish, gift_id = self.get_npc_details(npc_id)
-        if npc_name is not None:
-            print("talk to {0}".format(npc_name))
+    # def talk_to_npc(self, npc_id):
+    #     npc_name, vanish, gift_id = self.get_npc_details(npc_id)
+    #     if npc_name is not None:
+    #         print("talk to {0}".format(npc_name))
 
     def add_monster(self, new_monster, move_vector, ai = None):
         self.monsters[new_monster] = move_vector

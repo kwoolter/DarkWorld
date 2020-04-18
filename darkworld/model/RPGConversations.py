@@ -1,7 +1,7 @@
 __author__ = 'KeithW'
 
-from xml.dom.minidom import *
 from .RPGXMLUtilities import *
+from xml.dom.minidom import *
 import logging
 import random
 
@@ -67,6 +67,11 @@ class Conversation(object):
                 self.current_line = 0
 
         return line
+
+    def reset(self):
+        self.current_line = 0
+        for line in self._lines:
+            line.completed = False
 
     def print(self):
         print("%s conversation." % self.owner)
@@ -138,6 +143,10 @@ class ConversationFactory(object):
             self._conversations["{0}:{1}".format(new_conversation.owner,world_id)] = new_conversation
 
         self._dom.unlink()
+
+    def reset(self):
+        for conv in self._conversations.values():
+            conv.reset()
 
 
 

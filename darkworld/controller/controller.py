@@ -133,6 +133,6 @@ class DWController:
             self.v.draw()
             self.v.update()
 
-            FPSCLOCK.tick(50)
+            FPSCLOCK.tick(60)
 
         self.end()

@@ -87,7 +87,9 @@ class ImageManager:
             model.Objects.EXTRA_LIFE: "rpg_sprite_gold1-14.png",
             model.Objects.BLOCK1: "block1.png",
             model.Objects.BLOCK2: "block2.png",
-            model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
+            #model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
+            model.Objects.PLAYER: ("knight0.png","knight1.png","knight2.png","knight3.png"),
+            model.Objects.PLAYER2: ("knight4.png", "knight5.png", "knight6.png", "knight7.png"),
             model.Objects.HELMET1: "rpg_sprite_gold2-10.png",
             model.Objects.HELMET2: "rpg_sprite_gold3-10.png",
             model.Objects.MAP: "rpg_sprite_gold1-5.png",
@@ -320,6 +322,10 @@ class ImageManager:
         sheet_file_name = "winter_sheet2.png"
         for i in range(0, 5):
             self.sprite_sheets["winter_tiles{0}.png".format(i)] = (sheet_file_name, (i * 119, 1, 96, 96))
+
+        sheet_file_name = "knights.png"
+        for i in range(0, 8):
+            self.sprite_sheets["knight{0}.png".format(i)] = (sheet_file_name, (i * 32 + 4,0,24,32))
 
 
 class View():
@@ -563,15 +569,21 @@ class DWWorldView(View):
             # For each object found in that plane...
             for pos, obj in objs_at_d:
 
+                object_name = obj.name
+
                 if obj.is_switch is True:
                     tick_count = obj.state
                 elif obj.name in (model.Objects.PLAYER):
-                    tick_count = obj.tick_count // 10
+                    dx, dy, dz = obj.dxdydz
+                    tick_count = obj.tick_count // 6
+                    #If player is moving up the screen then swap to different set of images
+                    if dy < 0:
+                        object_name = model.Objects.PLAYER2
                 else:
                     tick_count = self.tick_count
 
                 # Get the image for the object based on the object's name
-                image = View.image_manager.get_skin_image(obj.name,
+                image = View.image_manager.get_skin_image(object_name,
                                                           skin_name=self.skin,
                                                           tick=tick_count)
 
