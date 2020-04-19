@@ -168,10 +168,12 @@ class ImageManager:
         new_skin_name = "tutorial"
         new_skin = (new_skin_name, {
 
-            model.Objects.WALL1: "wall.png",
+            model.Objects.WALL1: "rpg_sprite_bw8-1.png",
+            model.Objects.BLOCK1: "rpg_sprite_bw9-0.png",
+            model.Objects.BLOCK2: "rpg_sprite_bw6-1.png",
             model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
             model.Objects.ENEMY2: "rpg_sprite_gold6-15.png",
-            model.Objects.FAKE_WALL: "wall.png",
+            model.Objects.FAKE_WALL: "rpg_sprite_bw8-1.png",
             model.Objects.TILE1: "tile20.png",
             model.Objects.MONSTER1: "tile20.png",
             model.Objects.MONSTER2: "tile20.png",
@@ -267,15 +269,18 @@ class ImageManager:
             model.Objects.DECOR2: "rpg_sprite_gold8-12.png",
             model.Objects.LADDER_DOWN: "ladder4.png",
             model.Objects.LADDER_UP: "ladder3.png",
+            model.Objects.PLAYER: ("knight_light0.png", "knight_light1.png", "knight_light2.png", "knight_light3.png"),
+            model.Objects.PLAYER2: ("knight_light4.png", "knight_light5.png", "knight_light6.png", "knight_light7.png"),
             model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
             model.Objects.NPC1: "rpg_sprite_gold5-14.png",
             model.Objects.TILE1: "tile4.png",
             model.Objects.TILE2: "wall2.png",
+            model.Objects.TILE3: "tile4.png",
             model.Objects.TREASURE: "rpg_sprite_gold1-12.png",
             model.Objects.WALL1: "winter_tiles0.png",
             model.Objects.WALL2: "winter_tiles3.png",
             model.Objects.WALL3: "winter_tiles2.png",
-            model.Objects.FAKE_WALL: "winter_tiles0.png",
+            model.Objects.FAKE_WALL: "winter_tiles3.png",
         })
 
         ImageManager.skins[new_skin_name] = new_skin

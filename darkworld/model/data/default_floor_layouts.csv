@@ -424,14 +424,14 @@ ID,Name,Layer,Layout
 1,World1,20,                    
 1,World1,20,                    
 1,World1,20,####################
-1,World1,20,#                  #
-1,World1,20,#      S           #
-1,World1,20,#                  #
+1,World1,20,#b   qB#B   ###q  b#
+1,World1,20,#      S    ###    #
+1,World1,20,#           bbb    #
 1,World1,20,#               n  #
 1,World1,20,#                  #
-1,World1,20,#                  #
-1,World1,20,#      S           #
-1,World1,20,#                  #
+1,World1,20,#           bbb    #
+1,World1,20,#      S    ###    #
+1,World1,20,#bQ   B#B  Q###   b#
 1,World1,20,####################
 1,World1,20,                    
 1,World1,20,                    
@@ -444,14 +444,14 @@ ID,Name,Layer,Layout
 1,World1,21,                    
 1,World1,21,                    
 1,World1,21,                    
+1,World1,21, FFFFFFFFFFF   FFFF 
+1,World1,21, FFFFFFFFFFF   FFFF 
+1,World1,21, FFFFFFFFFFF   FFFF 
 1,World1,21, FFFFFFFFFFF___FFFF 
 1,World1,21, FFFFFFFFFFF___FFFF 
-1,World1,21, FFFFFFFFFFF___FFFF 
-1,World1,21, FFFFFFFFFFF___FFFF 
-1,World1,21, FFFFFFFFFFF___FFFF 
-1,World1,21, FFFFFFFFFFF___FFFF 
-1,World1,21, FFFFFFFFFFF___FFFF 
-1,World1,21, FFFFFFFFFFF___FFFF 
+1,World1,21, FFFFFFFFFFF   FFFF 
+1,World1,21, FFFFFFFFFFF   FFFF 
+1,World1,21, FFFFFFFFFFF   FFFF 
 1,World1,21,                    
 1,World1,21,                    
 1,World1,21,                    
@@ -463,16 +463,16 @@ ID,Name,Layer,Layout
 2,World2,20,                    
 2,World2,20,                    
 2,World2,20,                    
-2,World2,20,####################
-2,World2,20,##      #   $   k ##
-2,World2,20,#      S#S         #
-2,World2,20,#                  #
-2,World2,20,#               n  #
-2,World2,20,#                  #
-2,World2,20,#                  #
-2,World2,20,#      S#S         #
-2,World2,20,##      #   c   K ##
-2,World2,20,####################
+2,World2,20, ::::::: :::::::::: 
+2,World2,20,::     :::  $BB k ::
+2,World2,20,:B     S:S   BB    :
+2,World2,20,:       B          :
+2,World2,20,:               n  :
+2,World2,20,:                  :
+2,World2,20,:       B          :
+2,World2,20,:B     S:S   BB    :
+2,World2,20,::     :::  cBB K ::
+2,World2,20, ::::::: :::::::::: 
 2,World2,20,                    
 2,World2,20,                    
 2,World2,20,                    
@@ -543,16 +543,16 @@ ID,Name,Layer,Layout
 4,World4,20,                   
 4,World4,20,                   
 4,World4,20,                   
-4,World4,20,###################
-4,World4,20,#      #    k    ##
-4,World4,20,      S#S         #
-4,World4,20,                  #
-4,World4,20,               n  #
-4,World4,20,                  #
-4,World4,20,                  #
-4,World4,20,      S#S         #
-4,World4,20,#      #         ##
-4,World4,20,###################
+4,World4,20, ###########;;;####
+4,World4,20,##    ###   ;k;  ##
+4,World4,20,#q    S#S   ; ;   #
+4,World4,20,#      B          #
+4,World4,20,#        LL     n #
+4,World4,20,#        LL       #
+4,World4,20,#      B          #
+4,World4,20,#     S#S   ; ;   #
+4,World4,20,##   Q###   ; ;  ##
+4,World4,20, ###########;;;####
 4,World4,20,                   
 4,World4,20,                   
 4,World4,20,                   
@@ -1021,20 +1021,20 @@ ID,Name,Layer,Layout
 100,World100,90,                    
 100,World100,90,                    
 100,World100,90,                    
-100,World100,90,                    
-100,World100,90,                    
-100,World100,90,:  :                
-100,World100,90,:  :        ::::::::
-100,World100,90,:  :               :
-100,World100,90,:  :               :
-100,World100,90,:  :               :
-100,World100,90,:  :               :
-100,World100,90,:  :               :
-100,World100,90,:  :               :
-100,World100,90,:  :        :::::  :
-100,World100,90,:  :            :  :
-100,World100,90,:  :            :  :
-100,World100,90,:  ::::::::::::::  :
+100,World100,90,:    :              
+100,World100,90,:  :::              
+100,World100,90,:  ::       :       
+100,World100,90,:  :       :::::@:::
+100,World100,90,:  :        :     q:
+100,World100,90,:  ::              :
+100,World100,90,:  S:              :
+100,World100,90,:   :      ::Q     :
+100,World100,90,:   :      ::::::  :
+100,World100,90,:  ::      ::LLL:  :
+100,World100,90,:  :        :LLL:  :
+100,World100,90,:  :        :LLL:  :
+100,World100,90,:  ::   :::::LL::  :
+100,World100,90,:  Q:::::q  ::::   :
 100,World100,90,:                  :
 100,World100,90,:                  :
 100,World100,90,::::::::::::::::::::
@@ -1047,23 +1047,67 @@ ID,Name,Layer,Layout
 100,World100,91, **                 
 100,World100,91, **         ******* 
 100,World100,91, **         ******* 
-100,World100,91, **         ******* 
-100,World100,91, **         ******* 
-100,World100,91, **         ******* 
+100,World100,91, ***        ******* 
+100,World100,91, ***        ******* 
+100,World100,91, ***        ******* 
 100,World100,91, **         ******* 
 100,World100,91, **              ** 
 100,World100,91, **              ** 
 100,World100,91, **              ** 
-100,World100,91, **              ** 
+100,World100,91, ***     ***    *** 
 100,World100,91, ****************** 
 100,World100,91, ****************** 
 100,World100,91,                    
-100,World100,150,::::::::::          
-100,World100,150,:  X:n :            
-100,World100,150,:   :  :            
-100,World100,150,:U  :..:            
-100,World100,150,:                   
-100,World100,150,::                  
+100,World100,120,                    
+100,World100,120,                    
+100,World100,120,                    
+100,World100,120,              ;   ; 
+100,World100,120,             ;;   ; 
+100,World100,120,             ;q   ; 
+100,World100,120,        ;; ;;;    ;;
+100,World100,120,         ;;;*;     ;
+100,World100,120,             ;    Q;
+100,World100,120,             ;;;;;;;
+100,World100,120,       q ;;;;;      
+100,World100,120,        ;;          
+100,World100,120,                      
+100,World100,120,                    
+100,World100,120,                    
+100,World100,120,                    
+100,World100,120,                    
+100,World100,120,                    
+100,World100,120,                    
+100,World100,120,                    
+100,World100,121,                    
+100,World100,121,                    
+100,World100,121,                    
+100,World100,121,               fff  
+100,World100,121,               fff  
+100,World100,121,              ffff  
+100,World100,121,              ffff  
+100,World100,121,      fff     fffff 
+100,World100,121,      fff**** fffff 
+100,World100,121,      fff****       
+100,World100,121,      fff           
+100,World100,121,                    
+100,World100,121,                    
+100,World100,121,                    
+100,World100,121,                    
+100,World100,121,                    
+100,World100,121,                    
+100,World100,121,                    
+100,World100,121,                    
+100,World100,121,                    
+100,World100,150,                    
+100,World100,150,                    
+100,World100,150,                    
+100,World100,150,             __     
+100,World100,150,             __     
+100,World100,150,             __     
+100,World100,150,             __     
+100,World100,150,           ____     
+100,World100,150,     __________     
+100,World100,150,     ________       
 100,World100,150,                    
 100,World100,150,                    
 100,World100,150,                    
@@ -1074,27 +1118,43 @@ ID,Name,Layer,Layout
 100,World100,150,                    
 100,World100,150,                    
 100,World100,150,                    
-100,World100,150,                    
-100,World100,150,                    
-100,World100,150,                    
-100,World100,150,                    
-100,World100,151,                    
-100,World100,151, FFF FF FFFFFFFFFFF 
-100,World100,151, FFF FF FFFFFFFFFFF 
-100,World100,151, FFF FF ??          
-100,World100,151, FFF FF ??          
-100,World100,151, FFF FF ??          
-100,World100,151,     FFFFF          
-100,World100,151,     FFFFF          
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
-100,World100,151,                    
+100,World100,170,::::::::::::::::::::
+100,World100,170,:U X:n :U         x:
+100,World100,170,:   :  :           :
+100,World100,170,:   :..:         :::
+100,World100,170,:   :  :         :::
+100,World100,170,:   :  :          ::
+100,World100,170,::  :  :k          :
+100,World100,170,::                 :
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,170,                    
+100,World100,171,                    
+100,World100,171, FFF FF FFFFFFFFFFF 
+100,World100,171, FFF FF FFFFFFFFFFF 
+100,World100,171, FFF FF ??          
+100,World100,171, FFF FF ??          
+100,World100,171, FFF FF ??          
+100,World100,171,     FF FF          
+100,World100,171,     FF FF          
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    
+100,World100,171,                    

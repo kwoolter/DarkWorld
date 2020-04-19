@@ -362,9 +362,9 @@ class WorldBuilder():
         new_monster.set_pos((11 * 32, int(9.5  * 32), 20))
 
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.WEST, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
+        instructions = [(World3D.WEST * 2, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                        (World3D.EAST, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.EAST * 2, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                         ]
         ai.set_instructions(instructions)
@@ -604,15 +604,15 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((32*12, 32*7, 60))
         ai = AIBot(new_monster, world)
-        instructions = [(World3D.UP, 6 * 32, AIBot.INSTRUCTION_FAIL_TICK),
+        instructions = [(World3D.UP, 6 * 32, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                        (World3D.DOWN, 6 * 32, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DOWN, 6 * 32, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)]
         ai.set_instructions(instructions)
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
         # Monster #2
-        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
         new_monster.set_pos((32*4, 32*9, 60))
         ai = AIBot(new_monster, world)
         instructions = [(World3D.EAST, 10 *32, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -689,7 +689,7 @@ class WorldBuilder():
             Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.TILE2, SwitchGroup.NAND)}
 
         new_world_id +=1
-        new_world_properties = ("Tutorial World {0}".format(new_world_id), "tutorial2", (50, 104, 20), (528, 358, 20), switch_groups)
+        new_world_properties = ("Tutorial World {0}".format(new_world_id), "tutorial2", (50, 104, 0), (528, 358, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 9
@@ -1137,7 +1137,7 @@ class World3D:
         dx, dy, dz = vector
 
         if len(self.touching_objects(selected_object, distance = 0, filter=World3D.SLOW_TILES)) > 0:
-            print("Hitting some slowing objects")
+            #print("Hitting some slowing objects")
             dx = int(dx/2)
             dy = int(dy/2)
 
