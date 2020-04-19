@@ -108,7 +108,10 @@ class ImageManager:
             model.Objects.DECOR2: "rpg_sprite_gold1-13.png",
             model.Objects.DOOR1: "door.png",
             model.Objects.DOOR1_OPEN: "door_open.png",
-            model.Objects.TRAP: "trap.png",
+            model.Objects.TRAP: ("trap0.png","trap1.png","trap2.png","trap3.png",
+                                 "trap4.png","trap5.png","trap6.png","trap7.png",
+                                 "trap6.png","trap5.png","trap4.png","trap3.png",
+                                 "trap2.png","trap1.png","trap0.png","trap0.png"),
             model.Objects.TRAP_DISABLE: "trap_disable.png",
             model.Objects.KEY: "key2.png",
             model.Objects.BOSS_KEY: "key4.png",
@@ -126,13 +129,14 @@ class ImageManager:
             model.Objects.SWITCH_TILE2: None,
             model.Objects.SWITCH_TILE3: None,
             model.Objects.SWITCH_TILE4: None,
-            model.Objects.SWITCH_1: ("switch0.png", "switch1.png"),
-            model.Objects.SWITCH_2: ("switch1.png", "switch0.png"),
-            model.Objects.SWITCH_3: ("switch0.png", "switch1.png"),
-            model.Objects.SWITCH_4: ("switch1.png", "switch0.png"),
+            model.Objects.SWITCH_1: ("switch7.png", "switch6.png"),
+            model.Objects.SWITCH_2: ("switch7.png", "switch6.png"),
+            model.Objects.SWITCH_3: ("switch7.png", "switch6.png"),
+            model.Objects.SWITCH_4: ("switch7.png", "switch6.png"),
             model.Objects.SWORD: "rpg_sprite_gold9-5.png",
             model.Objects.LIQUID1: "liquid3.png",
-            model.Objects.LIQUID2: "liquid2.png",
+            model.Objects.LIQUID2: ("liquid_gold0.png","liquid_gold1.png","liquid_gold2.png","liquid_gold3.png",
+                                    "liquid_gold4.png","liquid_gold5.png","liquid_gold6.png","liquid_gold7.png"),
             model.Objects.LADDER_UP: "ladder2.png",
             model.Objects.LADDER_DOWN: "ladder1.png",
 
@@ -225,6 +229,38 @@ class ImageManager:
 
         ImageManager.skins[new_skin_name] = new_skin
 
+        new_skin_name = "world10"
+        new_skin = (new_skin_name, {
+
+            model.Objects.WALL1: "winter_tiles0.png",
+            model.Objects.FAKE_WALL: "winter_tiles0.png",
+            model.Objects.TREASURE: "rpg_sprite_gold7-12.png",
+            model.Objects.TREASURE_CHEST: "rpg_sprite_gold2-3.png",
+            model.Objects.DECOR1: "rpg_sprite_bw1-1.png",
+            model.Objects.DECOR2: "rpg_sprite_bw6-2.png",
+            model.Objects.DOOR1: "rpg_sprite_bw2-2.png",
+            model.Objects.DOOR1_OPEN: None,
+            model.Objects.DOOR2: "rpg_sprite_bw1-2.png",
+            model.Objects.DOOR2_OPEN: None,
+            model.Objects.ENEMY1: "rpg_sprite_gold4-17.png",
+            model.Objects.ENEMY2: "rpg_sprite_gold5-17.png",
+            model.Objects.LADDER_UP: "ladder3.png",
+            model.Objects.LADDER_DOWN: "ladder4.png",
+            model.Objects.LIQUID1: "rpg_sprite_bw0-3.png",
+            model.Objects.LIQUID2: ("liquid_gold0.png","liquid_gold1.png","liquid_gold2.png","liquid_gold3.png",
+                                    "liquid_gold4.png","liquid_gold5.png","liquid_gold6.png","liquid_gold7.png"),
+            model.Objects.MONSTER1: "tile3.png",
+            model.Objects.MONSTER2: "tile3.png",
+            model.Objects.PLAYER: ("knight_light0.png", "knight_light1.png", "knight_light2.png", "knight_light3.png"),
+            model.Objects.PLAYER2: ("knight_light4.png", "knight_light5.png", "knight_light6.png", "knight_light7.png"),
+            model.Objects.TILE1: "tile3.png",
+            model.Objects.TILE2: "tile3.png",
+            model.Objects.TILE4: "tile2.png",
+
+        })
+
+        ImageManager.skins[new_skin_name] = new_skin
+
         new_skin_name = "dungeon"
         new_skin = (new_skin_name, {
             model.Objects.DECOR1: "rpg_sprite_gold0-13.png",
@@ -281,10 +317,6 @@ class ImageManager:
         for i in range(0, 5):
             self.sprite_sheets["brick{0}.png".format(i)] = (sheet_file_name, (i * 33 + 1, 1, 32, 32))
 
-        sheet_file_name = "man_sheet.png"
-        for i in range(0, 3):
-            self.sprite_sheets["man{0}.png".format(i)] = (sheet_file_name, (i * 13, 0, 13, 10))
-
         sheet_file_name = "token.png"
         for i in range(0, 5):
             self.sprite_sheets["token{0}.png".format(i)] = (sheet_file_name, (i * 8, 0, 8, 8))
@@ -293,6 +325,10 @@ class ImageManager:
         for i in range(0, 5):
             self.sprite_sheets["ladder{0}.png".format(i)] = (sheet_file_name, (0, i * 32, 32, 32))
 
+        sheet_file_name = "liquid_gold_sheet.png"
+        for i in range(0, 8):
+            self.sprite_sheets["liquid_gold{0}.png".format(i)] = (sheet_file_name, (i * 64,0, 32, 32))
+
         sheet_file_name = "switches_sheet.png"
         for i in range(0, 10):
             self.sprite_sheets["switch{0}.png".format(i)] = (sheet_file_name, (i * 32, 0, 32, 32))
@@ -300,6 +336,10 @@ class ImageManager:
         sheet_file_name = "doors_sheet.png"
         for i in range(0, 4):
             self.sprite_sheets["door{0}.png".format(i)] = (sheet_file_name, (i * 32, 0, 32, 32))
+
+        sheet_file_name = "trap_sheet.png"
+        for i in range(0, 8):
+            self.sprite_sheets["trap{0}.png".format(i)] = (sheet_file_name, (i * 32, 0, 32, 32))
 
         sheet_file_name = "hieroglyph_sheet2.png"
         i = 0
@@ -566,7 +606,7 @@ class DWWorldView(View):
         self.set_view((vx, vy, vz))
 
         # Get the visible objects at this view point from the model
-        objs = self.m2v.get_object_list(self.view_pos,
+        objs = self.m2v.get_object_list((vx,vy,vz),
                                         self.width * self.object_size_scale,
                                         self.height * self.object_size_scale,
                                         self.depth)
@@ -686,8 +726,8 @@ class ModelToView3D():
         for z in visible_planes:
 
             # Get the list of objects from the model that are at this plane...
-            # objects_at_z = sorted(self.model.world.planes[z], key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
-            # objects_at_z = self.model.world.planes[z].sort(key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
+            #objects_at_z = sorted(self.model.world.planes[z], key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
+            #objects_at_z = self.model.world.planes[z].sort(key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
             objects_at_z = self.model.world.planes[z]
 
             # For each object in the list...

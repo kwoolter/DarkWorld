@@ -586,6 +586,17 @@ class WorldBuilder():
         ai.set_instructions(instructions)
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
+        # Enemy #1
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((32*2, 32*8, 60))
+        ai = AIBot(new_monster, world)
+        instructions = [(World3D.UP, 9 * 32, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DOWN, 9 * 32, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
         # World 100
         world = self.get_world(100)
 
@@ -689,22 +700,24 @@ class WorldBuilder():
         # World 10
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR),
-            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.AND)}
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.AND),
+            Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.TILE4, SwitchGroup.AND)
+        }
 
         new_world_id = 10
-        new_world_properties = ("Welcome World", "default", (224, 254, 0), (102, 244, 0), switch_groups)
+        new_world_properties = ("Welcome", "world10", (224, 254, 0), (102, 244, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 20
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.OR),
             Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.XNOR),
-            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.TILE3, SwitchGroup.AND),
-            Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.TILE4, SwitchGroup.OR)
+            Objects.SWITCH_3: (Objects.SWITCH_TILE3, Objects.BOSS_KEY, SwitchGroup.AND),
+            Objects.SWITCH_4: (Objects.SWITCH_TILE4, Objects.TILE3, SwitchGroup.OR)
         }
 
         new_world_id = 20
-        new_world_properties = ("The Test", "World2", (560, 112, 0), (104, 48, 0), switch_groups)
+        new_world_properties = ("The Challenge", "world10", (560, 112, 0), (104, 48, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 30
