@@ -1064,12 +1064,12 @@ ID,Name,Layer,Layout
 100,World100,120,              ;   ; 
 100,World100,120,             ;;   ; 
 100,World100,120,             ;q   ; 
-100,World100,120,        ;; ;;;    ;;
-100,World100,120,         ;;;*;     ;
+100,World100,120,        ;;;;;;    ;;
+100,World100,120,         ;;  ;     ;
 100,World100,120,             ;    Q;
 100,World100,120,             ;;;;;;;
-100,World100,120,       q ;;;;;      
-100,World100,120,        ;;          
+100,World100,120,       q ;;  ;      
+100,World100,120,        ;;;;;;      
 100,World100,120,                      
 100,World100,120,                    
 100,World100,120,                    
@@ -1085,10 +1085,10 @@ ID,Name,Layer,Layout
 100,World100,121,               fff  
 100,World100,121,              ffff  
 100,World100,121,              ffff  
-100,World100,121,      fff     fffff 
+100,World100,121,           ** fffff 
 100,World100,121,      fff**** fffff 
 100,World100,121,      fff****       
-100,World100,121,      fff           
+100,World100,121,           **       
 100,World100,121,                    
 100,World100,121,                    
 100,World100,121,                    
