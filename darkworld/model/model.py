@@ -52,7 +52,7 @@ class DWModel():
         self.inventory_copy = copy.deepcopy(self.inventory)
         self.state = DWModel.STATE_READY
 
-        self.current_world_id = 100
+        self.current_world_id = 30
         self.move_world(self.current_world_id, do_copy=True)
 
     def get_next_world_id(self):
@@ -401,7 +401,7 @@ class DWModel():
 
             self.events.add_event(Event(type=Event.GAME,
                                         name=Event.ACTION_SUCCEEDED,
-                                        description="Welcome to {0} world".format(self.world.name)))
+                                        description="Welcome to {0}".format(self.world.name)))
 
         else:
             print("Can't find new world {0}".format(new_world_id))

@@ -136,7 +136,10 @@ class ImageManager:
             model.Objects.SWORD: "rpg_sprite_gold9-5.png",
             model.Objects.LIQUID1: "liquid3.png",
             model.Objects.LIQUID2: ("liquid_gold0.png","liquid_gold1.png","liquid_gold2.png","liquid_gold3.png",
-                                    "liquid_gold4.png","liquid_gold5.png","liquid_gold6.png","liquid_gold7.png"),
+                                    "liquid_gold4.png","liquid_gold5.png","liquid_gold6.png","liquid_gold7.png",
+                                    "liquid_gold8.png", "liquid_gold9.png", "liquid_gold10.png", "liquid_gold11.png",
+                                    "liquid_gold12.png", "liquid_gold13.png", "liquid_gold14.png", "liquid_gold15.png"
+                                    ),
             model.Objects.LADDER_UP: "ladder2.png",
             model.Objects.LADDER_DOWN: "ladder1.png",
 
@@ -194,10 +197,10 @@ class ImageManager:
 
         new_skin_name = "tutorial2"
         new_skin = (new_skin_name, {
-
+            model.Objects.DECOR1: "rpg_sprite_gold3-17.png",
+            model.Objects.DECOR2: "rpg_sprite_gold4-2.png",
             model.Objects.ENEMY1: "rpg_sprite_bw5-15.png",
-            model.Objects.ENEMY2: "rpg_sprite_bw6-15.png",
-            model.Objects.WALL1: "hieroglyph_light5.png",
+            model.Objects.ENEMY2: "rpg_sprite_bw0-17.png",
             model.Objects.WALL1: "rpg_sprite_gold8-1.png",
             model.Objects.WALL2: "hieroglyph_light4.png",
             model.Objects.WALL3: "hieroglyph_light3.png",
@@ -207,7 +210,7 @@ class ImageManager:
             model.Objects.TILE1: "hieroglyph_dark2.png",
             model.Objects.TILE2: "hieroglyph_dark0.png",
             model.Objects.TILE3: "hieroglyph_dark4.png",
-            model.Objects.TILE4: "hieroglyph_dark6.png",
+            model.Objects.TILE4: "hieroglyph_light6.png",
             model.Objects.TREASURE: "rpg_sprite_bw7-12.png",
             model.Objects.TREASURE_CHEST: "rpg_sprite_bw2-3.png",
             model.Objects.MONSTER1: "hieroglyph_dark1.png",
@@ -331,8 +334,8 @@ class ImageManager:
             self.sprite_sheets["ladder{0}.png".format(i)] = (sheet_file_name, (0, i * 32, 32, 32))
 
         sheet_file_name = "liquid_gold_sheet.png"
-        for i in range(0, 8):
-            self.sprite_sheets["liquid_gold{0}.png".format(i)] = (sheet_file_name, (i * 64,0, 32, 32))
+        for i in range(0, 16):
+            self.sprite_sheets["liquid_gold{0}.png".format(i)] = (sheet_file_name, (i * 32,0, 32, 32))
 
         sheet_file_name = "switches_sheet.png"
         for i in range(0, 10):
@@ -780,7 +783,7 @@ class DWTextBox(View):
 
         # Properties of the text box
         self.width = 100
-        self.height = 150
+        self.max_height = self.height = 150
         self.margin = 4
         self.padding = 4
         self.skin = "default"
@@ -808,7 +811,7 @@ class DWTextBox(View):
 
         # get the height of the font
         fontHeight = self.font.size("Tg")[1]
-        self.height = max(len(self.model) * fontHeight / 6, fontHeight * 4)
+        self.height = min(max(len(self.model) * fontHeight / 6, fontHeight * 4), self.max_height)
 
         self.border_rect = (self.padding,
                             self.padding,
