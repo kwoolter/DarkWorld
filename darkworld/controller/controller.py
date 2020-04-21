@@ -84,10 +84,16 @@ class DWController:
                         elif event.key == K_F12:
                             self.v.print()
                             self.m.print()
+                        elif event.key == K_F1:
+                            self.m.help()
                         elif event.key == K_F11:
                             self.v.world_view.m2v.infinity += 10
                         elif event.key == K_F10:
                             self.v.world_view.m2v.infinity -= 10
+                        # elif event.key == K_PAGEUP:
+                        #     self.v.world_view.object_size_scale += 0.01
+                        # elif event.key == K_PAGEDOWN:
+                        #     self.v.world_view.object_size_scale -= 0.01
 
                     keys = pygame.key.get_pressed()
                     if keys[K_LEFT]:
@@ -98,6 +104,10 @@ class DWController:
                         self.m.move_player(np.array(model.World3D.DOWN) * self.move_speed)
                     elif keys[K_DOWN]:
                         self.m.move_player(np.array(model.World3D.UP) * self.move_speed)
+                    elif keys[K_PAGEUP]:
+                        self.v.world_view.object_size_scale += 0.01
+                    elif keys[K_PAGEDOWN]:
+                        self.v.world_view.object_size_scale -= 0.01
 
                 # Process events for when the game is in state READY
                 elif self.m.state == model.DWModel.STATE_READY:
@@ -116,6 +126,8 @@ class DWController:
                         # Space to unpause the game
                         if event.key == K_SPACE:
                             self.m.pause()
+                        elif event.key == K_ESCAPE:
+                            self.m.player_died()
 
                 # Process events for when the game is in state GAME_OVER
                 elif self.m.state == model.DWModel.STATE_GAME_OVER:

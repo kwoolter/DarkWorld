@@ -52,7 +52,7 @@ class DWModel():
         self.inventory_copy = copy.deepcopy(self.inventory)
         self.state = DWModel.STATE_READY
 
-        self.current_world_id = 8
+        self.current_world_id = 1
 
         self.move_world(self.current_world_id, do_copy=True)
 
@@ -128,6 +128,11 @@ class DWModel():
 
                 if self.world.is_player_dead() is True:
                     self.player_died()
+
+    def help(self):
+        self.events.add_event(Event(type=Event.GAME,
+                                    name=Event.HELP,
+                                    description="Instructions: Arrow Keys = Move | SPACE = Interact | ESC = Pause | Page UP DOWN = Zoom"))
 
     def get_next_event(self):
         next_event = None

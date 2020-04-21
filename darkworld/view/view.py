@@ -560,8 +560,10 @@ class DWWorldView(View):
         self.object_size_scale = 1.0
 
         #  How big a view are we going to render?
-        self.width = 600 * self.object_size_scale
-        self.height = 600 * self.object_size_scale
+        # self.width = 600 * self.object_size_scale
+        # self.height = 600 * self.object_size_scale
+        self.width = 600
+        self.height = 600
 
         # How far away from the camera are we rendering objects before they disappear?
         self.depth = 65
@@ -615,8 +617,8 @@ class DWWorldView(View):
 
         # Get the visible objects at this view point from the model
         objs = self.m2v.get_object_list((vx,vy,vz),
-                                        self.width * self.object_size_scale,
-                                        self.height * self.object_size_scale,
+                                        self.width /self.object_size_scale,
+                                        self.height / self.object_size_scale,
                                         self.depth)
 
         # Draw visible objects in reverse order by distance from the camera

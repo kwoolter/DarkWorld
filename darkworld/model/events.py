@@ -8,6 +8,7 @@ class Event():
 
     # Event Names
     TICK = "Tick"
+    HELP = "Help"
     PLAYING = "playing"
     GAME_OVER = "game over"
     COLLIDE = "collide"
