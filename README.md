@@ -2,13 +2,26 @@
 Dark World by :monkey: kwoolter  :copyright: 2020
 
 ## Summary
-New RPG with *smooooth* movement and next generation graphics!
+RPG with 3D top down perspective view and movement
 
-**WORK IN PROGRESS**
+## Controls
+
+While playing
+- ESC to PAUSE
+- Arrow Keys to move
+- i - toggle inventory
+- SPACE - interact
+- Page Up - zoom in
+- Page Down - zoom out
+
+While paused/ready to start
+- SPACE to start
+- q to lose a live and restart level
 
 ## Requirements
 - Python 3
-- PyGame for Python 3
+- Pygame for Python 3
+- Numpy
 
 ## Screen Shots
 <table>

@@ -91,7 +91,7 @@ class DWModel():
 
         self.events.add_event(Event(type=Event.GAME,
                                     name=Event.PLAYING,
-                                    description="Game state changed to {0}".format(self.world.state)))
+                                    description="Game state changed to {0}".format(self.state)))
 
     def print(self):
 

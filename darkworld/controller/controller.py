@@ -105,9 +105,13 @@ class DWController:
                     elif keys[K_DOWN]:
                         self.m.move_player(np.array(model.World3D.UP) * self.move_speed)
                     elif keys[K_PAGEUP]:
-                        self.v.world_view.object_size_scale += 0.01
+                        self.v.world_view.zoom_view(0.01)
                     elif keys[K_PAGEDOWN]:
-                        self.v.world_view.object_size_scale -= 0.01
+                        self.v.world_view.zoom_view(-0.01)
+                    elif keys[K_PAGEUP]:
+                        self.v.world_view.zoom_view(0.01)
+                    elif keys[K_HOME]:
+                        self.v.world_view.zoom_view()
 
                 # Process events for when the game is in state READY
                 elif self.m.state == model.DWModel.STATE_READY:
@@ -126,7 +130,7 @@ class DWController:
                         # Space to unpause the game
                         if event.key == K_SPACE:
                             self.m.pause()
-                        elif event.key == K_ESCAPE:
+                        elif event.key == K_q:
                             self.m.player_died()
 
                 # Process events for when the game is in state GAME_OVER

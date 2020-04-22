@@ -527,6 +527,31 @@ class DWMainFrame(View):
                       fg_colour=Colours.WHITE,
                       bg_colour=Colours.DARK_GREY)
 
+            msg_box_width = 200
+            msg_box_height = 34
+            y = 20
+
+            msg_rect = pygame.Rect((self.world_view.width - msg_box_width) / 2,
+                                   y, msg_box_width, msg_box_height)
+
+            pygame.draw.rect(self.surface,
+                             Colours.DARK_GREY,
+                             msg_rect,
+                             0)
+
+            pygame.draw.rect(self.surface,
+                             Colours.WHITE,
+                             msg_rect,
+                             2)
+
+            msg = "  {0}  ".format(self.model.world.name)
+            draw_text(surface=self.surface, msg=msg,
+                      x=self.width / 2,
+                      y=y + msg_box_height/2,
+                      size=32,
+                      fg_colour=Colours.WHITE,
+                      bg_colour=Colours.DARK_GREY)
+
     def update(self):
         pygame.display.update()
 
@@ -547,6 +572,9 @@ class DWMainFrame(View):
 
 class DWWorldView(View):
 
+    MAX_ZOOM = 2.0
+    MIN_ZOOM = 0.6
+
     def __init__(self, model: model.DWModel, min_view_pos, max_view_pos, view_pos=None):
 
         super(DWWorldView, self).__init__()
@@ -557,7 +585,7 @@ class DWWorldView(View):
         self.surface = None
 
         # Multiplication factor for size of images
-        self.object_size_scale = 1.0
+        self.object_zoom_ratio = 1.0
 
         #  How big a view are we going to render?
         # self.width = 600 * self.object_size_scale
@@ -617,8 +645,8 @@ class DWWorldView(View):
 
         # Get the visible objects at this view point from the model
         objs = self.m2v.get_object_list((vx,vy,vz),
-                                        self.width /self.object_size_scale,
-                                        self.height / self.object_size_scale,
+                                        self.width / self.object_zoom_ratio,
+                                        self.height / self.object_zoom_ratio,
                                         self.depth)
 
         # Draw visible objects in reverse order by distance from the camera
@@ -657,7 +685,7 @@ class DWWorldView(View):
 
                     # Scale the object based on the size of the object and how far away from the camera it is
                     # Size adjust = 1 on the plane that the player is currently on
-                    size_adj = (1 - (d + self.camera_distance) / self.infinity) * self.object_size_scale
+                    size_adj = (1 - (d + self.camera_distance) / self.infinity) * self.object_zoom_ratio
                     size_w = int(obj.rect.width * size_adj)
                     size_h = int(obj.rect.height * size_adj)
                     image = pygame.transform.scale(image, (size_w, size_h))
@@ -672,7 +700,7 @@ class DWWorldView(View):
 
                     # Blit the object image at the appropriate place and size
                     self.surface.blit(image, (
-                        int(x * self.object_size_scale), int(y * self.object_size_scale), size_w, size_h))
+                        int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w, size_h))
 
         # Draw current view position
         msg = "View Pos={0} : Distances={1} : Tick={2}".format(self.view_pos, str(distance), self.tick_count)
@@ -684,17 +712,29 @@ class DWWorldView(View):
                  font=pygame.font.SysFont(pygame.font.get_default_font(), 12),
                  bkg=Colours.DARK_GREY)
 
-        msg = "  {0}  ".format(self.model.world.name)
-        draw_text(surface=self.surface, msg=msg, x=self.width / 2, y=20, size=32, fg_colour=Colours.WHITE,
-                  bg_colour=Colours.BLACK)
+        # msg = "  {0}  ".format(self.model.world.name)
+        # draw_text(surface=self.surface, msg=msg, x=self.width / 2, y=20, size=32, fg_colour=Colours.WHITE,
+        #           bg_colour=Colours.BLACK)
 
     def set_view(self, new_view_pos):
         # Set the position of the camera applying the minimum and maximum constraints of where is is allowed to go
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
 
     def move_view(self, direction):
+        # Move the view camera in a specified direction but...
+        # constrain where the camera can go using min and max positions
         new_view_pos = np.add(self.view_pos, direction)
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
+
+    def zoom_view(self, zoom_delta : float = None):
+        # Change how much we zoom into the world view
+        # object_zoom_ratio = 1.0 Normal View
+        # Object_zoom_ratio > 1.0 Zoom in
+        # Object_zoom_ratio < 1.0 zoom out
+        if zoom_delta is None:
+            self.object_zoom_ratio = 1.0
+        else:
+            self.object_zoom_ratio=max(min(self.object_zoom_ratio * (1+zoom_delta), DWWorldView.MAX_ZOOM), DWWorldView.MIN_ZOOM)
 
 
 class ModelToView3D():
@@ -813,7 +853,7 @@ class DWTextBox(View):
 
         # get the height of the font
         fontHeight = self.font.size("Tg")[1]
-        self.height = min(max(len(self.model) * fontHeight / 6, fontHeight * 4), self.max_height)
+        self.height = min(max(len(self.model) * fontHeight / 6, fontHeight * 5), self.max_height)
 
         self.border_rect = (self.padding,
                             self.padding,

@@ -665,7 +665,7 @@ class WorldBuilder():
 
         # World 5
         new_world_id +=1
-        new_world_properties = ("Tutorial World 5", "tutorial2", (80, 306, 10), (474, 300, 40), None)
+        new_world_properties = ("Tutorial World 5", "tutorial2", (80, 306, 0), (474, 300, 40), None)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 6
