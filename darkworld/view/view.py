@@ -125,6 +125,8 @@ class ImageManager:
             model.Objects.EXIT_PREVIOUS: "exit_red.png",
             model.Objects.POTION1: "rpg_sprite_gold5-4.png",
             model.Objects.POTION2: "rpg_sprite_gold4-4.png",
+            model.Objects.SIGN_1: "rpg_sprite_gold3-14.png",
+            model.Objects.SIGN_2: "rpg_sprite_gold3-14.png",
             model.Objects.SWITCH_TILE1: None,
             model.Objects.SWITCH_TILE2: None,
             model.Objects.SWITCH_TILE3: None,
@@ -160,10 +162,10 @@ class ImageManager:
             model.Objects.TILE4: "tile3.png",
             model.Objects.MONSTER1: "tile3.png",
             model.Objects.MONSTER2: "winter_tiles0.png",
-            model.Objects.SWITCH_1: ("switch0.png", "switch3.png"),
-            model.Objects.SWITCH_2: ("switch1.png", "switch2.png"),
-            model.Objects.SWITCH_3: ("switch0.png", "switch3.png"),
-            model.Objects.SWITCH_4: ("switch1.png", "switch2.png"),
+            model.Objects.SWITCH_1: ("switch9.png", "switch8.png"),
+            model.Objects.SWITCH_2: ("switch7.png", "switch6.png"),
+            model.Objects.SWITCH_3: ("switch9.png", "switch8.png"),
+            model.Objects.SWITCH_4: ("switch7.png", "switch6.png"),
         })
 
         ImageManager.skins[new_skin_name] = new_skin
@@ -184,10 +186,10 @@ class ImageManager:
             model.Objects.PLAYER2: ("knight_light4.png", "knight_light5.png", "knight_light6.png", "knight_light7.png"),
             model.Objects.NPC1: "rpg_sprite_gold0-15.png",
             model.Objects.NPC2: "rpg_sprite_gold1-15.png",
-            model.Objects.SWITCH_1: ("switch0.png", "switch5.png"),
-            model.Objects.SWITCH_2: ("switch1.png", "switch4.png"),
-            model.Objects.SWITCH_3: ("switch0.png", "switch5.png"),
-            model.Objects.SWITCH_4: ("switch1.png", "switch4.png"),
+            model.Objects.SWITCH_1: ("switch9.png", "switch8.png"),
+            model.Objects.SWITCH_2: ("switch7.png", "switch6.png"),
+            model.Objects.SWITCH_3: ("switch9.png", "switch8.png"),
+            model.Objects.SWITCH_4: ("switch7.png", "switch6.png"),
             model.Objects.TREASURE: "rpg_sprite_gold7-12.png",
             model.Objects.DOOR1: "door0.png",
             model.Objects.DOOR1_OPEN: "door1.png",
@@ -217,10 +219,10 @@ class ImageManager:
             model.Objects.MONSTER2: "hieroglyph_dark1.png",
             model.Objects.NPC1: "rpg_sprite_bw0-15.png",
             model.Objects.NPC2: "rpg_sprite_bw8-14.png",
-            model.Objects.SWITCH_1: ("switch7.png", "switch6.png"),
+            model.Objects.SWITCH_1: ("switch9.png", "switch8.png"),
             model.Objects.SWITCH_2: ("switch7.png", "switch6.png"),
             model.Objects.SWITCH_3: ("switch9.png", "switch8.png"),
-            model.Objects.SWITCH_4: ("switch9.png", "switch8.png"),
+            model.Objects.SWITCH_4: ("switch7.png", "switch6.png"),
             model.Objects.DOOR1: "rpg_sprite_gold2-2.png",
             model.Objects.DOOR1_OPEN: None,
             model.Objects.DOOR2: "rpg_sprite_gold1-2.png",
@@ -420,6 +422,8 @@ class DWMainFrame(View):
 
     def __init__(self, model: model.DWModel):
 
+        super(DWMainFrame, self).__init__()
+
         self.model = model
         self.surface = None
         self.width = 600
@@ -559,6 +563,9 @@ class DWMainFrame(View):
         pygame.quit()
 
     def tick(self):
+
+        super(DWMainFrame, self).tick()
+
         self.world_view.tick()
         self.text_box.tick()
 
@@ -573,7 +580,7 @@ class DWMainFrame(View):
 class DWWorldView(View):
 
     MAX_ZOOM = 2.0
-    MIN_ZOOM = 0.6
+    MIN_ZOOM = 0.8
 
     def __init__(self, model: model.DWModel, min_view_pos, max_view_pos, view_pos=None):
 
@@ -703,7 +710,10 @@ class DWWorldView(View):
                         int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w, size_h))
 
         # Draw current view position
-        msg = "View Pos={0} : Distances={1} : Tick={2}".format(self.view_pos, str(distance), self.tick_count)
+        msg = "View Pos={0} : Distances={1} : Zoom {2:.2} : Tick={3}".format(self.view_pos,
+                                                                             str(distance),
+                                                                              self.object_zoom_ratio,
+                                                                              self.tick_count)
         text_rect = (0, 0, 300, 30)
         drawText(surface=self.surface,
                  text=msg,
@@ -777,7 +787,6 @@ class ModelToView3D():
 
             # Get the list of objects from the model that are at this plane...
             #objects_at_z = sorted(self.model.world.planes[z], key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
-            #objects_at_z = self.model.world.planes[z].sort(key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
             objects_at_z = self.model.world.planes[z]
 
             # For each object in the list...

@@ -41,6 +41,8 @@ class Objects:
     POTION1 = "potion1"
     POTION2 = "potion2"
     SCROLL = "a scroll"
+    SIGN_1 = "sign 1"
+    SIGN_2 = "sign 2"
     SWITCH_1 = "switch 1"
     SWITCH_2 = "switch 2"
     SWITCH_3 = "switch 3"

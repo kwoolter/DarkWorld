@@ -190,6 +190,22 @@ class DWModel():
             self.events.add_event(
                 Event(type=Event.GAME, name=Event.TALK, description="{0} has nothing to say to you.".format(npc_name)))
 
+    def read(self, chosen_object):
+
+        conversation = self._conversations.get_conversation("{0}:{1}".format(chosen_object.name, self.current_world_id))
+        if conversation is not None:
+            next_line = conversation.get_next_line()
+            if next_line.attempt() is True:
+                text = next_line.text
+                self.events.add_event(
+                    Event(type=Event.GAME, name=Event.READ, description=text))
+            else:
+                self.events.add_event(
+                    Event(type=Event.GAME, name=Event.ACTION_FAILED, description="Nothing to see here"))
+        else:
+            self.events.add_event(
+                Event(type=Event.GAME, name=Event.ACTION_FAILED, description="Nothing to see here"))
+
     def interact(self):
 
         touching_objects = self.world.touching_objects(self.world.player)
@@ -316,6 +332,9 @@ class DWModel():
                 elif object.name in (Objects.NPC1, Objects.NPC2):
                     self.talk_to_npc(object)
 
+                elif object.name in (Objects.SIGN_1, Objects.SIGN_2):
+                    self.read(object)
+
                 else:
                     self.collect_inventory_object(object)
                     self.delete_world_object(object)
@@ -384,9 +403,11 @@ class DWModel():
     def swap_world_object(self, old_object, new_object_name):
         self.world.swap_object(old_object, new_object_name)
 
-    def move_world(self, new_world_id : int, do_copy : bool = False):
+    def move_world(self, new_world_id : int = None, do_copy : bool = False):
 
         moved = False
+        if new_world_id is None:
+            new_world_id = self.get_next_world_id()
 
         print("Moving from world {0} to world {1}".format(self.current_world_id, new_world_id))
 

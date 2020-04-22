@@ -122,6 +122,11 @@ class RPGObject3D(object):
                self != other_object and \
                self.rect.contains(other_object.rect)
 
+    def contains_point(self, point):
+        x,y,z = point
+        #print(f'{x}:{y} collides {self.rect}={self.rect.collidepoint((x,y))}')
+        return self.z == z and self.rect.collidepoint((x,y)) !=0
+
     def has_moved(self):
         return self._z != self._old_z or self._rect != self._old_rect
 
@@ -314,12 +319,31 @@ class WorldBuilder():
 
     def load_moving_objects(self):
 
+
+        # World 1
+        world = self.get_world(1)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((4 * 32, 13 * 32, 20))
+        ai = AIBotRandom(new_monster, world)
+        ai.set_instructions((World3D.UP, World3D.DOWN, World3D.DUMMY, World3D.WEST, World3D.EAST), min_duration=10, max_duration=20)
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        # World 2
+        world = self.get_world(2)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((4 * 32, 13 * 32, 20))
+        ai = AIBotRouteFollowing(new_monster, world)
+        ai.set_instructions([(4*32,7*32,20), (4*32, 13*32,20), (7*32, 10*32,20)])
+
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
         # World 3
         world = self.get_world(3)
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((15 * 32, 6  * 32, 20))
 
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.UP, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DOWN, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -334,7 +358,7 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((15 * 32, 6  * 32, 20))
 
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.UP * 2, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DOWN * 2, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -347,7 +371,7 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((11 * 32, 13  * 32, 20))
 
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.UP * 2, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DOWN * 2, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -361,7 +385,7 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
         new_monster.set_pos((11 * 32, int(9.5  * 32), 20))
 
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.WEST * 2, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.EAST * 2, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -380,7 +404,7 @@ class WorldBuilder():
             new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
             new_monster.set_pos((12*32, (9+i)*32, 51))
 
-            ai = AIBot(new_monster, world)
+            ai = AIBotInstructions(new_monster, world)
             instructions = [(World3D.EAST, 128, AIBot.INSTRUCTION_FAIL_SKIP),
                             (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                             (World3D.WEST, 128, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -393,7 +417,7 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
         new_monster.set_pos((11 * 32, 7  * 32, 50))
 
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.UP, 32 * 6, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DOWN, 32 * 6, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -409,7 +433,7 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
         new_monster.set_pos((3 * 32, 17  * 32, 50))
 
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.EAST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.WEST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -422,7 +446,7 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
         new_monster.set_pos((3 * 32, 2  * 32, 50))
 
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.EAST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.WEST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -437,10 +461,10 @@ class WorldBuilder():
             new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
             new_monster.set_pos((3*32, (9+i)*32, 21))
 
-            ai = AIBot(new_monster, world)
-            instructions = [(World3D.EAST, 32*15, AIBot.INSTRUCTION_FAIL_SKIP),
+            ai = AIBotInstructions(new_monster, world)
+            instructions = [(World3D.EAST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
                             (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                            (World3D.WEST, 32*15, AIBot.INSTRUCTION_FAIL_SKIP),
+                            (World3D.WEST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
                             (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                             ]
             ai.set_instructions(instructions)
@@ -451,10 +475,10 @@ class WorldBuilder():
             new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
             new_monster.set_pos((17*32, (9+i)*32, 120))
 
-            ai = AIBot(new_monster, world)
-            instructions = [(World3D.EAST, 32*15, AIBot.INSTRUCTION_FAIL_SKIP),
+            ai = AIBotInstructions(new_monster, world)
+            instructions = [(World3D.EAST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
                             (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                            (World3D.WEST, 32*15, AIBot.INSTRUCTION_FAIL_SKIP),
+                            (World3D.WEST, 32 * 15, AIBot.INSTRUCTION_FAIL_SKIP),
                             (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                             ]
             ai.set_instructions(instructions)
@@ -464,10 +488,10 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
         new_monster.set_pos((17*32, 8*32, 21))
 
-        ai = AIBot(new_monster, world)
-        instructions = [(World3D.DOWN, 32*5, AIBot.INSTRUCTION_FAIL_TICK),
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.DOWN, 32 * 5, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                        (World3D.UP, 32*5, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.UP, 32 * 5, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                         ]
         ai.set_instructions(instructions)
@@ -477,10 +501,10 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
         new_monster.set_pos((17*32, (11)*32, 21))
 
-        ai = AIBot(new_monster, world)
-        instructions = [(World3D.DOWN, 32*5, AIBot.INSTRUCTION_FAIL_TICK),
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.DOWN, 32 * 5, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                        (World3D.UP, 32*5, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.UP, 32 * 5, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                         ]
         ai.set_instructions(instructions)
@@ -493,10 +517,10 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((5*32, 11*32, 50))
 
-        ai = AIBot(new_monster, world)
-        instructions = [(World3D.EAST * 2, 32*10, AIBot.INSTRUCTION_FAIL_TICK),
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.EAST * 2, 32 * 10, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DUMMY, 50, False),
-                        (World3D.WEST * 2, 32*10, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.WEST * 2, 32 * 10, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DUMMY, 50, False)
                         ]
         ai.set_instructions(instructions)
@@ -506,10 +530,10 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
         new_monster.set_pos((15*32, 16*32, 50))
 
-        ai = AIBot(new_monster, world)
-        instructions = [(World3D.WEST, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.WEST, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                        (World3D.EAST, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.EAST, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                         ]
         ai.set_instructions(instructions)
@@ -523,10 +547,10 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((32 * 9, 32 * 10, 79))
 
-        ai = AIBot(new_monster, world)
-        instructions = [(World3D.DOWN, 32*6, AIBot.INSTRUCTION_FAIL_SKIP),
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.DOWN, 32 * 6, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 30, AIBot.INSTRUCTION_FAIL_TICK),
-                        (World3D.UP, 32*6, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.UP, 32 * 6, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 30, AIBot.INSTRUCTION_FAIL_TICK)
                         ]
         ai.set_instructions(instructions)
@@ -536,10 +560,10 @@ class WorldBuilder():
         # Enemy 2
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
         new_monster.set_pos((32 * 6, 32 * 12, 79))
-        ai = AIBot(new_monster, world)
-        instructions = [(World3D.EAST, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.EAST, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                        (World3D.WEST, 32*10, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.WEST, 32 * 10, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)
                         ]
         ai.set_instructions(instructions)
@@ -551,7 +575,7 @@ class WorldBuilder():
         # Monster 1 - moving block
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER1)
         new_monster.set_pos((10*32, 14*32, 66))
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.DOWN, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.UP, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -562,14 +586,14 @@ class WorldBuilder():
         # Monster #2 - moving block
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.MONSTER2)
         new_monster.set_pos((200, 544, 66))
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.EAST, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.WEST, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                        (World3D.DOWN, 32*5, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DOWN, 32 * 5, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
-                        (World3D.UP, 32*5, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.UP, 32 * 5, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         ]
         ai.set_instructions(instructions)
@@ -578,7 +602,7 @@ class WorldBuilder():
         # Monster #3 - Lift
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.BIG_MONSTER2)
         new_monster.set_pos((48, 196, 70))
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.NORTH, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.SOUTH, 1000, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -589,7 +613,7 @@ class WorldBuilder():
         # Enemy #1
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((32*2, 32*8, 60))
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.UP, 9 * 32, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DOWN, 9 * 32, AIBot.INSTRUCTION_FAIL_TICK),
@@ -603,7 +627,7 @@ class WorldBuilder():
         # Monster #1
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((32*12, 32*7, 60))
-        ai = AIBot(new_monster, world)
+        ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.UP, 6 * 32, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DOWN, 6 * 32, AIBot.INSTRUCTION_FAIL_SKIP),
@@ -614,8 +638,8 @@ class WorldBuilder():
         # Monster #2
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
         new_monster.set_pos((32*4, 32*9, 60))
-        ai = AIBot(new_monster, world)
-        instructions = [(World3D.EAST, 10 *32, AIBot.INSTRUCTION_FAIL_SKIP),
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.EAST, 10 * 32, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.WEST, 10 * 32, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)]
@@ -1352,29 +1376,37 @@ class World3D:
 
 
 class AIBot:
-
-    MODE_MOVING = "moving"
-
+    
     INSTRUCTION_FAIL_NOP = "NOP"
     INSTRUCTION_FAIL_TICK = "TICK"
     INSTRUCTION_FAIL_SKIP = "SKIP"
     INSTRUCTION_FAIL_VALID_OPTIONS = (INSTRUCTION_FAIL_NOP, INSTRUCTION_FAIL_SKIP, INSTRUCTION_FAIL_TICK)
-
-    def __init__(self, target_object  :RPGObject3D, world : World3D):
+    
+    def __init__(self, name : str, target_object : RPGObject3D, world : World3D):
+        self.name = name
         self.target_object = target_object
         self.world = world
+        self.loop = False
+
+    def tick(self):
+        pass
+
+class AIBotInstructions(AIBot):
+
+    def __init__(self, target_object  :RPGObject3D, world : World3D):
+
+        super(AIBotInstructions, self).__init__(str(__class__), target_object, world)
+
         self.instructions = []
         self.current_instruction_id = 0
         self.current_instruction_ticks = 0
-        self.loop = False
-        self.mode = AIBot.MODE_MOVING
 
     def __str__(self):
 
-        text = "Bot: loop({0}), instructions:".format(self.loop)
+        text = "{0} Bot: loop({1}), instructions:".format(self.name, self.loop)
         for instruction in self.instructions:
             action, ticks, skip_on_fail = instruction
-            text += "\t action({0}), ticks {1}), skip on fail({2})".format(action, ticks, skip_on_fail)
+            text += "\n\t action({0}), ticks {1}), skip on fail({2})".format(action, ticks, skip_on_fail)
 
         return text
 
@@ -1433,3 +1465,123 @@ class AIBot:
 
         self.current_instruction_ticks = 0
 
+
+
+class AIBotRouteFollowing(AIBot):
+
+    MODE_MOVING = "moving"
+
+    def __init__(self, target_object  :RPGObject3D, world : World3D):
+
+        super(AIBotRouteFollowing, self).__init__(str(__class__), target_object, world)
+
+        self.way_points = []
+        self.current_instruction_id = 0
+
+    def __str__(self):
+
+        text = "{0} Bot: way points:{1} current target:{2} current position:{3}".format(self.name,
+                                                                                        str(self.way_points),
+                                                                                        str(self.way_points[self.current_instruction_id]),
+                                                                                        str(self.target_object.xyz))
+
+        return text
+
+    def set_instructions(self, new_instructions : list, loop : bool = True):
+
+        self.way_points = new_instructions
+        self.loop = loop
+
+    def tick(self):
+
+        current_way_point = self.way_points[self.current_instruction_id]
+        cx, cy, cz = current_way_point
+        x = self.target_object.rect.centerx
+        y = self.target_object.rect.centery
+        z = self.target_object.z
+
+        if self.target_object.contains_point(current_way_point) is True:
+            self.next_instruction()
+
+        if cz == z:
+            if cx != x:
+                if cx < x:
+                    action = World3D.WEST
+                elif cx > x:
+                    action = World3D.EAST
+                self.world.move_object(self.target_object, action)
+
+            if cy != y:
+                if cy < y:
+                    action = World3D.DOWN
+                elif cy > y:
+                    action = World3D.UP
+                self.world.move_object(self.target_object, action)
+
+    def next_instruction(self):
+
+        self.current_instruction_id += 1
+
+        if self.current_instruction_id >= len(self.way_points):
+            self.current_instruction_id = 0
+
+
+
+
+class AIBotRandom(AIBot):
+
+    def __init__(self, target_object  :RPGObject3D, world : World3D):
+
+        super(AIBotRandom, self).__init__(str(__class__), target_object, world)
+
+        self.valid_actions = []
+        self.current_instruction = None
+        self.current_instruction_ticks = 0
+        self.current_instruction_duration = 0
+        self.action_on_fail = AIBotRandom.INSTRUCTION_FAIL_SKIP
+
+    def __str__(self):
+
+        text = "{0} Bot: valid actions:{1} : current action:{2}".format(self.name, str(self.valid_actions), self.valid_actions[self.current_instruction_id])
+
+        return text
+
+    def set_instructions(self, new_instructions : list, min_duration : int = 5, max_duration : int = 10):
+        self.valid_actions = new_instructions
+        self.min_duration = min_duration
+        self.max_duration = max_duration
+        self.next_instruction()
+
+    def tick(self):
+
+        # If the  instruction requires an action...
+        if self.current_instruction is not None:
+
+            self.world.move_object(self.target_object, self.current_instruction)
+            success = self.target_object.has_moved()
+
+        #If no action then success is always true
+        else:
+            success = True
+
+        # If instruction succeeded...
+        if success is True:
+            self.current_instruction_ticks += 1
+            if self.current_instruction_ticks > self.current_instruction_duration:
+                self.next_instruction()
+
+        # If the instruction failed then determine what to do next based on option
+        else:
+            if self.action_on_fail == AIBot.INSTRUCTION_FAIL_NOP:
+                pass
+            elif self.action_on_fail == AIBot.INSTRUCTION_FAIL_TICK:
+                self.current_instruction_ticks += 1
+                if self.current_instruction_ticks > self.current_instruction_duration:
+                    self.next_instruction()
+            elif self.action_on_fail == AIBot.INSTRUCTION_FAIL_SKIP:
+                self.next_instruction()
+
+    def next_instruction(self):
+        self.current_instruction = random.choice(self.valid_actions)
+        self.current_instruction_ticks = 0
+        self.current_instruction_duration = random.randint(self.min_duration,self.max_duration)

@@ -86,6 +86,8 @@ class DWController:
                             self.m.print()
                         elif event.key == K_F1:
                             self.m.help()
+                        elif event.key == K_F4:
+                            self.m.move_world()
                         elif event.key == K_F11:
                             self.v.world_view.m2v.infinity += 10
                         elif event.key == K_F10:

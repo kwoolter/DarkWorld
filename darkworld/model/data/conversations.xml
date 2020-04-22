@@ -36,6 +36,39 @@
             <text>Bye now...</text>
         </line>
     </conversation>
+    <conversation id="Sign 2:2">
+        <npc_name>sign 2</npc_name>
+        <world_id>2</world_id>
+        <linear>True</linear>
+        <line id="1">
+            <text>STOP! DO NOT PROCEED</text>
+        </line>
+        <line id="2">
+            <text>I did warn you!</text>
+        </line>
+    </conversation>
+    <conversation id="Sign 1:2">
+        <npc_name>sign 1</npc_name>
+        <world_id>2</world_id>
+        <linear>True</linear>
+        <line id="1">
+            <text>You really do not give up do you?</text>
+        </line>
+        <line id="2">
+            <text>Fine! I did try to stop you!</text>
+        </line>
+    </conversation>
+    <conversation id="Sign 1:7">
+        <npc_name>sign 1</npc_name>
+        <world_id>7</world_id>
+        <linear>True</linear>
+        <line id="1">
+            <text>You are going to need that key.</text>
+        </line>
+        <line id="2">
+            <text>No way through without that key! Ha Ha.</text>
+        </line>
+    </conversation>
     <conversation id="The Imprisoned One:5">
         <npc_name>The Imprisoned One</npc_name>
         <world_id>5</world_id>
@@ -59,7 +92,7 @@
             <text>...mmm...</text>
         </line>
     </conversation>
-        <conversation id="The Jalier:100">
+    <conversation id="The Jalier:100">
         <npc_name>The Jailer</npc_name>
         <world_id>100</world_id>
         <linear>True</linear>
@@ -73,7 +106,7 @@
             <text>Many traps and illusions</text>
         </line>
         <line id="4">
-            <text>Head down deeper into the dungeon at your peril!  Who knows if there  is a way back up?</text>
+            <text>Head down deeper into the dungeon at your peril! Who knows if there is a way back up?</text>
         </line>
     </conversation>
     <conversation id="Rosie">

@@ -467,8 +467,8 @@ ID,Name,Layer,Layout
 2,World2,20,::     :::  $BB k ::
 2,World2,20,:B     S:S   BB    :
 2,World2,20,:       B          :
-2,World2,20,:               n  :
-2,World2,20,:                  :
+2,World2,20,:    Z          n  :
+2,World2,20,:          z       :
 2,World2,20,:       B          :
 2,World2,20,:B     S:S   BB    :
 2,World2,20,::     :::  cBB K ::
@@ -664,14 +664,14 @@ ID,Name,Layer,Layout
 6,World6,20,                    
 6,World6,20,                    
 6,World6,20,####################
-6,World6,20,#      #    #      #
-6,World6,20,# p    @    #      #
+6,World6,20,#q     #   q#q    b#
+6,World6,20,#      @    #      #
 6,World6,20,#      #    #      #
 6,World6,20,#      #    #   n  #
 6,World6,20,#      # k  #      #
 6,World6,20,#      #    #      #
 6,World6,20,#      #    @      #
-6,World6,20,#      #    #      #
+6,World6,20,#q    b#b  q#q    b#
 6,World6,20,####################
 6,World6,20,                    
 6,World6,20,                    
@@ -708,7 +708,7 @@ ID,Name,Layer,Layout
 7,World7,20,#      @       #   #
 7,World7,20,#     B#  b b  #   #
 7,World7,20,#     B#       D   #
-7,World7,20,#     B#       ##E##
+7,World7,20,#     B#      z##E##
 7,World7,20,#     B#  b b  #   #
 7,World7,20,#      @       # n #
 7,World7,20,#_ q   #c  q  S#   #

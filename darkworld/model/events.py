@@ -12,7 +12,8 @@ class Event():
     PLAYING = "playing"
     GAME_OVER = "game over"
     COLLIDE = "collide"
-    INTERACT = "interact"
+    INTERACT = "interact"#
+    READ = "read"
     BLOCKED = "blocked"
     ACTION_FAILED = "action failed"
     ACTION_SUCCEEDED = "action succeeded"
