@@ -63,10 +63,13 @@ class DWController:
 
                     # Timer events
                     if event.type == USEREVENT + 1:
-                        try:
-                            self.m.tick()
-                        except Exception as err:
-                            print(str(err))
+
+                        self.m.tick()
+
+                        # try:
+                        #     self.m.tick()
+                        # except Exception as err:
+                        #     print(str(err))
 
                     # Timer for Computer AI moves
                     elif event.type == USEREVENT + 2:
