@@ -5,7 +5,7 @@ import pygame
 import numpy as np
 import random
 from .objects import Objects
-
+import math
 
 class RPGObject3D(object):
     TOUCH_FIELD_X = 4
@@ -328,6 +328,14 @@ class WorldBuilder():
                             min_duration=10,
                             max_duration=20)
 
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
+        new_monster.set_pos((4 * 32, 6 * 32, 20))
+        ai = AIBotHunter(new_monster, world, tick_slow_factor=1)
+        ai.set_instructions(new_target=None, route = [(4 * 32, 6 * 32, 20), (4 * 32, 14 * 32, 20), (7 * 32, 10 * 32, 20), (10 * 32, 10 * 32, 20)])
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
         # World 2
@@ -1046,6 +1054,11 @@ class World3D:
             self.move_player_to_xyz(self.player_start_pos)
         else:
             self.move_player_to_xyz(self.player_exit_pos)
+
+        for ai in self.bots:
+            if isinstance(ai, (AIBotTracker, AIBotHunter)) is True:
+                ai.set_instructions(self.player)
+
         return
 
     def add_npc(self, name: str, object_id: str, xyz: tuple, vanish=False, gift_id=None):
@@ -1069,6 +1082,8 @@ class World3D:
         self.monsters[new_monster] = move_vector
         if ai is not None:
             self.bots.append(ai)
+            if isinstance(ai, AIBotTracker) is True:
+                ai.set_instructions(self.player)
         self.add_object3D(new_monster, do_copy=False)
 
     def move_monsters(self, override_vector=None, reverse=True):
@@ -1499,6 +1514,9 @@ class AIBotRouteFollowing(AIBot):
 
     def set_instructions(self, new_instructions: list, loop: bool = True):
 
+        if new_instructions is None:
+            return
+
         self.way_points = new_instructions
         self.loop = loop
 
@@ -1553,6 +1571,125 @@ class AIBotRouteFollowing(AIBot):
             self.current_instruction_id = 0
 
         self.failed_ticks = 0
+
+
+
+class AIBotTracker(AIBot):
+
+    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor : int = 1):
+
+        super(AIBotTracker, self).__init__(str(__class__), target_object, world, tick_slow_factor)
+
+        self.following_object = None
+        self.failed_ticks = 0
+        self.failed_ticks_limit = 10
+
+    def __str__(self):
+
+        text = "{0} Bot: current target:{2} current position:{3}".format(self.name,
+                                                                         str(self.following_object),
+                                                                         str(self.target_object.xyz))
+
+        return text
+
+    def set_instructions(self, new_target: RPGObject3D, loop: bool = True):
+
+        self.following_object = new_target
+        self.loop = loop
+
+    def tick(self):
+
+        if super(AIBotTracker, self).tick() is False or self.following_object is None:
+            return
+
+        cx = self.following_object.rect.centerx
+        cy = self.following_object.rect.centery
+        cz = self.following_object.z
+
+        x = self.target_object.rect.centerx
+        y = self.target_object.rect.centery
+        z = self.target_object.z
+
+        if cz == z:
+            if cx != x:
+                if cx < x:
+                    action = World3D.WEST
+                elif cx > x:
+                    action = World3D.EAST
+                self.world.move_object(self.target_object, action)
+                m1 = self.target_object.has_moved()
+            else:
+                m1 = False
+
+            if cy != y:
+                if cy < y:
+                    action = World3D.DOWN
+                elif cy > y:
+                    action = World3D.UP
+                self.world.move_object(self.target_object, action)
+                m2 = self.target_object.has_moved()
+            else:
+                m2 = False
+
+            if (m1 or m2) is True:
+                self.failed_ticks = 0
+            else:
+                self.failed_ticks +=1
+
+
+
+class AIBotHunter(AIBot):
+
+    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor : int = 1):
+
+        super(AIBotHunter, self).__init__(str(__class__), target_object, world, tick_slow_factor)
+
+        self.following_object = None
+        self.visibility_distance = None
+        self.failed_ticks = 0
+        self.failed_ticks_limit = 10
+
+        self.tracker = AIBotTracker(target_object=target_object, world=world, tick_slow_factor= tick_slow_factor)
+        self.router = AIBotRouteFollowing(target_object=target_object, world=world, tick_slow_factor= tick_slow_factor)
+
+
+    def __str__(self):
+
+        text = "{0} Bot: current target:{2} current position:{3}".format(self.name,
+                                                                         str(self.following_object),
+                                                                         str(self.target_object.xyz))
+
+        return text
+
+    def set_instructions(self, new_target: RPGObject3D = None, distance : float = 150, route : list = None, loop: bool = True):
+
+        self.visibility_distance = distance
+        self.following_object = new_target
+        self.tracker.set_instructions(new_target)
+        self.router.set_instructions(new_instructions=route, loop=loop)
+        self.loop = loop
+
+    def tick(self):
+
+        if super(AIBotHunter, self).tick() is False or self.following_object is None:
+            return
+
+
+        cx = self.following_object.rect.centerx
+        cy = self.following_object.rect.centery
+        cz = self.following_object.z
+
+        x = self.target_object.rect.centerx
+        y = self.target_object.rect.centery
+        z = self.target_object.z
+
+        if cz == z:
+            distance = math.sqrt((cx-x)**2 + (cy-y)**2)
+
+            if distance <= self.visibility_distance:
+                self.tracker.tick()
+            else:
+                self.router.tick()
 
 
 class AIBotRandom(AIBot):
