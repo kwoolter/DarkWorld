@@ -8,7 +8,7 @@ RPG with 3D top down perspective view and movement
 
 While playing
 - ESC to PAUSE
-- Arrow Keys to move
+- Arrow Keys or WASD to move
 - i - toggle inventory
 - SPACE - interact
 - Page Up - zoom in
