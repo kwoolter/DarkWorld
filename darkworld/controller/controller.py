@@ -1,5 +1,6 @@
 import darkworld.model as model
 import darkworld.view as view
+import darkworld.audio as audio
 
 import os
 import pygame
@@ -13,6 +14,7 @@ class DWController:
     def __init__(self):
         self.m = model.DWModel("Dark World")
         self.v = view.DWMainFrame(self.m)
+        self.audio = audio.AudioManager()
 
     def initialise(self):
 
@@ -20,10 +22,12 @@ class DWController:
 
         self.m.initialise()
         self.v.initialise()
+        self.audio.initialise()
 
     def end(self):
         self.m.end()
         self.v.end()
+        self.audio.end()
 
     def run(self):
 
@@ -48,6 +52,8 @@ class DWController:
                 try:
                     self.m.process_event(event)
                     self.v.process_event(event)
+                    self.audio.process_event(event)
+
                 except Exception as err:
                     print(str(err))
 
@@ -87,8 +93,13 @@ class DWController:
                         elif event.key == K_F12:
                             self.v.print()
                             self.m.print()
+                            self.audio.print()
                         elif event.key == K_F1:
                             self.m.help()
+                        elif event.key == K_F2:
+                            self.audio.sound_on = not self.audio.sound_on
+                        elif event.key == K_F3:
+                            self.audio.music_on = not self.audio.music_on
                         elif event.key == K_F4:
                             self.m.move_world()
                         elif event.key == K_F11:
@@ -101,13 +112,13 @@ class DWController:
                         #     self.v.world_view.object_size_scale -= 0.01
 
                     keys = pygame.key.get_pressed()
-                    if keys[K_LEFT]:
+                    if keys[K_LEFT] or keys[K_a]:
                         self.m.move_player(np.array(model.World3D.WEST) * self.move_speed)
-                    elif keys[K_RIGHT]:
+                    elif keys[K_RIGHT] or keys[K_d]:
                         self.m.move_player(np.array(model.World3D.EAST) * self.move_speed)
-                    if keys[K_UP]:
+                    if keys[K_UP] or keys[K_w]:
                         self.m.move_player(np.array(model.World3D.DOWN) * self.move_speed)
-                    elif keys[K_DOWN]:
+                    elif keys[K_DOWN] or keys[K_s]:
                         self.m.move_player(np.array(model.World3D.UP) * self.move_speed)
                     elif keys[K_PAGEUP]:
                         self.v.world_view.zoom_view(0.01)

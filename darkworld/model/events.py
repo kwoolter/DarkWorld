@@ -6,11 +6,16 @@ class Event():
     GAME = "game"
     WORLD = "world"
 
+    # Define states
+    STATE_LOADED = "Game Loaded"
+    STATE_READY = "Game Ready"
+    STATE_PLAYING = "Game Playing"
+    STATE_PAUSED = "Game Paused"
+    STATE_GAME_OVER = "Game Over"
+
     # Event Names
     TICK = "Tick"
     HELP = "Help"
-    PLAYING = "playing"
-    GAME_OVER = "game over"
     COLLIDE = "collide"
     INTERACT = "interact"#
     READ = "read"

@@ -1047,8 +1047,6 @@ class World3D:
         if new_object.name not in self.switch_groups.keys():
             self.add_switch_group(SwitchGroup(name=new_object.name, from_object_name=new_object.name))
 
-        print("adding a switch object".format(str(new_object)))
-
         self.switch_groups[new_object.name].add_switch(new_object)
 
     def add_player(self, new_player, start_pos: bool):
@@ -1062,7 +1060,6 @@ class World3D:
         for ai in self.bots:
             if isinstance(ai, (AIBotTracker, AIBotHunter)) is True:
                 ai.set_instructions(self.player)
-
         return
 
     def add_npc(self, name: str, object_id: str, xyz: tuple, vanish=False, gift_id=None):
@@ -1077,11 +1074,6 @@ class World3D:
         else:
             return None
 
-    # def talk_to_npc(self, npc_id):
-    #     npc_name, vanish, gift_id = self.get_npc_details(npc_id)
-    #     if npc_name is not None:
-    #         print("talk to {0}".format(npc_name))
-
     def add_monster(self, new_monster, move_vector, ai=None):
         self.monsters[new_monster] = move_vector
         if ai is not None:
@@ -1090,7 +1082,7 @@ class World3D:
                 ai.set_instructions(self.player)
         self.add_object3D(new_monster, do_copy=False)
 
-    def move_monsters(self, override_vector=None, reverse=True):
+    def move_monsters(self):
 
         for bot in self.bots:
             bot.tick()
@@ -1155,7 +1147,6 @@ class World3D:
 
         self.state = World3D.STATE_READY
 
-        self.print()
 
     def pause(self, pause_on=None):
 
@@ -1168,7 +1159,6 @@ class World3D:
                 self.state = World3D.STATE_PLAYING
             elif self.state == World3D.STATE_PLAYING:
                 self.state = World3D.STATE_PAUSED
-        print("World state={0}".format(self.state))
 
     def tick(self):
 
@@ -1359,21 +1349,11 @@ class World3D:
 
     def set_switch_object(self, object, new_state=None):
 
-        # bject.tick()
-
-        # if object.state not in (True, False):
-        #     object.state = False
-        #
-        # if state is None:
-        #     object.state = not object.state
-        # else:
-        #     object.state = state
-
         if object.name in self.switch_groups.keys():
             switch_group = self.switch_groups[object.name]
             output = switch_group.switch(object, new_state)
+
             if switch_group.has_changed_state() is True:
-                print("swapping")
                 self.swap_objects_by_name(target_object_name=switch_group.outputs[not output],
                                           new_object_name=switch_group.outputs[output])
         else:
@@ -1393,7 +1373,7 @@ class World3D:
         for plane_objects in self.planes.values():
             for obj in plane_objects:
                 if obj.is_switch is True:
-                    print("Swicth: {0}".format(str(obj)))
+                    print("Switch: {0}".format(str(obj)))
 
 
 class AIBot:
@@ -1413,7 +1393,6 @@ class AIBot:
     def tick(self):
         self.tick_count += 1
         return self.tick_count % self.tick_slow_factor == 0
-
 
 class AIBotInstructions(AIBot):
 
@@ -1653,7 +1632,7 @@ class AIBotHunter(AIBot):
 
     def __str__(self):
 
-        text = "{0} Bot: current target:{2} current position:{3}".format(self.name,
+        text = "{0} Bot: current target:{1} current position:{2}".format(self.name,
                                                                          str(self.following_object),
                                                                          str(self.target_object.xyz))
 
@@ -1705,8 +1684,7 @@ class AIBotRandom(AIBot):
 
     def __str__(self):
 
-        text = "{0} Bot: valid actions:{1} : current action:{2}".format(self.name, str(self.valid_actions),
-                                                                        self.valid_actions[self.current_instruction_id])
+        text = "{0} Bot: valid actions:{1} : current action:{2}".format(self.name, str(self.valid_actions), self.current_instruction)
 
         return text
 

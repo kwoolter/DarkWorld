@@ -73,7 +73,7 @@ class DWModel():
     def start(self):
         self.state = DWModel.STATE_PLAYING
         self.events.add_event(Event(type=Event.GAME,
-                                    name=Event.PLAYING,
+                                    name=self.state,
                                     description="Game state changed to {0}".format(self.state)))
 
     def pause(self, pause_on = None):
@@ -90,7 +90,7 @@ class DWModel():
 
 
         self.events.add_event(Event(type=Event.GAME,
-                                    name=Event.PLAYING,
+                                    name=self.state,
                                     description="Game state changed to {0}".format(self.state)))
 
     def print(self):
@@ -214,7 +214,6 @@ class DWModel():
 
             if object.is_interactable is True:
 
-
                 if object.name == Objects.TELEPORT:
                     if self.world.player.is_inside(object):
                         self.world.move_player_to_start()
@@ -276,7 +275,6 @@ class DWModel():
                                                     name=Event.ACTION_FAILED,
                                                     description="You don't have anything to open the treasure chest."))
 
-
                 elif object.name == Objects.DOOR1:
                     req_obj = Objects.KEY
                     if self.have_inventory_object(req_obj) is True:
@@ -319,15 +317,10 @@ class DWModel():
 
                 elif object.is_switch is True:
                     self.world.set_switch_object(object)
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.SWITCH,
+                                                description="You switch {0}".format(object.name)))
 
-                    print("Switching {0}".format(object))
-
-                # elif object.name == Objects.SWITCH_2:
-                #     #self.swap_world_object(object, Objects.SWITCH_ON)
-                #     #self.world.set_switch(object.name, True)
-                #     self.world.set_object_switch(object)
-                #     #self.world.swap_objects_by_name(Objects.TILE1, Objects.SWITCH_TILE)
-                #     print("Switching {0}".format(object))
 
                 elif object.name in (Objects.NPC1, Objects.NPC2):
                     self.talk_to_npc(object)

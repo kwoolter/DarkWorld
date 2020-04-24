@@ -170,6 +170,19 @@ class ImageManager:
 
         ImageManager.skins[new_skin_name] = new_skin
 
+        new_skin_name = "New Tiles"
+        new_skin = (new_skin_name, {
+
+            model.Objects.WALL1: "tiles64:5.png",
+            model.Objects.FAKE_WALL: "tiles64:5.png",
+            model.Objects.TILE1: "tiles64:2.png",
+            model.Objects.TILE2: "tiles64:1.png",
+            model.Objects.TILE3: "tiles64:2.png",
+            model.Objects.TILE4: "tiles64:3.png",
+        })
+
+        ImageManager.skins[new_skin_name] = new_skin
+
         new_skin_name = "tutorial"
         new_skin = (new_skin_name, {
 
@@ -322,6 +335,10 @@ class ImageManager:
         return image
 
     def load_sprite_sheets(self):
+
+        sheet_file_name = "tiles64x64.png"
+        for i in range(0, 7):
+            self.sprite_sheets["tiles64:{0}.png".format(i)] = (sheet_file_name, (i * 64, 0, 64, 64))
 
         sheet_file_name = "brick_tiles_1.png"
         for i in range(0, 5):
