@@ -87,12 +87,14 @@ class AudioManager:
             model.Event.STATE_PLAYING: "LTTP_Rupee1.wav",
             model.Event.TREASURE: "LTTP_Rupee1.wav",
             model.Event.DEAD: "LTTP_Link_Hurt.wav",
+            model.Event.DOOR_OPEN: "click36.wav",
             model.Event.READ: "LTTP_Menu_Select.wav",
-            model.Event.TALK: "LTTP_Menu_Select.wav",
-            model.Event.SWITCH: "LTTP_Door.wav",
+            model.Event.TALK: "huh.wav",
+            model.Event.SWITCH: "click23.wav",
             model.Event.STATE_PAUSED: "LTTP_Menu_Cursor.wav",
             model.Event.STATE_GAME_OVER: "LTTP_Link_Hurt.wav",
             model.Event.STATE_READY: "LA_TrendyGame_Win.wav",
+            model.Event.TREASURE_OPEN:"click11.wav",
         }
 
         self.sound_themes[new_theme_name] = new_theme
@@ -102,9 +104,24 @@ class AudioManager:
         new_theme = {
 
             model.Event.STATE_GAME_OVER: "Rains Will Fall.mp3",
-            model.Event.STATE_READY: "Heroic_Age.mp3",
-            model.Event.STATE_PLAYING: "Crossing the Chasm.mp3",
-            model.Event.STATE_PAUSED: "Tabuk.mp3",
+            model.Event.STATE_GAME_OVER: "the-descent-by-kevin-macleod-from-filmmusic-io.mp3",
+            model.Event.STATE_READY: "our-story-begins-by-kevin-macleod-from-filmmusic-io.mp3",
+            model.Event.STATE_PLAYING: "M02_Firelink Shrine.mp3",
+            model.Event.STATE_PLAYING: "dark-times-by-kevin-macleod-from-filmmusic-io.mp3",
+            model.Event.STATE_PAUSED: "lost-time-by-kevin-macleod-from-filmmusic-io.mp3",
+        }
+
+        self.music_themes[new_theme_name] = new_theme
+
+        new_theme_name = "dungeon"
+        new_theme = {
+
+            model.Event.STATE_GAME_OVER: "Rains Will Fall.mp3",
+            model.Event.STATE_GAME_OVER: "the-descent-by-kevin-macleod-from-filmmusic-io.mp3",
+            model.Event.STATE_READY: "our-story-begins-by-kevin-macleod-from-filmmusic-io.mp3",
+            model.Event.STATE_PLAYING: "M02_Firelink Shrine.mp3",
+            model.Event.STATE_PLAYING: "dark-times-by-kevin-macleod-from-filmmusic-io.mp3",
+            model.Event.STATE_PAUSED: "lost-time-by-kevin-macleod-from-filmmusic-io.mp3",
         }
 
         self.music_themes[new_theme_name] = new_theme
