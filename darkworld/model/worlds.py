@@ -7,6 +7,7 @@ import random
 from .objects import Objects
 import math
 
+
 class RPGObject3D(object):
     TOUCH_FIELD_X = 4
     TOUCH_FIELD_Y = 4
@@ -320,6 +321,7 @@ class WorldBuilder():
     def load_moving_objects(self):
 
         # World 1
+        # add random
         world = self.get_world(1)
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((4 * 32, 13 * 32, 20))
@@ -330,12 +332,12 @@ class WorldBuilder():
 
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
-
-
+        # add hunter
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
-        new_monster.set_pos((4 * 32, 6 * 32, 20))
-        ai = AIBotHunter(new_monster, world, tick_slow_factor=1)
-        ai.set_instructions(new_target=None, route = [(4 * 32, 6 * 32, 20), (4 * 32, 14 * 32, 20), (7 * 32, 10 * 32, 20), (10 * 32, 10 * 32, 20)])
+        new_monster.set_pos((11 * 32, 6 * 32, 20))
+        ai = AIBotHunter(new_monster, world, tick_slow_factor=2)
+        ai.set_instructions(new_target=None, route=[(4 * 32, 6 * 32, 20), (4 * 32, 14 * 32, 20), (7 * 32, 10 * 32, 20),
+                                                    (10 * 32, 10 * 32, 20)])
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
         # World 2
@@ -343,14 +345,16 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((6 * 32, 10 * 32, 20))
         ai = AIBotRouteFollowing(new_monster, world, tick_slow_factor=1)
-        ai.set_instructions([(4 * 32, 6 * 32, 20), (4 * 32, 14 * 32, 20), (7 * 32, 10 * 32, 20), (10 * 32, 10 * 32, 20)])
+        ai.set_instructions(
+            [(4 * 32, 6 * 32, 20), (4 * 32, 14 * 32, 20), (7 * 32, 10 * 32, 20), (10 * 32, 10 * 32, 20)])
 
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
         new_monster.set_pos((4 * 32, 6 * 32, 20))
         ai = AIBotRouteFollowing(new_monster, world, tick_slow_factor=2)
-        ai.set_instructions([(4 * 32, 6 * 32, 20), (4 * 32, 14 * 32, 20), (7 * 32, 10 * 32, 20), (10 * 32, 10 * 32, 20)])
+        ai.set_instructions(
+            [(4 * 32, 6 * 32, 20), (4 * 32, 14 * 32, 20), (7 * 32, 10 * 32, 20), (10 * 32, 10 * 32, 20)])
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
         # World 3
@@ -712,7 +716,7 @@ class WorldBuilder():
 
         new_world_id += 1
         new_world_properties = (
-        "Tutorial World {0}".format(new_world_id), "tutorial2", (66, 300, 0), (528, 358, 20), switch_groups)
+            "Tutorial World {0}".format(new_world_id), "tutorial2", (66, 300, 0), (528, 358, 20), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 8
@@ -724,13 +728,13 @@ class WorldBuilder():
 
         new_world_id += 1
         new_world_properties = (
-        "Tutorial World {0}".format(new_world_id), "tutorial2", (50, 104, 0), (528, 358, 0), switch_groups)
+            "Tutorial World {0}".format(new_world_id), "tutorial2", (50, 104, 0), (528, 358, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 9
         new_world_id += 1
         new_world_properties = (
-        "Tutorial World {0}".format(new_world_id), "tutorial2", (66, 300, 0), (528, 240, 0), None)
+            "Tutorial World {0}".format(new_world_id), "tutorial2", (66, 300, 0), (528, 240, 0), None)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 10
@@ -1393,13 +1397,12 @@ class World3D:
 
 
 class AIBot:
-
     INSTRUCTION_FAIL_NOP = "NOP"
     INSTRUCTION_FAIL_TICK = "TICK"
     INSTRUCTION_FAIL_SKIP = "SKIP"
     INSTRUCTION_FAIL_VALID_OPTIONS = (INSTRUCTION_FAIL_NOP, INSTRUCTION_FAIL_SKIP, INSTRUCTION_FAIL_TICK)
 
-    def __init__(self, name: str, target_object: RPGObject3D, world: World3D, tick_slow_factor : int = 1):
+    def __init__(self, name: str, target_object: RPGObject3D, world: World3D, tick_slow_factor: int = 1):
         self.name = name
         self.target_object = target_object
         self.world = world
@@ -1414,7 +1417,7 @@ class AIBot:
 
 class AIBotInstructions(AIBot):
 
-    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor : int = 1):
+    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor: int = 1):
 
         super(AIBotInstructions, self).__init__(str(__class__), target_object, world, tick_slow_factor)
 
@@ -1492,7 +1495,7 @@ class AIBotInstructions(AIBot):
 
 class AIBotRouteFollowing(AIBot):
 
-    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor : int = 1):
+    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor: int = 1):
 
         super(AIBotRouteFollowing, self).__init__(str(__class__), target_object, world, tick_slow_factor)
 
@@ -1500,7 +1503,6 @@ class AIBotRouteFollowing(AIBot):
         self.current_instruction_id = 0
         self.failed_ticks = 0
         self.failed_ticks_limit = 10
-
 
     def __str__(self):
 
@@ -1558,25 +1560,23 @@ class AIBotRouteFollowing(AIBot):
             if (m1 or m2) is True:
                 self.failed_ticks = 0
             else:
-                self.failed_ticks +=1
+                self.failed_ticks += 1
                 if self.failed_ticks > self.failed_ticks_limit:
                     self.next_instruction()
-
 
     def next_instruction(self):
 
         self.current_instruction_id += 1
 
-        if self.current_instruction_id >= len(self.way_points):
+        if self.current_instruction_id >= len(self.way_points) and self.loop is True:
             self.current_instruction_id = 0
 
         self.failed_ticks = 0
 
 
-
 class AIBotTracker(AIBot):
 
-    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor : int = 1):
+    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor: int = 1):
 
         super(AIBotTracker, self).__init__(str(__class__), target_object, world, tick_slow_factor)
 
@@ -1617,9 +1617,9 @@ class AIBotTracker(AIBot):
                 elif cx > x:
                     action = World3D.EAST
                 self.world.move_object(self.target_object, action)
-                m1 = self.target_object.has_moved()
+                move_x = self.target_object.has_moved()
             else:
-                m1 = False
+                move_x = False
 
             if cy != y:
                 if cy < y:
@@ -1627,31 +1627,29 @@ class AIBotTracker(AIBot):
                 elif cy > y:
                     action = World3D.UP
                 self.world.move_object(self.target_object, action)
-                m2 = self.target_object.has_moved()
+                move_y = self.target_object.has_moved()
             else:
-                m2 = False
+                move_y = False
 
-            if (m1 or m2) is True:
+            if (move_x or move_y) is True:
                 self.failed_ticks = 0
             else:
-                self.failed_ticks +=1
+                self.failed_ticks += 1
 
+        return self.failed_ticks > self.failed_ticks_limit
 
 
 class AIBotHunter(AIBot):
 
-    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor : int = 1):
+    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor: int = 1):
 
         super(AIBotHunter, self).__init__(str(__class__), target_object, world, tick_slow_factor)
 
         self.following_object = None
         self.visibility_distance = None
-        self.failed_ticks = 0
-        self.failed_ticks_limit = 10
 
-        self.tracker = AIBotTracker(target_object=target_object, world=world, tick_slow_factor= tick_slow_factor)
-        self.router = AIBotRouteFollowing(target_object=target_object, world=world, tick_slow_factor= tick_slow_factor)
-
+        self.tracker = AIBotTracker(target_object=target_object, world=world, tick_slow_factor=tick_slow_factor)
+        self.router = AIBotRouteFollowing(target_object=target_object, world=world, tick_slow_factor=tick_slow_factor)
 
     def __str__(self):
 
@@ -1661,19 +1659,18 @@ class AIBotHunter(AIBot):
 
         return text
 
-    def set_instructions(self, new_target: RPGObject3D = None, distance : float = 150, route : list = None, loop: bool = True):
+    def set_instructions(self, new_target: RPGObject3D = None, distance: float = 100, route: list = None,
+                         loop: bool = True):
 
         self.visibility_distance = distance
         self.following_object = new_target
-        self.tracker.set_instructions(new_target)
+        self.tracker.set_instructions(new_target=new_target)
         self.router.set_instructions(new_instructions=route, loop=loop)
-        self.loop = loop
 
     def tick(self):
 
         if super(AIBotHunter, self).tick() is False or self.following_object is None:
             return
-
 
         cx = self.following_object.rect.centerx
         cy = self.following_object.rect.centery
@@ -1684,7 +1681,7 @@ class AIBotHunter(AIBot):
         z = self.target_object.z
 
         if cz == z:
-            distance = math.sqrt((cx-x)**2 + (cy-y)**2)
+            distance = math.sqrt((cx - x) ** 2 + (cy - y) ** 2)
 
             if distance <= self.visibility_distance:
                 self.tracker.tick()
@@ -1694,7 +1691,7 @@ class AIBotHunter(AIBot):
 
 class AIBotRandom(AIBot):
 
-    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor : int = 1):
+    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor: int = 1):
 
         super(AIBotRandom, self).__init__(str(__class__), target_object, world, tick_slow_factor)
 
@@ -1702,6 +1699,8 @@ class AIBotRandom(AIBot):
         self.current_instruction = None
         self.current_instruction_ticks = 0
         self.current_instruction_duration = 0
+        self.min_duration = 5
+        self.max_duration = 10
         self.action_on_fail = AIBotRandom.INSTRUCTION_FAIL_SKIP
 
     def __str__(self):
@@ -1722,7 +1721,7 @@ class AIBotRandom(AIBot):
         if super(AIBotRandom, self).tick() is False:
             return
 
-        # If the  instruction requires an action...
+        # If the instruction requires an action...
         if self.current_instruction is not None:
 
             self.world.move_object(self.target_object, self.current_instruction)

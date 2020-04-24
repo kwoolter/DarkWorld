@@ -177,7 +177,7 @@ class ImageManager:
             model.Objects.BLOCK1: "rpg_sprite_bw9-0.png",
             model.Objects.BLOCK2: "rpg_sprite_bw6-1.png",
             model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
-            model.Objects.ENEMY2: "rpg_sprite_gold6-15.png",
+            model.Objects.ENEMY2: "rpg_sprite_gold8-17.png",
             model.Objects.FAKE_WALL: "rpg_sprite_bw8-1.png",
             model.Objects.TILE1: "tile20.png",
             model.Objects.MONSTER1: "tile20.png",
