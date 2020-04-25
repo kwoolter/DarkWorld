@@ -18,6 +18,8 @@ class AudioManager:
         self.current_music = None
         self.music_on = True
         self.sound_on = True
+        self.music_volume = 1.0
+        self.sound_volume = 1.0
 
     def process_event(self, new_event: model.Event):
         print("AudioManager event process:{0}".format(new_event))
@@ -72,6 +74,7 @@ class AudioManager:
                 self.sounds_cache[sound_name] = None
 
         if play is True and sound is not None:
+            sound.set_volume(self.sound_volume)
             sound.play()
 
         return sound
@@ -84,16 +87,17 @@ class AudioManager:
             model.Event.ACTION_FAILED: "LTTP_Error.wav",
             model.Event.ACTION_SUCCEEDED: "LTTP_Get_Key.wav",
             model.Event.BLOCKED: "LTTP_Error.wav",
-            model.Event.STATE_PLAYING: "LTTP_Rupee1.wav",
             model.Event.TREASURE: "LTTP_Rupee1.wav",
             model.Event.DEAD: "LTTP_Link_Hurt.wav",
             model.Event.DOOR_OPEN: "click36.wav",
-            model.Event.READ: "LTTP_Menu_Select.wav",
+            model.Event.READ: "Typing Sfx.wav",
             model.Event.TALK: "huh.wav",
             model.Event.SWITCH: "click23.wav",
+            model.Event.STATE_PLAYING: "LTTP_Rupee1.wav",
             model.Event.STATE_PAUSED: "LTTP_Menu_Cursor.wav",
             model.Event.STATE_GAME_OVER: "LTTP_Link_Hurt.wav",
-            model.Event.STATE_READY: "LA_TrendyGame_Win.wav",
+            model.Event.STATE_READY: "click44.wav",
+            model.Event.NEW_WORLD: "click44.wav",
             model.Event.TREASURE_OPEN:"click11.wav",
         }
 
@@ -161,6 +165,14 @@ class AudioManager:
         # pygame.mixer.music.stop()
         pygame.mixer.music.fadeout(700)
 
+    def change_volume(self, delta : float = 0.1):
+        self.music_volume += delta
+        self.music_volume = max(min(self.music_volume, 1.0), 0)
+        self.sound_volume += delta
+        self.sound_volume = max(min(self.sound_volume, 1.0), 0)
+
+        pygame.mixer.music.set_volume(self.music_volume)
+
     def end(self):
         pygame.mixer.quit()
 
@@ -169,3 +181,4 @@ class AudioManager:
         print("{0} sounds loaded".format(len(self.sound_themes.keys())))
         print("{0} music loaded".format(len(self.music_themes.keys())))
         print("sound={0} : music={1}".format(self.sound_on, self.music_on))
+        print("sound Volume = {0}; Music Volumne = {1}".format(self.sound_volume, pygame.mixer.music.get_volume()))

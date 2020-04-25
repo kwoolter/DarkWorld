@@ -1,4 +1,53 @@
 <conversations>
+    <conversation id="The Master:Intro">
+        <npc_name>The Master</npc_name>
+        <world_id>Game Ready</world_id>
+        <linear>True</linear>
+        <line id="3">
+            <text>Press SPACE to get started</text>
+        </line>
+        <line id="4">
+            <text>Use WASD or Arrow Keys to move</text>
+        </line>
+        <line id="3">
+            <text>Press SPACE while playing to interact with things</text>
+        </line>
+        <line id="5">
+            <text>Press I to toggle inventory</text>
+        </line>
+        <line id="6">
+            <text>You can use Page Up and Down to zoom in and out</text>
+        </line>
+        <line id="7">
+            <text>F2:F3 change sound volume</text>
+        </line>
+        <line id="8">
+            <text>Press Esc to pause the game</text>
+        </line>
+        <line id="2">
+            <text>Awesome game music by Kevin Macleod</text>
+        </line>
+        <line id="9">
+            <text>Good luck in your Dark World quest!</text>
+        </line>
+    </conversation>
+    <conversation id="The Master:Game PausedIntro">
+        <npc_name>The Master</npc_name>
+        <world_id>Game Paused</world_id>
+        <linear>True</linear>
+        <line id="1">
+            <text>Game Paused</text>
+        </line>
+        <line id="3">
+            <text>Press SPACE to get go back to the game</text>
+        </line>
+        <line id="7">
+            <text>F2:F3 change sound volume</text>
+        </line>
+        <line id="9">
+            <text>Good luck in your Dark World quest!</text>
+        </line>
+    </conversation>
     <conversation id="The Master:1">
         <npc_name>The Master</npc_name>
         <world_id>1</world_id>
@@ -10,7 +59,7 @@
             <text>These first few levels are easy and designed to teach you about this place.</text>
         </line>
         <line id="3">
-            <text>Good luck and you will need this to proceeed!</text>
+            <text>Good luck and you will need this to proceed!</text>
         </line>
         <line id="4">
             <text>Bye now...</text>

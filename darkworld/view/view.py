@@ -587,8 +587,20 @@ class DWMainFrame(View):
         self.text_box.tick()
 
     def process_event(self, new_event: model.Event):
+
         self.world_view.process_event(new_event)
         self.text_box.process_event(new_event)
+
+        if self.model.state == model.DWModel.STATE_PLAYING:
+            self.text_box.fade_out = DWTextBox.FADE_OUT
+        elif self.model.state == model.DWModel.STATE_READY:
+            self.text_box.fade_out = DWTextBox.FADE_IN_OUT
+        elif self.model.state == model.DWModel.STATE_PAUSED:
+            self.text_box.fade_out = DWTextBox.FADE_OUT
+        elif self.model.state == model.DWModel.STATE_GAME_OVER:
+            self.text_box.fade_out = DWTextBox.FADE_OUT
+        else:
+            self.text_box.fade_out = DWTextBox.FADE_OFF
 
     def move_view(self, direction):
         self.world_view.move_view(direction)
@@ -842,6 +854,11 @@ class ModelToView3D():
 
 class DWTextBox(View):
 
+    FADE_OFF = "fade off"
+    FADE_IN = "fade in"
+    FADE_OUT = "fade out"
+    FADE_IN_OUT = "fade in and out"
+
     def __init__(self, model: str):
         super(DWTextBox, self).__init__()
 
@@ -859,20 +876,21 @@ class DWTextBox(View):
         self.fg = Colours.WHITE
         self.bg = Colours.BLACK
         self.timer = self.tick_count
+        self.fade_out = DWTextBox.FADE_OFF
         self.life_time_ticks = 20
 
     @property
     def is_visible(self):
         return self.tick_count < (self.timer + self.life_time_ticks)
 
-    def initialise(self):
+    def initialise(self, fade_out : str = FADE_OFF):
         super(DWTextBox, self).initialise()
 
         print("Initialising {0}".format(__class__))
         self.surface = pygame.Surface((self.width, self.height))
         self.surface.set_colorkey((0, 255, 0))
         self.font = pygame.font.SysFont(pygame.font.get_default_font(), self.text_size)
-
+        self.fade_out = fade_out
         self.set_size()
 
     def set_size(self):
@@ -892,7 +910,7 @@ class DWTextBox(View):
                           self.height - 2 * (self.padding + self.padding))
 
     def print(self):
-        print("Printing Dark Work Text Box view...")
+        print("Printing Dark Work Text Box view: txt={0}, fade option = {1}".format(self.model, self.fade_out))
 
     def process_event(self, new_event: model.Event):
         self.model = new_event.description
@@ -922,6 +940,18 @@ class DWTextBox(View):
                  font=self.font,
                  color=self.fg,
                  bkg=self.bg)
+
+        life_pct = (self.tick_count - self.timer) / self.life_time_ticks
+        if self.fade_out == DWTextBox.FADE_OFF:
+            alpha = 255
+        elif self.fade_out == DWTextBox.FADE_IN:
+            alpha = 255 * life_pct * 1.5
+        elif self.fade_out == DWTextBox.FADE_OUT:
+            alpha = 255 * (1-life_pct) * 1.5
+        elif self.fade_out == DWTextBox.FADE_IN_OUT:
+            alpha = 255 * (1 - abs(1 - (life_pct * 2))) * 1.5
+
+        self.surface.set_alpha(alpha)
 
 class DWInventoryView(View):
 

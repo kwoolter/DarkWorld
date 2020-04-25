@@ -56,6 +56,10 @@ class DWModel():
 
         self.move_world(self.current_world_id, do_copy=True)
 
+        self.events.add_event(Event(type=Event.STATE,
+                                    name=self.state,
+                                    description="Game state changed to {0}".format(self.state)))
+
     def get_next_world_id(self):
         idx = self.world_ids.index(self.current_world_id)
         if idx == len(self.world_ids):
@@ -72,7 +76,7 @@ class DWModel():
 
     def start(self):
         self.state = DWModel.STATE_PLAYING
-        self.events.add_event(Event(type=Event.GAME,
+        self.events.add_event(Event(type=Event.STATE,
                                     name=self.state,
                                     description="Game state changed to {0}".format(self.state)))
 
@@ -88,8 +92,7 @@ class DWModel():
             elif self.state == DWModel.STATE_PLAYING:
                 self.state = DWModel.STATE_PAUSED
 
-
-        self.events.add_event(Event(type=Event.GAME,
+        self.events.add_event(Event(type=Event.STATE,
                                     name=self.state,
                                     description="Game state changed to {0}".format(self.state)))
 
@@ -167,11 +170,19 @@ class DWModel():
 
                         self.world.delete_object3D(object)
 
-    def talk_to_npc(self, npc_object):
+    def talk_to_npc(self, npc_object : RPGObject3D, npc_name : str = None, world_id : str = None):
 
-        npc_id = npc_object.name
-        npc_name, vanish, gift_id = self.world.get_npc_details(npc_id)
-        conversation = self._conversations.get_conversation("{0}:{1}".format(npc_name, self.current_world_id))
+        if npc_object is not None:
+            npc_id = npc_object.name
+            npc_name, vanish, gift_id = self.world.get_npc_details(npc_id)
+            conversation_id = "{0}:{1}".format(npc_name, self.current_world_id)
+        else:
+            vanish = False
+            gift_id = None
+            conversation_id = "{0}:{1}".format(npc_name, world_id)
+
+        conversation = self._conversations.get_conversation(conversation_id)
+
         if conversation is not None:
             next_line = conversation.get_next_line()
             if next_line.attempt() is True:
@@ -267,7 +278,7 @@ class DWModel():
                         self.use_inventory_object(req_obj)
                         self.swap_world_object(object, Objects.TREASURE)
                         self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.ACTION_SUCCEEDED,
+                                                    name=Event.TREASURE_OPEN,
                                                     description="You open the treasure chest with a key."))
                     else:
                         print("You don't have required object {0}".format(req_obj))
@@ -282,7 +293,7 @@ class DWModel():
                         self.use_inventory_object(req_obj)
                         self.swap_world_object(object, Objects.DOOR1_OPEN)
                         self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.ACTION_SUCCEEDED,
+                                                    name=Event.DOOR_OPEN,
                                                     description="You open the door with a key."))
                     else:
                         print("You don't have required object {0}".format(req_obj))
@@ -297,7 +308,7 @@ class DWModel():
                         self.use_inventory_object(req_obj)
                         self.swap_world_object(object, Objects.DOOR2_OPEN)
                         self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.ACTION_SUCCEEDED,
+                                                    name=Event.DOOR_OPEN,
                                                     description="You open the door with a key."))
                     else:
                         print("You don't have required object {0}".format(req_obj))
@@ -388,10 +399,11 @@ class DWModel():
         self.state = DWModel.STATE_READY
 
         if self.player_lives <=0:
-            self.events.add_event(Event(type=Event.GAME,
-                                        name=Event.GAME_OVER,
-                                        description="{0} has died. Game Over".format(self.player.name)))
             self.state = DWModel.STATE_GAME_OVER
+            self.events.add_event(Event(type=Event.STATE,
+                                        name=self.state,
+                                        description="{0} has died. Game Over".format(self.player.name)))
+
 
     def swap_world_object(self, old_object, new_object_name):
         self.world.swap_object(old_object, new_object_name)
@@ -420,7 +432,7 @@ class DWModel():
             moved = True
 
             self.events.add_event(Event(type=Event.GAME,
-                                        name=Event.ACTION_SUCCEEDED,
+                                        name=Event.NEW_WORLD,
                                         description="Welcome to {0}".format(self.world.name)))
 
         else:

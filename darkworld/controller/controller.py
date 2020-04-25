@@ -39,6 +39,7 @@ class DWController:
 
         pygame.time.set_timer(USEREVENT + 1, 20)
         pygame.time.set_timer(USEREVENT + 2, 300)
+        pygame.time.set_timer(USEREVENT + 3, 8000)
         pygame.event.set_allowed([QUIT, KEYDOWN, KEYUP, USEREVENT])
 
         loop = True
@@ -97,9 +98,9 @@ class DWController:
                         elif event.key == K_F1:
                             self.m.help()
                         elif event.key == K_F2:
-                            self.audio.sound_on = not self.audio.sound_on
+                            self.audio.change_volume()
                         elif event.key == K_F3:
-                            self.audio.music_on = not self.audio.music_on
+                            self.audio.change_volume(-0.1)
                         elif event.key == K_F4:
                             self.m.move_world()
                         elif event.key == K_F11:
@@ -137,6 +138,17 @@ class DWController:
                         # Space to start the game
                         if event.key == K_SPACE:
                             self.m.start()
+                        elif event.key == K_F2:
+                            self.audio.change_volume()
+                        elif event.key == K_F3:
+                            self.audio.change_volume(-0.1)
+                    # Timer events
+                    elif event.type == USEREVENT + 2:
+                        self.v.tick()
+
+                    # Timer for talking
+                    elif event.type == USEREVENT + 3:
+                        self.m.talk_to_npc(npc_object=None, npc_name="The Master", world_id=self.m.state)
 
                 # Process events for when the game is in state PAUSED
                 elif self.m.state == model.DWModel.STATE_PAUSED:
@@ -146,8 +158,25 @@ class DWController:
                         # Space to unpause the game
                         if event.key == K_SPACE:
                             self.m.pause()
+                        elif event.key == K_F2:
+                            self.audio.change_volume()
+                        elif event.key == K_F3:
+                            self.audio.change_volume(-0.1)
+                        elif event.key == K_F12:
+                            print("\n\nG A M E   S T A T E")
+                            self.v.print()
+                            self.m.print()
+                            self.audio.print()
                         elif event.key == K_q:
                             self.m.player_died()
+
+                    # Timer events
+                    elif event.type == USEREVENT + 2:
+                        self.v.tick()
+
+                    # Timer for talking
+                    elif event.type == USEREVENT + 3:
+                        self.m.talk_to_npc(npc_object=None, npc_name="The Master", world_id=self.m.state)
 
                 # Process events for when the game is in state GAME_OVER
                 elif self.m.state == model.DWModel.STATE_GAME_OVER:
@@ -157,6 +186,10 @@ class DWController:
                         # Space to restart the game
                         if event.key == K_SPACE:
                             self.m.initialise()
+
+                    # Timer events
+                    elif event.type == USEREVENT + 2:
+                        self.v.tick()
 
                 # Quit event
                 if event.type == QUIT:
