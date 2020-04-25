@@ -283,7 +283,7 @@ class DWModel():
                     else:
                         print("You don't have required object {0}".format(req_obj))
                         self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.ACTION_FAILED,
+                                                    name=Event.DOOR_LOCKED,
                                                     description="You don't have anything to open the treasure chest."))
 
                 elif object.name == Objects.DOOR1:
@@ -298,7 +298,7 @@ class DWModel():
                     else:
                         print("You don't have required object {0}".format(req_obj))
                         self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.ACTION_FAILED,
+                                                    name=Event.DOOR_LOCKED,
                                                     description="You don't have anything to open the door."))
 
                 elif object.name == Objects.DOOR2:
@@ -313,7 +313,7 @@ class DWModel():
                     else:
                         print("You don't have required object {0}".format(req_obj))
                         self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.ACTION_FAILED,
+                                                    name=Event.DOOR_LOCKED,
                                                     description="You don't have anything to open the door."))
 
 

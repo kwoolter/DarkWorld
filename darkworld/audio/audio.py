@@ -17,6 +17,7 @@ class AudioManager:
         self.music_themes = None
         self.sounds_cache = None
         self.current_music = None
+
         self.music_on = True
         self.sound_on = True
         self.music_volume = 1.0
@@ -99,16 +100,21 @@ class AudioManager:
             model.Event.TREASURE: "metal_small3.wav",
             model.Event.DEAD: "LTTP_Link_Hurt.wav",
             model.Event.DOOR_OPEN: "click36.wav",
+            model.Event.DOOR_LOCKED: "lockeddoor.wav",
             model.Event.READ: "random4KW.wav",
             model.Event.TALK: "huh.wav",
             model.Event.TALK: ("giant2.wav","giant4.wav","giant5.wav"),
+            model.Event.TALK: ("tribe_a.wav", "tribe_b.wav", "tribe_c.wav", "tribe_d.wav"),
             model.Event.SWITCH: "click36.wav",
-            model.Event.STATE_PLAYING: "click44.wav",
+            model.Event.STATE_PLAYING: "clickloud.wav",
             model.Event.STATE_PAUSED: "LTTP_Menu_Cursor.wav",
             model.Event.STATE_GAME_OVER: "LTTP_Link_Hurt.wav",
-            model.Event.STATE_READY: "click44.wav",
-            model.Event.NEW_WORLD: "click44.wav",
+            model.Event.STATE_READY: "clickloud.wav",
+            model.Event.NEW_WORLD: "clickloud.wav",
             model.Event.TREASURE_OPEN:"click11.wav",
+            model.Event.RANDOM_ENVIRONMENT: ("bubbles.wav","fireplace.wav", "water-wave1.wav","water-wave2.wav",
+                                             "click44.wav", "click36.wav", "smith2.wav", "raven.wav", "raven2.wav",
+                                             "Mmm.ogg", "TouchOfDeath.ogg", "Stone.ogg", "dripping.wav"),
         }
 
         self.sound_themes[new_theme_name] = new_theme

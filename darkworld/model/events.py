@@ -39,6 +39,7 @@ class Event():
     DAMAGE_OPPONENT = "damaged opponent"
     VICTORY = "victory"
     TALK = "talk"
+    RANDOM_ENVIRONMENT = "random environment"
 
     def __init__(self, name: str, description: str = None, type: str = DEFAULT):
         self.name = name

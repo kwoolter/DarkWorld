@@ -82,6 +82,8 @@ class DWController:
                     elif event.type == USEREVENT + 2:
                         self.v.tick()
 
+                    elif event.type == USEREVENT + 3:
+                        self.audio.get_theme_sound(model.Event.RANDOM_ENVIRONMENT, self.m.world.skin)
                     # Key events
                     elif event.type == KEYUP:
 
@@ -190,6 +192,10 @@ class DWController:
                     # Timer events
                     elif event.type == USEREVENT + 2:
                         self.v.tick()
+
+                    # Timer for talking
+                    elif event.type == USEREVENT + 3:
+                        self.m.talk_to_npc(npc_object=None, npc_name="The Master", world_id=self.m.state)
 
                 # Quit event
                 if event.type == QUIT:

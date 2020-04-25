@@ -31,7 +31,7 @@
             <text>Good luck in your Dark World quest!</text>
         </line>
     </conversation>
-    <conversation id="The Master:Game PausedIntro">
+    <conversation id="The Master:Game Paused">
         <npc_name>The Master</npc_name>
         <world_id>Game Paused</world_id>
         <linear>True</linear>
@@ -46,6 +46,26 @@
         </line>
         <line id="9">
             <text>Good luck in your Dark World quest!</text>
+        </line>
+    </conversation>
+    <conversation id="The Master:Game Over">
+        <npc_name>The Master</npc_name>
+        <world_id>Game Over</world_id>
+        <linear>True</linear>
+        <line id="1">
+            <text>Game Over</text>
+        </line>
+        <line id="2">
+            <text>You adventure in Dark World has ended here</text>
+        </line>
+        <line id="3">
+            <text>You are not the first to have failed.</text>
+        </line>
+        <line id="4">
+            <text>Many have tried and died</text>
+        </line>
+        <line id="5">
+            <text>Press SPACE to continue</text>
         </line>
     </conversation>
     <conversation id="The Master:1">
