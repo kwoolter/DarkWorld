@@ -1,6 +1,7 @@
 import darkworld.model.events as model
 import pygame
 import os
+import random
 
 class AudioManager:
 
@@ -23,9 +24,7 @@ class AudioManager:
 
     def process_event(self, new_event: model.Event):
         print("AudioManager event process:{0}".format(new_event))
-        sound = self.get_theme_sound(new_event.name)
-        if sound is not None:
-            sound.play()
+        self.get_theme_sound(new_event.name)
 
         if new_event.type == model.Event.STATE:
             self.play_theme_music(new_event.name)
@@ -44,35 +43,44 @@ class AudioManager:
 
     def get_theme_sound(self, sound_name: str, sound_theme: str = DEFAULT_THEME, play=True):
 
-        sound = None
-
         if self.sound_on is False:
             return None
 
+        # First check the specified sound theme exists or use the default if not specified
         if sound_theme not in self.sound_themes.keys():
             sound_theme = AudioManager.DEFAULT_THEME
             if sound_theme not in self.sound_themes.keys():
                 raise Exception("Can't find sound theme {0}.")
 
+        # Get the details of the sounds associated with this theme
         theme = self.sound_themes[sound_theme]
 
+        # Look for the name of the sound in the specified the
+        # If we can't find it swap to teh default theme
         if sound_name not in theme.keys():
             theme = self.sound_themes[AudioManager.DEFAULT_THEME]
 
+        # If we can't find the sound anywhere then give up
         if sound_name not in theme.keys():
             raise Exception("Can't find sound '{0}' in theme '{1}'".format(sound_name, sound_theme))
 
-        if sound_name in self.sounds_cache.keys():
-            sound = self.sounds_cache[sound_name]
+        # See what file name is associated with this sound name
+        sound_file_name = theme[sound_name]
 
+        # If the result is a list of possible sound files then pick a random one
+        if isinstance(sound_file_name, tuple):
+            sound_file_name = random.choice(sound_file_name)
+
+        # If we have cached this sound file before then use it
+        if sound_file_name in self.sounds_cache.keys():
+            sound = self.sounds_cache[sound_file_name]
+
+        # Else load the sound from file and store it in the cache
         else:
-            sound_file_name = theme[sound_name]
-            if sound_file_name is not None:
-                sound = pygame.mixer.Sound(AudioManager.RESOURCES_DIR + sound_file_name)
-                self.sounds_cache[sound_name] = sound
-            else:
-                self.sounds_cache[sound_name] = None
+            sound = pygame.mixer.Sound(AudioManager.RESOURCES_DIR + sound_file_name)
+            self.sounds_cache[sound_file_name] = sound
 
+        # Play the sound at the current volume level
         if play is True and sound is not None:
             sound.set_volume(self.sound_volume)
             sound.play()
@@ -85,15 +93,17 @@ class AudioManager:
         new_theme = {
             model.Event.TICK: "LTTP_Menu_Cursor.wav",
             model.Event.ACTION_FAILED: "LTTP_Error.wav",
-            model.Event.ACTION_SUCCEEDED: "LTTP_Get_Key.wav",
+            model.Event.ACTION_FAILED: "interface6.wav",
+            model.Event.ACTION_SUCCEEDED: "metal-ringingKW.wav",
             model.Event.BLOCKED: "LTTP_Error.wav",
-            model.Event.TREASURE: "LTTP_Rupee1.wav",
+            model.Event.TREASURE: "metal_small3.wav",
             model.Event.DEAD: "LTTP_Link_Hurt.wav",
             model.Event.DOOR_OPEN: "click36.wav",
-            model.Event.READ: "Typing Sfx.wav",
+            model.Event.READ: "random4KW.wav",
             model.Event.TALK: "huh.wav",
-            model.Event.SWITCH: "click23.wav",
-            model.Event.STATE_PLAYING: "LTTP_Rupee1.wav",
+            model.Event.TALK: ("giant2.wav","giant4.wav","giant5.wav"),
+            model.Event.SWITCH: "click36.wav",
+            model.Event.STATE_PLAYING: "click44.wav",
             model.Event.STATE_PAUSED: "LTTP_Menu_Cursor.wav",
             model.Event.STATE_GAME_OVER: "LTTP_Link_Hurt.wav",
             model.Event.STATE_READY: "click44.wav",
