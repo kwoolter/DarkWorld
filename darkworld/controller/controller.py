@@ -148,6 +148,8 @@ class DWController:
                         # Space to start the game
                         if event.key == K_SPACE:
                             self.m.start()
+                            self.audio.current_music_theme = self.m.world.skin
+                            self.audio.current_sound_theme = self.m.world.skin
                         elif event.key == K_F2:
                             self.audio.change_volume()
                         elif event.key == K_F3:

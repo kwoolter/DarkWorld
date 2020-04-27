@@ -125,10 +125,29 @@ class DWModel():
             self.world.tick()
             self.tick_count += 1
 
-            if Event.EFFECT_PROTECTION not in self.effects.keys() and \
-                    len(self.world.touching_objects(self.player, distance=0, filter=World3D.ENEMIES)) > 0:
-                print("Hit enemy")
-                self.player_died()
+            colliding_enemies = self.world.touching_objects(self.player, distance=0, filter=World3D.ENEMIES)
+
+            # If you are colliding with an enemy
+            if len(colliding_enemies) > 0:
+                # If you are protect nothing happens
+                if Event.EFFECT_PROTECTION in self.effects.keys():
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.BLOCKED,
+                                                description="You are protected"))
+                # If you can kill enemies then delete them
+                elif Event.EFFECT_KILL_ENEMIES in self.effects.keys():
+                    for enemy in colliding_enemies:
+                        if random.randint(0, 10) > 1:
+                            self.swap_world_object(enemy, random.choice((Objects.TREASURE, Objects.COINS, Objects.KEY)))
+                        else:
+                            self.world.delete_object3D(enemy)
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.KILL_ENEMY,
+                                                description="You slay some foes"))
+                # else you die
+                else:
+                    print("Hit enemy")
+                    self.player_died()
             else:
 
                 # Gravity tries to make the player fall

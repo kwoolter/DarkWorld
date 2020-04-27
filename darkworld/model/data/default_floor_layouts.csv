@@ -424,7 +424,7 @@ ID,Name,Layer,Layout
 1,World1,20,                    
 1,World1,20,                    
 1,World1,20,####################
-1,World1,20,#b   qB#B   ###q  b#
+1,World1,20,#b R qB#B   ###q  b#
 1,World1,20,#a     S    ###    #
 1,World1,20,#           bbb    #
 1,World1,20,#               n  #
@@ -745,7 +745,7 @@ ID,Name,Layer,Layout
 8,World8,20,#  #          #    #
 8,World8,20,#  #                
 8,World8,20,#  #                
-8,World8,20,#  #                
+8,World8,20,# G#                
 8,World8,20,# q##             ::
 8,World8,20,#                 ::
 8,World8,20,#                 ::

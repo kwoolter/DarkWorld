@@ -19,7 +19,8 @@ class Event():
     EFFECT_END = "Effect End"
     HELP = "Help"
     COLLIDE = "collide"
-    INTERACT = "interact"#
+    KILL_ENEMY = "kill_enemy"
+    INTERACT = "interact"
     READ = "read"
     BLOCKED = "blocked"
     ACTION_FAILED = "action failed"
@@ -45,6 +46,8 @@ class Event():
 
     # Effects
     EFFECT_FREEZE_ENEMIES = "**Freeze Enemies**"
+    EFFECT_KILL_ENEMIES = "Slay Foes"
+    EFFECT_SLOW_ENEMIES = "Slow Enemies"
     EFFECT_INVISIBLE = "**Invisibility**"
     EFFECT_PROTECTION = "**Protection**"
     EFFECT_REVEAL_SECRETS = "**Reveal Secrets**"
@@ -53,9 +56,10 @@ class Event():
         EFFECT_INVISIBLE : 20,
         EFFECT_PROTECTION : 20,
         EFFECT_FREEZE_ENEMIES : 20,
-        EFFECT_REVEAL_SECRETS : 0
+        EFFECT_SLOW_ENEMIES: 20,
+        EFFECT_REVEAL_SECRETS : 0,
+        EFFECT_KILL_ENEMIES : 20
     }
-
 
     def __init__(self, name: str, description: str = None, type: str = DEFAULT):
         self.name = name

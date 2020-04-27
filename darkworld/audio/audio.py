@@ -14,6 +14,9 @@ class AudioManager:
 
         self.sound_themes = None
         self.music_themes = None
+        self.current_sound_theme = AudioManager.DEFAULT_THEME
+        self.current_music_theme = AudioManager.DEFAULT_THEME
+
         self.sounds_cache = None
         self.current_music = None
 
@@ -104,13 +107,14 @@ class AudioManager:
             model.Event.ACTION_FAILED: "LTTP_Error.wav",
             model.Event.ACTION_FAILED: "interface6.wav",
             model.Event.ACTION_SUCCEEDED: "metal-ringingKW.wav",
-            model.Event.BLOCKED: "LTTP_Error.wav",
+            model.Event.BLOCKED: "interface6.wav",
+            model.Event.KILL_ENEMY: "Whip.ogg",
             model.Event.TREASURE: "metal_small3.wav",
             model.Event.DEAD: "LTTP_Link_Hurt.wav",
             model.Event.DOOR_OPEN: "click36.wav",
             model.Event.DOOR_LOCKED: "lockeddoor.wav",
             model.Event.EFFECT_START: "Beam.ogg",
-            model.Event.EFFECT_END: "suck.ogg",
+            model.Event.EFFECT_END: "interface6.wav",
             model.Event.READ: "random4KW.wav",
             model.Event.TALK: "huh.wav",
             model.Event.TALK: ("giant2.wav", "giant4.wav", "giant5.wav"),
@@ -133,7 +137,7 @@ class AudioManager:
         new_theme_name = "dungeon"
         new_theme = {
             model.Event.RANDOM_ENVIRONMENT: (
-            "click44.wav", "click36.wav", "smith2.wav", "TouchOfDeath.ogg", "Stone.ogg", "dripping.wav"),
+            "click44.wav", "click36.wav", "smith2.wav", "TouchOfDeath.ogg", "Stone.ogg", "dripping.wav", "drain.ogg"),
         }
 
         self.sound_themes[new_theme_name] = new_theme
@@ -163,7 +167,7 @@ class AudioManager:
         new_theme_name = "tutorial"
         new_theme = {
 
-            model.Event.STATE_PLAYING: "M02_Firelink Shrine.mp3",
+            model.Event.STATE_PLAYING: "grave-matters-by-kevin-macleod-from-filmmusic-io.mp3",
 
         }
 
@@ -171,20 +175,19 @@ class AudioManager:
 
     def play_theme_music(self, music_name: str, music_theme: str = None, repeat: int = 1):
 
-
+        # If music is turned off stop here
         if self.music_on is False:
             return
 
-        if music_name is None:
+        # If no theme specified or theme not found use default
+        if music_theme is None or music_theme not in self.music_themes.keys():
             music_theme = self.current_music_theme
 
         print("Play that funky music...{0} from {1} theme".format(music_name, music_theme))
 
-        if music_theme not in self.music_themes.keys():
-            music_theme = AudioManager.DEFAULT_THEME
-
         theme = self.music_themes[music_theme]
 
+        # If we can't find the specified music then look in default theme
         if music_name not in theme.keys():
             music_theme = AudioManager.DEFAULT_THEME
             theme = self.music_themes[music_theme]

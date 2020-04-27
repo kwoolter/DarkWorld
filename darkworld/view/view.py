@@ -744,16 +744,44 @@ class DWWorldView(View):
                     alpha = 255 * (1 - min((abs(pz - d - vz) / self.depth, 1)))
 
                     if obj.name == model.Objects.PLAYER:
-                        if Event.EFFECT_INVISIBLE in self.model.effects:
+                        if Event.EFFECT_INVISIBLE in self.model.world.effects:
                             alpha = 90
-                        elif Event.EFFECT_PROTECTION in self.model.effects:
-                            alpha = 55 + (self.tick_count % 5) * 20
+                        elif Event.EFFECT_PROTECTION in self.model.world.effects:
+                            alpha = 255 - (self.tick_count % 6) * 40
+                        elif Event.EFFECT_KILL_ENEMIES in self.model.world.effects:
+                            pass
+
+                    elif obj.name in model.World3D.ENEMIES:
+                        if Event.EFFECT_FREEZE_ENEMIES in self.model.world.effects:
+                            alpha = 255 - (self.tick_count % 6) * 40
 
                     image.set_alpha(alpha)
 
                     # Blit the object image at the appropriate place and size
                     self.surface.blit(image, (
                         int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w, size_h))
+
+                    if obj.name == model.Objects.PLAYER:
+                        effect_image = None
+                        if Event.EFFECT_INVISIBLE in self.model.world.effects:
+                            effect_image = model.Objects.POTION1
+                        elif Event.EFFECT_PROTECTION in self.model.world.effects:
+                            effect_image = model.Objects.HELMET1
+                        elif Event.EFFECT_KILL_ENEMIES in self.model.world.effects:
+                            effect_image = model.Objects.SWORD
+
+                        if effect_image is not None:
+                            # Get the image for the object based on the object's name
+                            sword_image = View.image_manager.get_skin_image(effect_image,
+                                                                      skin_name=self.skin,
+                                                                      tick=tick_count)
+                            alpha = 220 - (self.tick_count % 6) * 40
+
+                            sword_image.set_alpha(alpha)
+
+                            # Blit the object image at the appropriate place and size
+                            self.surface.blit(sword_image, (
+                                int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w, size_h))
 
         # Draw current view position
         msg = "View Pos={0} : Distances={1} : Zoom {2:.2} : Tick={3}".format(self.view_pos,

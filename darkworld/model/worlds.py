@@ -1372,7 +1372,7 @@ class World3D:
     def remove_effect(self, effect_name):
         if effect_name == "REMOVE_ALL":
             self.effects = set()
-        else:
+        elif effect_name in self.effects:
             self.effects.remove(effect_name)
 
     def print(self):
@@ -1408,7 +1408,14 @@ class AIBot:
 
     def tick(self):
         self.tick_count += 1
-        return self.tick_count % self.tick_slow_factor == 0
+
+        if Event.EFFECT_FREEZE_ENEMIES in self.world.effects:
+            return False
+        else:
+            if Event.EFFECT_SLOW_ENEMIES in self.world.effects:
+                return self.tick_count % (self.tick_slow_factor * 2) == 0
+            else:
+                return self.tick_count % self.tick_slow_factor == 0
 
 
 class AIBotInstructions(AIBot):
