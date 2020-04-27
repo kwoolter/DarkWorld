@@ -3,10 +3,9 @@ import pygame
 import os
 import random
 
-class AudioManager:
 
+class AudioManager:
     DEFAULT_THEME = "default"
-    PLAYING = model.Event.STATE_PLAYING
 
     RESOURCES_DIR = os.path.dirname(__file__) + "\\resources\\"
     RESOURCES_DIR_MUSIC = os.path.dirname(__file__) + "\\resources\\music\\"
@@ -25,10 +24,13 @@ class AudioManager:
 
     def process_event(self, new_event: model.Event):
         print("AudioManager event process:{0}".format(new_event))
-        self.get_theme_sound(new_event.name)
+        self.get_theme_sound(new_event.name, sound_theme=self.current_sound_theme)
 
         if new_event.type == model.Event.STATE:
-            self.play_theme_music(new_event.name)
+            self.play_theme_music(new_event.name, music_theme=self.current_music_theme)
+        elif new_event.name == model.Event.NEW_WORLD:
+            pass
+            #self.play_theme_music(model.Event.STATE_PLAYING, music_theme=self.current_music_theme)
 
     def initialise(self):
 
@@ -39,13 +41,19 @@ class AudioManager:
         self.load_sound_themes()
         self.load_music_themes()
 
+        self.current_sound_theme = AudioManager.DEFAULT_THEME
+        self.current_music_theme = AudioManager.DEFAULT_THEME
+
         pygame.mixer.pre_init(44100, -16, 2, 2048)
         pygame.mixer.init()
 
-    def get_theme_sound(self, sound_name: str, sound_theme: str = DEFAULT_THEME, play=True):
+    def get_theme_sound(self, sound_name: str, sound_theme: str = None, play=True):
 
         if self.sound_on is False:
             return None
+
+        if sound_theme is None:
+            sound_theme = self.current_sound_theme
 
         # First check the specified sound theme exists or use the default if not specified
         if sound_theme not in self.sound_themes.keys():
@@ -101,34 +109,44 @@ class AudioManager:
             model.Event.DEAD: "LTTP_Link_Hurt.wav",
             model.Event.DOOR_OPEN: "click36.wav",
             model.Event.DOOR_LOCKED: "lockeddoor.wav",
+            model.Event.EFFECT_START: "Beam.ogg",
+            model.Event.EFFECT_END: "suck.ogg",
             model.Event.READ: "random4KW.wav",
             model.Event.TALK: "huh.wav",
-            model.Event.TALK: ("giant2.wav","giant4.wav","giant5.wav"),
+            model.Event.TALK: ("giant2.wav", "giant4.wav", "giant5.wav"),
             model.Event.TALK: ("tribe_a.wav", "tribe_b.wav", "tribe_c.wav", "tribe_d.wav"),
             model.Event.SWITCH: "click36.wav",
+            model.Event.STATE_LOADED: "clickloud.wav",
             model.Event.STATE_PLAYING: "clickloud.wav",
             model.Event.STATE_PAUSED: "LTTP_Menu_Cursor.wav",
             model.Event.STATE_GAME_OVER: "LTTP_Link_Hurt.wav",
             model.Event.STATE_READY: "clickloud.wav",
             model.Event.NEW_WORLD: "clickloud.wav",
-            model.Event.TREASURE_OPEN:"click11.wav",
-            model.Event.RANDOM_ENVIRONMENT: ("bubbles.wav","fireplace.wav", "water-wave1.wav","water-wave2.wav",
+            model.Event.TREASURE_OPEN: "click11.wav",
+            model.Event.RANDOM_ENVIRONMENT: ("bubbles.wav", "fireplace.wav", "water-wave1.wav", "water-wave2.wav",
                                              "click44.wav", "click36.wav", "smith2.wav", "raven.wav", "raven2.wav",
                                              "Mmm.ogg", "TouchOfDeath.ogg", "Stone.ogg", "dripping.wav"),
         }
 
         self.sound_themes[new_theme_name] = new_theme
 
+        new_theme_name = "dungeon"
+        new_theme = {
+            model.Event.RANDOM_ENVIRONMENT: (
+            "click44.wav", "click36.wav", "smith2.wav", "TouchOfDeath.ogg", "Stone.ogg", "dripping.wav"),
+        }
+
+        self.sound_themes[new_theme_name] = new_theme
+
     def load_music_themes(self):
+
         new_theme_name = AudioManager.DEFAULT_THEME
         new_theme = {
-
-            model.Event.STATE_GAME_OVER: "Rains Will Fall.mp3",
-            model.Event.STATE_GAME_OVER: "the-descent-by-kevin-macleod-from-filmmusic-io.mp3",
-            model.Event.STATE_READY: "our-story-begins-by-kevin-macleod-from-filmmusic-io.mp3",
-            model.Event.STATE_PLAYING: "M02_Firelink Shrine.mp3",
+            model.Event.STATE_LOADED: "our-story-begins-by-kevin-macleod-from-filmmusic-io.mp3",
             model.Event.STATE_PLAYING: "dark-times-by-kevin-macleod-from-filmmusic-io.mp3",
             model.Event.STATE_PAUSED: "lost-time-by-kevin-macleod-from-filmmusic-io.mp3",
+            model.Event.STATE_READY: "Ossuary 5 - Rest.mp3",
+            model.Event.STATE_GAME_OVER: "the-descent-by-kevin-macleod-from-filmmusic-io.mp3",
         }
 
         self.music_themes[new_theme_name] = new_theme
@@ -136,22 +154,31 @@ class AudioManager:
         new_theme_name = "dungeon"
         new_theme = {
 
-            model.Event.STATE_GAME_OVER: "Rains Will Fall.mp3",
-            model.Event.STATE_GAME_OVER: "the-descent-by-kevin-macleod-from-filmmusic-io.mp3",
-            model.Event.STATE_READY: "our-story-begins-by-kevin-macleod-from-filmmusic-io.mp3",
-            model.Event.STATE_PLAYING: "M02_Firelink Shrine.mp3",
-            model.Event.STATE_PLAYING: "dark-times-by-kevin-macleod-from-filmmusic-io.mp3",
-            model.Event.STATE_PAUSED: "lost-time-by-kevin-macleod-from-filmmusic-io.mp3",
+            model.Event.STATE_PLAYING: "strength-of-the-titans-by-kevin-macleod-from-filmmusic-io.mp3",
+
         }
 
         self.music_themes[new_theme_name] = new_theme
 
-    def play_theme_music(self, music_name: str, music_theme: str = DEFAULT_THEME, repeat: int = 1):
+        new_theme_name = "tutorial"
+        new_theme = {
 
-        print("Play that funky music...{0} from {1} theme".format(music_name, music_theme))
+            model.Event.STATE_PLAYING: "M02_Firelink Shrine.mp3",
+
+        }
+
+        self.music_themes[new_theme_name] = new_theme
+
+    def play_theme_music(self, music_name: str, music_theme: str = None, repeat: int = 1):
+
 
         if self.music_on is False:
             return
+
+        if music_name is None:
+            music_theme = self.current_music_theme
+
+        print("Play that funky music...{0} from {1} theme".format(music_name, music_theme))
 
         if music_theme not in self.music_themes.keys():
             music_theme = AudioManager.DEFAULT_THEME
@@ -159,7 +186,10 @@ class AudioManager:
         theme = self.music_themes[music_theme]
 
         if music_name not in theme.keys():
-            raise Exception("Can't find sound {0} in theme {1}".format(music_name, music_theme))
+            music_theme = AudioManager.DEFAULT_THEME
+            theme = self.music_themes[music_theme]
+            if music_name not in theme.keys():
+                raise Exception("Can't find music {0} in theme {1}".format(music_name, music_theme))
 
         music_file_name = theme[music_name]
 
@@ -181,7 +211,7 @@ class AudioManager:
         # pygame.mixer.music.stop()
         pygame.mixer.music.fadeout(700)
 
-    def change_volume(self, delta : float = 0.1):
+    def change_volume(self, delta: float = 0.1):
         self.music_volume += delta
         self.music_volume = max(min(self.music_volume, 1.0), 0)
         self.sound_volume += delta
@@ -192,8 +222,8 @@ class AudioManager:
     def end(self):
         pygame.mixer.quit()
 
-
     def print(self):
+        print("sound theme={0}  music theme={1}".format(self.current_sound_theme, self.current_music_theme))
         print("{0} sounds loaded".format(len(self.sound_themes.keys())))
         print("{0} music loaded".format(len(self.music_themes.keys())))
         print("sound={0} : music={1}".format(self.sound_on, self.music_on))

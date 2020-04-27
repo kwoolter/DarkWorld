@@ -425,13 +425,13 @@ ID,Name,Layer,Layout
 1,World1,20,                    
 1,World1,20,####################
 1,World1,20,#b   qB#B   ###q  b#
-1,World1,20,#      S    ###    #
+1,World1,20,#a     S    ###    #
 1,World1,20,#           bbb    #
 1,World1,20,#               n  #
 1,World1,20,#                  #
 1,World1,20,#           bbb    #
-1,World1,20,#      S    ###    #
-1,World1,20,#bQ   B#B  Q###   b#
+1,World1,20,#h     S    ###    #
+1,World1,20,#bQ  gB#B  q###   b#
 1,World1,20,####################
 1,World1,20,                    
 1,World1,20,                    
@@ -667,7 +667,7 @@ ID,Name,Layer,Layout
 6,World6,20,#q     #   q#q    b#
 6,World6,20,#      @    #      #
 6,World6,20,#      #    #      #
-6,World6,20,#      #    #   n  #
+6,World6,20,#   A  #    #   n  #
 6,World6,20,#      # k  #      #
 6,World6,20,#      #    #      #
 6,World6,20,#      #    @      #
@@ -707,8 +707,8 @@ ID,Name,Layer,Layout
 7,World7,20,#Q     #$     S#_  #
 7,World7,20,#      @       #   #
 7,World7,20,#     B#  b b  #   #
-7,World7,20,#     B#       D   #
-7,World7,20,#     B#      z##E##
+7,World7,20,#     B#   z   D   #
+7,World7,20,#     B#       ##E##
 7,World7,20,#     B#  b b  #   #
 7,World7,20,#      @       # n #
 7,World7,20,#_ q   #c  q  S#   #

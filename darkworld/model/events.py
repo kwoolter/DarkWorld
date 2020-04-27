@@ -15,6 +15,8 @@ class Event():
 
     # Event Names
     TICK = "Tick"
+    EFFECT_START = "Effect Start"
+    EFFECT_END = "Effect End"
     HELP = "Help"
     COLLIDE = "collide"
     INTERACT = "interact"#
@@ -40,6 +42,20 @@ class Event():
     VICTORY = "victory"
     TALK = "talk"
     RANDOM_ENVIRONMENT = "random environment"
+
+    # Effects
+    EFFECT_FREEZE_ENEMIES = "**Freeze Enemies**"
+    EFFECT_INVISIBLE = "**Invisibility**"
+    EFFECT_PROTECTION = "**Protection**"
+    EFFECT_REVEAL_SECRETS = "**Reveal Secrets**"
+
+    EFFECT_DURATION = {
+        EFFECT_INVISIBLE : 20,
+        EFFECT_PROTECTION : 20,
+        EFFECT_FREEZE_ENEMIES : 20,
+        EFFECT_REVEAL_SECRETS : 0
+    }
+
 
     def __init__(self, name: str, description: str = None, type: str = DEFAULT):
         self.name = name

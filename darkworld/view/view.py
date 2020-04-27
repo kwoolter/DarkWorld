@@ -6,6 +6,7 @@ import numpy as np
 import logging
 from operator import itemgetter
 from darkworld.model.events import *
+from collections import deque
 
 
 class Colours:
@@ -513,7 +514,7 @@ class DWMainFrame(View):
         y = 4
 
         # If the Inventory view is active then draw it
-        if self.inventory_view.is_visible is True:
+        if self.model.state == model.DWModel.STATE_PLAYING and self.inventory_view.is_visible is True:
             self.inventory_view.draw()
             self.surface.blit(self.inventory_view.surface, (x, y))
 
@@ -548,30 +549,33 @@ class DWMainFrame(View):
                       fg_colour=Colours.WHITE,
                       bg_colour=Colours.DARK_GREY)
 
-            msg_box_width = 200
-            msg_box_height = 34
-            y = 20
 
-            msg_rect = pygame.Rect((self.world_view.width - msg_box_width) / 2,
-                                   y, msg_box_width, msg_box_height)
+            if self.model.world is not None:
+                msg_box_width = 200
+                msg_box_height = 34
+                y = 20
 
-            pygame.draw.rect(self.surface,
-                             Colours.DARK_GREY,
-                             msg_rect,
-                             0)
+                msg_rect = pygame.Rect((self.world_view.width - msg_box_width) / 2,
+                                       y, msg_box_width, msg_box_height)
 
-            pygame.draw.rect(self.surface,
-                             Colours.WHITE,
-                             msg_rect,
-                             2)
+                pygame.draw.rect(self.surface,
+                                 Colours.DARK_GREY,
+                                 msg_rect,
+                                 0)
 
-            msg = "  {0}  ".format(self.model.world.name)
-            draw_text(surface=self.surface, msg=msg,
-                      x=self.width / 2,
-                      y=y + msg_box_height/2,
-                      size=32,
-                      fg_colour=Colours.WHITE,
-                      bg_colour=Colours.DARK_GREY)
+                pygame.draw.rect(self.surface,
+                                 Colours.WHITE,
+                                 msg_rect,
+                                 2)
+
+
+                msg = "  {0}  ".format(self.model.world.name)
+                draw_text(surface=self.surface, msg=msg,
+                          x=self.width / 2,
+                          y=y + msg_box_height/2,
+                          size=32,
+                          fg_colour=Colours.WHITE,
+                          bg_colour=Colours.DARK_GREY)
 
     def update(self):
         pygame.display.update()
@@ -591,7 +595,9 @@ class DWMainFrame(View):
         self.world_view.process_event(new_event)
         self.text_box.process_event(new_event)
 
-        if self.model.state == model.DWModel.STATE_PLAYING:
+        if self.model.state == model.DWModel.STATE_LOADED:
+            self.text_box.fade_out = DWTextBox.FADE_IN_OUT
+        elif self.model.state == model.DWModel.STATE_PLAYING:
             self.text_box.fade_out = DWTextBox.FADE_OUT
         elif self.model.state == model.DWModel.STATE_READY:
             self.text_box.fade_out = DWTextBox.FADE_IN_OUT
@@ -664,10 +670,14 @@ class DWWorldView(View):
 
     def draw(self):
 
-        # Get what skin we are using for the world that we are drawing
-        self.skin = self.model.world.skin
 
         self.surface.fill(Colours.BLACK)
+
+        if self.model.world is None:
+            return
+
+        # Get what skin we are using for the world that we are drawing
+        self.skin = self.model.get_skin_name()
 
         # Find out where the player currently is
         vx, vy, vz = self.model.world.get_player_xyz()
@@ -700,7 +710,7 @@ class DWWorldView(View):
 
                 if obj.is_switch is True:
                     tick_count = obj.state
-                elif obj.name in (model.Objects.PLAYER):
+                elif obj.name == model.Objects.PLAYER:
                     dx, dy, dz = obj.dxdydz
                     tick_count = obj.tick_count // 6
                     #If player is moving up the screen then swap to different set of images
@@ -732,6 +742,13 @@ class DWWorldView(View):
                     # Beyond the player's plane - increasing levels of transparency
                     # alpha = 255 * (1 - min((abs(pz-d-vz)*20/self.m2v.infinity, 1)))
                     alpha = 255 * (1 - min((abs(pz - d - vz) / self.depth, 1)))
+
+                    if obj.name == model.Objects.PLAYER:
+                        if Event.EFFECT_INVISIBLE in self.model.effects:
+                            alpha = 90
+                        elif Event.EFFECT_PROTECTION in self.model.effects:
+                            alpha = 55 + (self.tick_count % 5) * 20
+
                     image.set_alpha(alpha)
 
                     # Blit the object image at the appropriate place and size
@@ -864,6 +881,7 @@ class DWTextBox(View):
 
         # Connect to the model
         self.model = model
+        self.msg_queue = deque()
         self.surface = None
 
         # Properties of the text box
@@ -911,10 +929,29 @@ class DWTextBox(View):
 
     def print(self):
         print("Printing Dark Work Text Box view: txt={0}, fade option = {1}".format(self.model, self.fade_out))
+        print("Msg Q = {0}".format(str(self.msg_queue)))
+
+    def tick(self):
+
+        super(DWTextBox, self).tick()
+
+        if len(self.msg_queue) > 0:
+            if self.tick_count > (self.timer + self.life_time_ticks):
+                self.model = self.msg_queue.popleft()
+                self.timer = self.tick_count
 
     def process_event(self, new_event: model.Event):
-        self.model = new_event.description
-        self.timer = self.tick_count
+
+        if new_event.name in (Event.TALK, Event.READ):
+            self.msg_queue.appendleft(new_event.description)
+            self.model = self.msg_queue.popleft()
+            self.timer = self.tick_count
+        elif new_event.type == Event.STATE:
+            self.msg_queue.appendleft(new_event.description)
+            self.model = self.msg_queue.popleft()
+            self.timer = self.tick_count
+        else:
+            self.msg_queue.append(new_event.description)
 
     def draw(self):
         if self.tick_count > (self.timer + self.life_time_ticks):
@@ -972,7 +1009,7 @@ class DWInventoryView(View):
         self.skin = ImageManager.DEFAULT_SKIN
         self.fg = Colours.WHITE
         self.bg = Colours.BLACK
-        self.is_visible = False
+        self.is_visible = True
 
     def initialise(self):
         super(DWInventoryView, self).initialise()
@@ -1010,7 +1047,7 @@ class DWInventoryView(View):
             return
 
         # Get what skin we are using for the world that we are drawing
-        self.skin = self.model.world.skin
+        self.skin = self.model.get_skin_name()
 
         pygame.draw.rect(self.surface,
                          Colours.DARK_GREY,

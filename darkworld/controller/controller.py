@@ -53,7 +53,15 @@ class DWController:
                 try:
                     self.m.process_event(event)
                     self.v.process_event(event)
+
+                    if event.name == model.Event.NEW_WORLD:
+                        print("Changing world skin = {0}".format(self.m.world.skin))
+                        self.audio.current_music_theme = self.m.world.skin
+                        self.audio.current_sound_theme = self.m.world.skin
+                        self.audio.print()
+
                     self.audio.process_event(event)
+
 
                 except Exception as err:
                     print(str(err))
@@ -131,6 +139,26 @@ class DWController:
                         self.v.world_view.zoom_view(0.01)
                     elif keys[K_HOME]:
                         self.v.world_view.zoom_view()
+
+                # Process events for when the game is in state READY
+                elif self.m.state == model.DWModel.STATE_LOADED:
+
+                    # Key events
+                    if event.type == KEYUP:
+                        # Space to start the game
+                        if event.key == K_SPACE:
+                            self.m.start()
+                        elif event.key == K_F2:
+                            self.audio.change_volume()
+                        elif event.key == K_F3:
+                            self.audio.change_volume(-0.1)
+                    # Timer events
+                    elif event.type == USEREVENT + 2:
+                        self.v.tick()
+
+                    # Timer for talking
+                    elif event.type == USEREVENT + 3:
+                        self.m.talk_to_npc(npc_object=None, npc_name="The Master", world_id=self.m.state)
 
                 # Process events for when the game is in state READY
                 elif self.m.state == model.DWModel.STATE_READY:

@@ -1,7 +1,7 @@
 <conversations>
     <conversation id="The Master:Intro">
         <npc_name>The Master</npc_name>
-        <world_id>Game Ready</world_id>
+        <world_id>Game Loaded</world_id>
         <linear>True</linear>
         <line id="3">
             <text>Press SPACE to get started</text>
@@ -18,8 +18,14 @@
         <line id="6">
             <text>You can use Page Up and Down to zoom in and out</text>
         </line>
+        <line id="6">
+            <text>You can press Home to reset zoom view to original position</text>
+        </line>
         <line id="7">
             <text>F2:F3 change sound volume</text>
+        </line>
+        <line id="7">
+            <text>F1 to get some help</text>
         </line>
         <line id="8">
             <text>Press Esc to pause the game</text>
@@ -29,6 +35,20 @@
         </line>
         <line id="9">
             <text>Good luck in your Dark World quest!</text>
+        </line>
+    </conversation>
+    <conversation id="The Master:Help">
+        <npc_name>The Master</npc_name>
+        <world_id>Help</world_id>
+        <linear>True</linear>
+        <line id="4">
+            <text>Use WASD or Arrow Keys to move</text>
+        </line>
+        <line id="3">
+            <text>Press SPACE while playing to interact with things</text>
+        </line>
+        <line id="5">
+            <text>Press I to toggle inventory</text>
         </line>
     </conversation>
     <conversation id="The Master:Game Paused">
@@ -43,6 +63,20 @@
         </line>
         <line id="7">
             <text>F2:F3 change sound volume</text>
+        </line>
+        <line id="9">
+            <text>Good luck in your Dark World quest!</text>
+        </line>
+    </conversation>
+    <conversation id="The Master:Game Ready">
+        <npc_name>The Master</npc_name>
+        <world_id>Game Ready</world_id>
+        <linear>True</linear>
+        <line id="1">
+            <text>Game Ready</text>
+        </line>
+        <line id="3">
+            <text>Press SPACE to start playing</text>
         </line>
         <line id="9">
             <text>Good luck in your Dark World quest!</text>

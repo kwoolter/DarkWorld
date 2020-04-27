@@ -1,3 +1,5 @@
+from .events import *
+
 
 class Objects:
 
@@ -64,4 +66,11 @@ class Objects:
     WALL1 = "wall1"
     WALL2 = "wall2"
     WALL3 = "wall3"
+
+    EFFECT_OBJECTS = {
+        POTION1 : Event.EFFECT_INVISIBLE,
+        SCROLL : Event.EFFECT_REVEAL_SECRETS,
+        BOOK : Event.EFFECT_FREEZE_ENEMIES,
+        HELMET1 : Event.EFFECT_PROTECTION
+    }
 

@@ -5,8 +5,8 @@ from darkworld.model.RPGConversations import *
 from darkworld.model.worlds import *
 from darkworld.model.events import *
 
-class DWModel():
 
+class DWModel():
     DATA_FILES_DIR = os.path.dirname(__file__) + "\\data\\"
 
     # Define states
@@ -15,6 +15,12 @@ class DWModel():
     STATE_PLAYING = "Game Playing"
     STATE_PAUSED = "Game Paused"
     STATE_GAME_OVER = "Game Over"
+
+    # Default skin name
+    DEFAUL_SKIN_NAME = "default"
+
+    # Define Effects
+    EFFECT_COUNTDOWN_RATE = 20
 
     def __init__(self, name: str):
         self.name = name
@@ -29,6 +35,7 @@ class DWModel():
         self.player = None
         self.player_lives = 0
         self._conversations = None
+        self.effects = {}
         self.inventory = {}
         self.inventory_copy = copy.deepcopy(self.inventory)
 
@@ -39,7 +46,7 @@ class DWModel():
         self.world_factory.initialise()
         self.world_ids = self.world_factory.get_world_names()
         self.current_world_id = self.world_ids[0]
-        #self.world = self.world_factory.get_world(self.current_world_id)
+        # self.world = self.world_factory.get_world(self.current_world_id)
 
         self._conversations = ConversationFactory(DWModel.DATA_FILES_DIR + "conversations.xml")
         self._conversations.load()
@@ -48,14 +55,14 @@ class DWModel():
         self.player = WorldObjectLoader.get_object_copy_by_name(Objects.PLAYER)
         self.player.is_player = True
         self.player_lives = 3
+        self.effects = {}
         self.inventory = {}
         self.inventory_copy = copy.deepcopy(self.inventory)
-        self.state = DWModel.STATE_READY
-
         self.current_world_id = 1
 
-        self.move_world(self.current_world_id, do_copy=True)
+        # self.move_world(self.current_world_id, do_copy=True)
 
+        self.state = DWModel.STATE_LOADED
         self.events.add_event(Event(type=Event.STATE,
                                     name=self.state,
                                     description="Game state changed to {0}".format(self.state)))
@@ -80,7 +87,9 @@ class DWModel():
                                     name=self.state,
                                     description="Game state changed to {0}".format(self.state)))
 
-    def pause(self, pause_on = None):
+        self.move_world(self.current_world_id, do_copy=True)
+
+    def pause(self, pause_on=None):
 
         if pause_on is True:
             self.state = DWModel.STATE_PAUSED
@@ -103,9 +112,8 @@ class DWModel():
         print("Player state {0}".format(self.world.player_state))
         print("Player currently at {0}".format(self.player.xyz))
         for obj, count in self.inventory.items():
-            print("Carrying {0} x {1}".format(obj,count))
+            print("Carrying {0} x {1}".format(obj, count))
         self.world.print()
-
 
     def process_event(self, new_event):
         print("Default Game event process:{0}".format(new_event))
@@ -117,7 +125,8 @@ class DWModel():
             self.world.tick()
             self.tick_count += 1
 
-            if len(self.world.touching_objects(self.player, distance = 0, filter=World3D.ENEMIES)) > 0:
+            if Event.EFFECT_PROTECTION not in self.effects.keys() and \
+                    len(self.world.touching_objects(self.player, distance=0, filter=World3D.ENEMIES)) > 0:
                 print("Hit enemy")
                 self.player_died()
             else:
@@ -132,10 +141,29 @@ class DWModel():
                 if self.world.is_player_dead() is True:
                     self.player_died()
 
+            if self.tick_count % DWModel.EFFECT_COUNTDOWN_RATE == 0:
+                expired_effects = []
+                for effect, count in self.effects.items():
+                    if count > 0:
+                        self.effects[effect] -= 1
+                    elif count == 0:
+                        expired_effects.append(effect)
+
+                for effect in expired_effects:
+                    del self.effects[effect]
+                    self.world.remove_effect(effect)
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.EFFECT_END,
+                                                description="Effect {0} wears off!".format(effect)))
+
     def help(self):
-        self.events.add_event(Event(type=Event.GAME,
-                                    name=Event.HELP,
-                                    description="Instructions: Arrow Keys = Move | SPACE = Interact | ESC = Pause | Page UP DOWN = Zoom"))
+        self.talk_to_npc(npc_object=None, npc_name="The Master", world_id="Help")
+
+    def get_skin_name(self):
+        if self.world is None:
+            return DWModel.DEFAUL_SKIN_NAME
+        else:
+            return self.world.skin
 
     def get_next_event(self):
         next_event = None
@@ -159,7 +187,7 @@ class DWModel():
 
                 if object.name == Objects.HOLE:
                     print("Falling...")
-                    self.move_player((0,0,-2))
+                    self.move_player((0, 0, -2))
 
                 elif object.name == Objects.TRAP:
                     if self.world.player.is_colliding(object):
@@ -170,7 +198,7 @@ class DWModel():
 
                         self.world.delete_object3D(object)
 
-    def talk_to_npc(self, npc_object : RPGObject3D, npc_name : str = None, world_id : str = None):
+    def talk_to_npc(self, npc_object: RPGObject3D, npc_name: str = None, world_id: str = None):
 
         if npc_object is not None:
             npc_id = npc_object.name
@@ -195,7 +223,8 @@ class DWModel():
                     Event(type=Event.GAME, name=Event.TALK, description="{0}: '{1}'".format(npc_name, text)))
             else:
                 self.events.add_event(
-                    Event(type=Event.GAME, name=Event.TALK, description="{0} has nothing to say to you.".format(npc_name)))
+                    Event(type=Event.GAME, name=Event.TALK,
+                          description="{0} has nothing to say to you.".format(npc_name)))
 
         else:
             self.events.add_event(
@@ -236,14 +265,16 @@ class DWModel():
                     req_obj = Objects.BOSS_KEY
                     if self.world.player.is_inside(object):
                         if self.have_inventory_object(req_obj) is True:
-                            print("Using {0} to go to next world...".format(req_obj))
-
                             if self.move_world(self.get_next_world_id(), do_copy=True) is True:
                                 # Use the boss key
                                 self.use_inventory_object(req_obj)
 
                                 # Take a snap shot of what the player has at the start of the world
                                 self.inventory_copy = copy.deepcopy(self.inventory)
+
+                                self.events.add_event(Event(type=Event.GAME,
+                                                            name=Event.NEW_WORLD,
+                                                            description="Welcome to {0}".format(self.world.name)))
 
                         else:
                             self.events.add_event(Event(type=Event.GAME,
@@ -274,7 +305,7 @@ class DWModel():
                 elif object.name == Objects.TREASURE_CHEST:
                     req_obj = Objects.KEY
                     if self.have_inventory_object(req_obj) is True:
-                        print("Using {0} to open {1}...".format(req_obj,object.name))
+                        print("Using {0} to open {1}...".format(req_obj, object.name))
                         self.use_inventory_object(req_obj)
                         self.swap_world_object(object, Objects.TREASURE)
                         self.events.add_event(Event(type=Event.GAME,
@@ -311,20 +342,23 @@ class DWModel():
                                                     name=Event.DOOR_OPEN,
                                                     description="You open the door with a key."))
                     else:
-                        print("You don't have required object {0}".format(req_obj))
+                        # print("You don't have required object {0}".format(req_obj))
                         self.events.add_event(Event(type=Event.GAME,
                                                     name=Event.DOOR_LOCKED,
                                                     description="You don't have anything to open the door."))
 
-
                 elif object.name == Objects.TRAP:
                     req_obj = Objects.TRAP_DISABLE
                     if self.have_inventory_object(req_obj) is True:
-                        print("Using {0} to disable trap...".format(req_obj))
                         self.use_inventory_object(req_obj)
                         self.delete_world_object(object)
+                        self.events.add_event(Event(type=Event.GAME,
+                                                    name=Event.ACTION_SUCCEEDED,
+                                                    description="You disabled the trap."))
                     else:
-                        print("You don't have required object {0}".format(req_obj))
+                        self.events.add_event(Event(type=Event.GAME,
+                                                    name=Event.ACTION_FAILED,
+                                                    description="You don't have {0}".format(req_obj)))
 
                 elif object.is_switch is True:
                     self.world.set_switch_object(object)
@@ -332,12 +366,17 @@ class DWModel():
                                                 name=Event.SWITCH,
                                                 description="You switch {0}".format(object.name)))
 
-
                 elif object.name in (Objects.NPC1, Objects.NPC2):
                     self.talk_to_npc(object)
 
                 elif object.name in (Objects.SIGN_1, Objects.SIGN_2):
                     self.read(object)
+
+                # Temp logic
+                elif object.name in Objects.EFFECT_OBJECTS.keys():
+                    effect = Objects.EFFECT_OBJECTS[object.name]
+                    self.add_effect(effect)
+                    self.delete_world_object(object)
 
                 else:
                     self.collect_inventory_object(object)
@@ -352,15 +391,13 @@ class DWModel():
             else:
                 print("Object {0} is not interactable".format(object))
 
-
-
     def collect_inventory_object(self, new_object):
         if new_object.is_collectable is True:
             if new_object.name not in self.inventory.keys():
                 self.inventory[new_object.name] = 0
             self.inventory[new_object.name] += 1
 
-    def have_inventory_object(self, object_name : str):
+    def have_inventory_object(self, object_name: str):
         have = False
 
         if object_name in self.inventory.keys() and self.inventory[object_name] > 0:
@@ -368,7 +405,7 @@ class DWModel():
 
         return have
 
-    def use_inventory_object(self, object_name : str, count = 1):
+    def use_inventory_object(self, object_name: str, count=1):
         if object_name in self.inventory.keys():
             self.inventory[object_name] -= count
 
@@ -378,37 +415,64 @@ class DWModel():
         else:
             self.inventory[object_name] = -count
 
+    def add_effect(self, effect_type: str, effect_count: int = None):
+
+        if effect_type in self.effects.keys():
+            raise Exception(
+                "Effect {0} already active for another {1} ticks.".format(effect_type, self.effects[effect_type]))
+
+        if effect_count is None:
+            effect_count = Event.EFFECT_DURATION[effect_type]
+
+        if effect_count > 0:
+            self.effects[effect_type] = effect_count
+
+        self.world.add_effect(effect_type, one_off=(effect_count < 1))
+
+        self.events.add_event(Event(type=Event.GAME,
+                                    name=Event.EFFECT_START,
+                                    description="Effect {0} activated".format(effect_type)))
+
     def delete_world_object(self, old_object):
         self.world.delete_object3D(old_object)
 
     def player_died(self):
+
         self.events.add_event(Event(type=Event.GAME,
                                     name=Event.DEAD,
                                     description="{0} has died".format(self.player.name)))
+
         # Delete the player from the current world
         self.delete_world_object(self.player)
 
         # Restore player's inventory to what it was when we arrived in this world
         self.inventory = copy.deepcopy(self.inventory_copy)
 
+        # Remove an effects
+        self.effects = {}
+        self.world.remove_effect("REMOVE_ALL")
+
         # Reset ALL conversations
         self._conversations.reset()
 
-        self.move_world(self.current_world_id, do_copy = True)
+        self.move_world(self.current_world_id, do_copy=True)
         self.player_lives -= 1
-        self.state = DWModel.STATE_READY
 
-        if self.player_lives <=0:
+        if self.player_lives <= 0:
             self.state = DWModel.STATE_GAME_OVER
             self.events.add_event(Event(type=Event.STATE,
                                         name=self.state,
                                         description="{0} has died. Game Over".format(self.player.name)))
-
+        else:
+            self.state = DWModel.STATE_READY
+            self.events.add_event(Event(type=Event.STATE,
+                                        name=self.state,
+                                        description="{0} has died.".format(self.player.name)))
 
     def swap_world_object(self, old_object, new_object_name):
         self.world.swap_object(old_object, new_object_name)
 
-    def move_world(self, new_world_id : int = None, do_copy : bool = False):
+    def move_world(self, new_world_id: int = None, do_copy: bool = False):
 
         moved = False
         if new_world_id is None:
@@ -427,21 +491,20 @@ class DWModel():
                 self.world.delete_player()
 
             self.world = new_world
-            self.world.add_player(self.player, start_pos = (self.current_world_id <= new_world_id))
+            self.world.add_player(self.player, start_pos=(self.current_world_id <= new_world_id))
             self.current_world_id = new_world_id
             moved = True
 
-            self.events.add_event(Event(type=Event.GAME,
-                                        name=Event.NEW_WORLD,
-                                        description="Welcome to {0}".format(self.world.name)))
+            # self.events.add_event(Event(type=Event.GAME,
+            #                             name=Event.NEW_WORLD,
+            #                             description="Welcome to {0}".format(self.world.name)))
 
         else:
             print("Can't find new world {0}".format(new_world_id))
 
         return moved
 
-
-    def get_conversation(self, npc_name : str):
+    def get_conversation(self, npc_name: str):
         return self._conversations.get_conversation(npc_name)
 
     def end(self):
@@ -464,4 +527,3 @@ class EventQueue():
     def print(self):
         for event in self.events:
             print(event)
-

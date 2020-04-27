@@ -6,6 +6,7 @@ import numpy as np
 import random
 from .objects import Objects
 import math
+from .events import Event
 
 
 class RPGObject3D(object):
@@ -982,7 +983,7 @@ class World3D:
         self.bots = []
         self._npcs = {}
         self.switch_groups = {}
-
+        self.effects = set()
         self.player = None
 
     def __str__(self):
@@ -1145,25 +1146,27 @@ class World3D:
         # Set the end of the world to be the biggest plane depth + 100
         self.depth = max(self.planes.keys()) + 100
 
+        self.effects = set()
+
         self.state = World3D.STATE_READY
 
-
-    def pause(self, pause_on=None):
-
-        if pause_on is True:
-            self.state = World3D.STATE_PAUSED
-        elif pause_on is False and self.state == World3D.STATE_PAUSED:
-            self.state = World3D.STATE_PLAYING
-        elif pause_on is None:
-            if self.state == World3D.STATE_PAUSED:
-                self.state = World3D.STATE_PLAYING
-            elif self.state == World3D.STATE_PLAYING:
-                self.state = World3D.STATE_PAUSED
+    # def pause(self, pause_on=None):
+    #
+    #     if pause_on is True:
+    #         self.state = World3D.STATE_PAUSED
+    #     elif pause_on is False and self.state == World3D.STATE_PAUSED:
+    #         self.state = World3D.STATE_PLAYING
+    #     elif pause_on is None:
+    #         if self.state == World3D.STATE_PAUSED:
+    #             self.state = World3D.STATE_PLAYING
+    #         elif self.state == World3D.STATE_PLAYING:
+    #             self.state = World3D.STATE_PAUSED
 
     def tick(self):
 
         self.tick_count += 1
-        self.move_monsters()
+        if Event.EFFECT_FREEZE_ENEMIES not in self.effects:
+            self.move_monsters()
 
     def move_player(self, vector):
         self.move_object(self.player, vector)
@@ -1319,13 +1322,13 @@ class World3D:
         self.add_object3D(new_object)
         self.delete_object3D(old_object)
 
-    def swap_objects_by_name(self, target_object_name: str, new_object_name: str):
+    def swap_objects_by_name(self, target_object_name: str, new_object_name: str, switch_all : bool = False):
 
         # Collect the list of objects that need to be swapped
         objects_to_swap = []
         for plane in self.planes.values():
             for obj in plane:
-                if obj.name == target_object_name and obj.is_switchable is True:
+                if obj.name == target_object_name and (obj.is_switchable is True or switch_all is True):
                     objects_to_swap.append(obj)
 
         # Swap each object that we found matching
@@ -1358,6 +1361,19 @@ class World3D:
                                           new_object_name=switch_group.outputs[output])
         else:
             print("I don't have a switch group called {0} in this world".format(object.name))
+
+    def add_effect(self, effect_name, one_off = False):
+
+        if effect_name == Event.EFFECT_REVEAL_SECRETS:
+            self.swap_objects_by_name(Objects.FAKE_WALL, Objects.EMPTY, switch_all=True)
+        elif one_off is False:
+            self.effects.add(effect_name)
+
+    def remove_effect(self, effect_name):
+        if effect_name == "REMOVE_ALL":
+            self.effects = set()
+        else:
+            self.effects.remove(effect_name)
 
     def print(self):
 
@@ -1393,6 +1409,7 @@ class AIBot:
     def tick(self):
         self.tick_count += 1
         return self.tick_count % self.tick_slow_factor == 0
+
 
 class AIBotInstructions(AIBot):
 
@@ -1578,7 +1595,9 @@ class AIBotTracker(AIBot):
 
     def tick(self):
 
-        if super(AIBotTracker, self).tick() is False or self.following_object is None:
+        if super(AIBotTracker, self).tick() is False or \
+                self.following_object is None or \
+                (self.following_object.name == Objects.PLAYER and Event.EFFECT_INVISIBLE in self.world.effects):
             return
 
         cx = self.following_object.rect.centerx
@@ -1662,7 +1681,10 @@ class AIBotHunter(AIBot):
         if cz == z:
             distance = math.sqrt((cx - x) ** 2 + (cy - y) ** 2)
 
-            if distance <= self.visibility_distance:
+            if distance <= self.visibility_distance and \
+                    (self.following_object.name == Objects.PLAYER and \
+                     Event.EFFECT_INVISIBLE not in self.world.effects or \
+                     self.following_object.name != Objects.PLAYER):
                 self.tracker.tick()
             else:
                 self.router.tick()
@@ -1684,7 +1706,8 @@ class AIBotRandom(AIBot):
 
     def __str__(self):
 
-        text = "{0} Bot: valid actions:{1} : current action:{2}".format(self.name, str(self.valid_actions), self.current_instruction)
+        text = "{0} Bot: valid actions:{1} : current action:{2}".format(self.name, str(self.valid_actions),
+                                                                        self.current_instruction)
 
         return text
 
