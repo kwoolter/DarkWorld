@@ -67,6 +67,29 @@ class DWModel():
                                     name=self.state,
                                     description="Game state changed to {0}".format(self.state)))
 
+    def reset(self):
+
+        # Delete the player from the current world
+        self.delete_world_object(self.player)
+
+        # Restore player's inventory to what it was when we arrived in this world
+        self.inventory = copy.deepcopy(self.inventory_copy)
+
+        # Remove any effects
+        self.effects = {}
+
+        # Reset ALL conversations
+        self._conversations.reset()
+
+        # Reset the new world just for good measure
+        self.world.reset()
+
+        # Add the player to NEW copy of the current world
+        self.move_world(self.current_world_id, do_copy=True)
+
+        # Reset the new world just for good measure
+        self.world.reset()
+
     def get_next_world_id(self):
         idx = self.world_ids.index(self.current_world_id)
         if idx == len(self.world_ids):
@@ -491,20 +514,8 @@ class DWModel():
                                     name=Event.DEAD,
                                     description="{0} has died".format(self.player.name)))
 
-        # Delete the player from the current world
-        self.delete_world_object(self.player)
+        self.reset()
 
-        # Restore player's inventory to what it was when we arrived in this world
-        self.inventory = copy.deepcopy(self.inventory_copy)
-
-        # Remove an effects
-        self.effects = {}
-        self.world.remove_effect("REMOVE_ALL")
-
-        # Reset ALL conversations
-        self._conversations.reset()
-
-        self.move_world(self.current_world_id, do_copy=True)
         self.player_lives -= 1
 
         if self.player_lives <= 0:

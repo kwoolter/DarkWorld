@@ -15,6 +15,7 @@ class DWController:
         self.m = model.DWModel("Dark World")
         self.v = view.DWMainFrame(self.m)
         self.audio = audio.AudioManager()
+        self._debug = False
 
     def initialise(self):
 
@@ -23,6 +24,11 @@ class DWController:
         self.m.initialise()
         self.v.initialise()
         self.audio.initialise()
+
+    def debug(self):
+        self._debug = not self._debug
+        if self._debug is True:
+            print("\n\nDEBUG MODE\n\n")
 
     def end(self):
         self.m.end()
@@ -101,7 +107,7 @@ class DWController:
                             self.v.inventory_show()
                         elif event.key == K_ESCAPE:
                             self.m.pause()
-                        elif event.key == K_F12:
+                        elif event.key == K_F12 and self._debug is True:
                             self.v.print()
                             self.m.print()
                             self.audio.print()
@@ -111,8 +117,10 @@ class DWController:
                             self.audio.change_volume()
                         elif event.key == K_F3:
                             self.audio.change_volume(-0.1)
-                        elif event.key == K_F4:
+                        elif event.key == K_F4 and self._debug is True:
                             self.m.move_world()
+                        elif event.key == K_F5 and self._debug is True:
+                            self.m.reset()
                         elif event.key == K_F11:
                             self.v.world_view.m2v.infinity += 10
                         elif event.key == K_F10:
@@ -156,6 +164,10 @@ class DWController:
                             self.audio.change_volume(-0.1)
                         elif event.key == K_F4:
                             loop = False
+                        elif event.key == K_F12 and self._debug is True:
+                            self.v.print()
+                            self.m.print()
+                            self.audio.print()
                     # Timer events
                     elif event.type == USEREVENT + 2:
                         self.v.tick()
@@ -176,6 +188,10 @@ class DWController:
                             self.audio.change_volume()
                         elif event.key == K_F3:
                             self.audio.change_volume(-0.1)
+                        elif event.key == K_F12 and self._debug is True:
+                            self.v.print()
+                            self.m.print()
+                            self.audio.print()
                     # Timer events
                     elif event.type == USEREVENT + 2:
                         self.v.tick()
@@ -196,11 +212,13 @@ class DWController:
                             self.audio.change_volume()
                         elif event.key == K_F3:
                             self.audio.change_volume(-0.1)
-                        elif event.key == K_F12:
+                        elif event.key == K_F12 and self._debug is True:
                             print("\n\nG A M E   S T A T E")
                             self.v.print()
                             self.m.print()
                             self.audio.print()
+                        elif event.key == K_NUMLOCK:
+                            self.debug()
                         elif event.key == K_q:
                             self.m.player_died()
 
@@ -220,6 +238,11 @@ class DWController:
                         # Space to restart the game
                         if event.key == K_SPACE:
                             self.m.initialise()
+                        elif event.key == K_F12 and self._debug is True:
+                            print("\n\nG A M E   S T A T E")
+                            self.v.print()
+                            self.m.print()
+                            self.audio.print()
 
                     # Timer events
                     elif event.type == USEREVENT + 2:

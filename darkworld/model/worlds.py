@@ -1153,7 +1153,7 @@ class World3D:
 
         dead = False
 
-        if self.player.z >= (self.depth - 50):
+        if self.player.z >= (self.depth):
             dead = True
             print("dead")
 
@@ -1189,6 +1189,7 @@ class World3D:
         # Set the end of the world to be the biggest plane depth + 100
         self.depth = max(self.planes.keys()) + 100
 
+        # Set list of active effects to empty set
         self.effects = set()
 
         self.state = World3D.STATE_READY
@@ -1204,6 +1205,15 @@ class World3D:
     #             self.state = World3D.STATE_PLAYING
     #         elif self.state == World3D.STATE_PLAYING:
     #             self.state = World3D.STATE_PAUSED
+
+    def reset(self):
+
+        # Set list of active effects to empty set
+        self.effects = set()
+
+        # Reset all bots
+        for bot in self.bots:
+            bot.reset()
 
     def tick(self):
 
@@ -1291,14 +1301,20 @@ class World3D:
             else:
                 selected_object.tick()
 
-    def move_player_to_xyz(self, xyz):
+
+    def move_object_to_xyz(self, selected_object : RPGObject3D, xyz):
 
         x, y, z = xyz
 
         if self.is_valid_xyz(x, y, z):
-            self.delete_object3D(self.player)
-            self.player.set_pos((x, y, z))
-            self.add_object3D(self.player, do_copy=False)
+            self.delete_object3D(selected_object)
+            selected_object.set_pos((x, y, z))
+            self.add_object3D(selected_object, do_copy=False)
+
+    def move_player_to_xyz(self, xyz):
+
+        self.move_object_to_xyz(self.player, xyz)
+
 
     def move_player_to_start(self):
 
@@ -1446,6 +1462,7 @@ class AIBot:
     def __init__(self, name: str, target_object: RPGObject3D, world: World3D, tick_slow_factor: int = 1):
         self.name = name
         self.target_object = target_object
+        self.initial_xyz = self.target_object.xyz
         self.world = world
         self.tick_slow_factor = tick_slow_factor
         self.loop = False
@@ -1462,6 +1479,16 @@ class AIBot:
             else:
                 return self.tick_count % self.tick_slow_factor == 0
 
+    def reset(self):
+        self.tick_count = 0
+        self.world.move_object_to_xyz(self.target_object, self.initial_xyz)
+
+    def __str__(self):
+        text = "Subject:{0} at {1} moved from original position {2}".format(self.target_object.name,
+                                                                            str(self.target_object.xyz),
+                                                                            str(self.initial_xyz))
+        return text
+
 
 class AIBotInstructions(AIBot):
 
@@ -1475,7 +1502,9 @@ class AIBotInstructions(AIBot):
 
     def __str__(self):
 
-        text = "{0} Bot: loop({1}), instructions:".format(self.name, self.loop)
+        text = super(AIBotInstructions, self).__str__()
+
+        text += "\n{0} Bot: loop({1}), instructions:".format(self.name, self.loop)
         for instruction in self.instructions:
             action, ticks, skip_on_fail = instruction
             text += "\n\t action({0}), ticks {1}), skip on fail({2})".format(action, ticks, skip_on_fail)
@@ -1540,6 +1569,11 @@ class AIBotInstructions(AIBot):
 
         self.current_instruction_ticks = 0
 
+    def reset(self):
+        super(AIBotInstructions, self).reset()
+        self.current_instruction_id = 0
+        self.current_instruction_ticks = 0
+
 
 class AIBotRouteFollowing(AIBot):
 
@@ -1559,7 +1593,6 @@ class AIBotRouteFollowing(AIBot):
                                                                                         str(self.way_points[
                                                                                                 self.current_instruction_id]),
                                                                                         str(self.target_object.xyz))
-
         return text
 
     def set_instructions(self, new_instructions: list, loop: bool = True):
@@ -1621,6 +1654,11 @@ class AIBotRouteFollowing(AIBot):
 
         self.failed_ticks = 0
 
+
+    def reset(self):
+        super(AIBotRouteFollowing, self).reset()
+        self.current_instruction_id = 0
+        self.failed_ticks = 0
 
 class AIBotTracker(AIBot):
 
@@ -1688,6 +1726,10 @@ class AIBotTracker(AIBot):
 
         return self.failed_ticks > self.failed_ticks_limit
 
+    def reset(self):
+        super(AIBotTracker, self).reset()
+        self.failed_ticks = 0
+
 
 class AIBotHunter(AIBot):
 
@@ -1741,6 +1783,9 @@ class AIBotHunter(AIBot):
             else:
                 self.router.tick()
 
+
+    def reset(self):
+        super(AIBotHunter, self).reset()
 
 class AIBotRandom(AIBot):
 
@@ -1805,3 +1850,8 @@ class AIBotRandom(AIBot):
         self.current_instruction = random.choice(self.valid_actions)
         self.current_instruction_ticks = 0
         self.current_instruction_duration = random.randint(self.min_duration, self.max_duration)
+
+    def reset(self):
+        super(AIBotRandom, self).reset()
+        self.current_instruction_ticks = 0
+        self.current_instruction_duration = 0
