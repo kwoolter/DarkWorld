@@ -154,6 +154,8 @@ class DWController:
                             self.audio.change_volume()
                         elif event.key == K_F3:
                             self.audio.change_volume(-0.1)
+                        elif event.key == K_F4:
+                            loop = False
                     # Timer events
                     elif event.type == USEREVENT + 2:
                         self.v.tick()

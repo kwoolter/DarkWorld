@@ -61,6 +61,7 @@ class Objects:
     TILE4 = "tile4"
     TRAP = "trap"
     TRAP_DISABLE = "a trap disabler"
+    TRAP_DOOR = "trap door"
     TREASURE = "treasure"
     TREASURE_CHEST = "treasure chest"
     WALL1 = "wall1"

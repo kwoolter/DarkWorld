@@ -660,6 +660,42 @@ class WorldBuilder():
         ai.set_instructions(instructions)
         world.add_monster(new_monster, World3D.DUMMY, ai)
 
+        # World 100
+        world = self.get_world(110)
+
+        # Monster #1 - Moving Platform
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE4)
+        new_monster.set_pos((13*32, 6*32, 81))
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.DOWN, 32*6, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.UP, 32*6, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 50, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        # Monster #2 - Moving Platform
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE2)
+        new_monster.set_pos((4*32, 3*32, 95))
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.EAST, 32*8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.WEST, 32*8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
+        # Monster #3 - Moving Platform
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE2)
+        new_monster.set_pos((2*32, 10*32, 81))
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.DOWN, 32*5, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.UP, 32*5, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, World3D.DUMMY, ai)
+
     def load_world_properties(self):
 
         # World Properties:-
@@ -775,6 +811,14 @@ class WorldBuilder():
 
         new_world_id = 100
         new_world_properties = ("Dungeon World", "dungeon", (46, 302, 0), (32 * 5.5, 32 * 3.5, 0), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
+
+        # World 110
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE1, SwitchGroup.AND)}
+        new_world_id = 110
+        new_world_properties = ("Dungeon World 2", "dungeon", (46, 302, 0), (32 * 5.5, 32 * 3.5, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # Load up all of the properties that we have defined
@@ -961,7 +1005,7 @@ class World3D:
     PLAYER_FALLING = "falling"
 
     SLOW_TILES = (Objects.LIQUID1, Objects.LIQUID2)
-    ENEMIES = (Objects.ENEMY1, Objects.ENEMY2)
+    ENEMIES = (Objects.ENEMY1, Objects.ENEMY2, Objects.TRAP)
 
     def __init__(self, name: str = "default", w: int = 100, h: int = 100, d: int = 100):
 
@@ -1030,7 +1074,6 @@ class World3D:
             selected_plane = self.planes[z]
             if selected_object in selected_plane:
                 self.planes[z].remove(selected_object)
-                # del selected_object
         else:
             print("Can't delete object {0} at ({1},{2},{3})".format(str(selected_object), x, y, z))
 
@@ -1291,9 +1334,8 @@ class World3D:
         matching_objects = []
 
         if z in self.planes.keys():
-
-            for obj in self.planes[z].values():
-                if self.is_collision((x, y, z), obj) is True:
+            for obj in self.planes[z]:
+                if obj.contains_point((x, y, z)) is True:
                     matching_objects.append(obj)
 
         return matching_objects
@@ -1313,13 +1355,16 @@ class World3D:
 
         return touching
 
-    def swap_object(self, old_object, new_object_name):
+    def swap_object(self, old_object, new_object_name : str):
 
         xyz = old_object.xyz
-        new_object = WorldObjectLoader.get_object_copy_by_name(new_object_name)
-        new_object.is_switchable = True
-        new_object.set_pos(xyz)
-        self.add_object3D(new_object)
+
+        if new_object_name not in (None, Objects.EMPTY):
+            new_object = WorldObjectLoader.get_object_copy_by_name(new_object_name)
+            new_object.is_switchable = True
+            new_object.set_pos(xyz)
+            self.add_object3D(new_object)
+
         self.delete_object3D(old_object)
 
     def swap_objects_by_name(self, target_object_name: str, new_object_name: str, switch_all : bool = False):

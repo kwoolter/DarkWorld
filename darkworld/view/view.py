@@ -61,6 +61,9 @@ class ImageManager:
             try:
 
                 # image = pygame.transform.scale(original_image, (width, height))
+                # smallest_size = original_image.get_bounding_rect()
+                # cropped_image = pygame.Surface((smallest_size.width, smallest_size.height))
+                # pygame.Surface.blit(cropped_image, original_image, smallest_size)
                 ImageManager.image_cache[image_file_name] = original_image
                 logging.info("Image {0} loaded and scaled to {1}x{2} and cached.".format(filename, width, height))
 
@@ -76,9 +79,7 @@ class ImageManager:
         new_skin = (new_skin_name, {
 
             model.Objects.EMPTY: None,
-            model.Objects.WALL1: "winter_tiles0.png",
-            model.Objects.WALL2: "winter_tiles2.png",
-            model.Objects.WALL3: "winter_tiles3.png",
+
             model.Objects.FAKE_WALL: "wall.png",
             model.Objects.BOOK: "rpg_sprite_gold2-5.png",
             model.Objects.COINS: "rpg_sprite_gold1-12.png",
@@ -88,6 +89,10 @@ class ImageManager:
             model.Objects.EXTRA_LIFE: "rpg_sprite_gold1-14.png",
             model.Objects.BLOCK1: "block1.png",
             model.Objects.BLOCK2: "block2.png",
+            model.Objects.DOOR1: "door.png",
+            model.Objects.DOOR1_OPEN: "door_open.png",
+            model.Objects.DOOR2: "door.png",
+            model.Objects.DOOR2_OPEN: "door_open.png",
             #model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
             model.Objects.PLAYER: ("knight_bw0.png","knight_bw1.png","knight_bw2.png","knight_bw3.png"),
             model.Objects.PLAYER2: ("knight_bw4.png", "knight_bw5.png", "knight_bw6.png", "knight_bw7.png"),
@@ -107,8 +112,6 @@ class ImageManager:
             model.Objects.TREASURE_CHEST: "rpg_sprite_gold2-3.png",
             model.Objects.DECOR1: "rpg_sprite_gold0-13.png",
             model.Objects.DECOR2: "rpg_sprite_gold1-13.png",
-            model.Objects.DOOR1: "door.png",
-            model.Objects.DOOR1_OPEN: "door_open.png",
             model.Objects.TRAP: ("trap0.png","trap1.png","trap2.png","trap3.png",
                                  "trap4.png","trap5.png","trap6.png","trap7.png",
                                  "trap6.png","trap5.png","trap4.png","trap3.png",
@@ -121,8 +124,8 @@ class ImageManager:
             model.Objects.TILE3: "tile3.png",
             model.Objects.TILE4: "tile4.png",
             model.Objects.TELEPORT: ("teleport_00.png", "teleport_01.png", "teleport_02.png"),
-            model.Objects.HOLE: "down shoot.png",
-            model.Objects.EXIT_NEXT: "exit_green.png",
+            model.Objects.HOLE: "hole.png",
+            model.Objects.EXIT_NEXT: "exit_green2.png",
             model.Objects.EXIT_PREVIOUS: "exit_red.png",
             model.Objects.POTION1: "rpg_sprite_gold5-4.png",
             model.Objects.POTION2: "rpg_sprite_gold4-4.png",
@@ -137,6 +140,7 @@ class ImageManager:
             model.Objects.SWITCH_3: ("switch7.png", "switch6.png"),
             model.Objects.SWITCH_4: ("switch7.png", "switch6.png"),
             model.Objects.SWORD: "rpg_sprite_gold9-5.png",
+            model.Objects.TRAP_DOOR: "rpg_sprite_bw2-1.png",
             model.Objects.LIQUID1: "liquid3.png",
             model.Objects.LIQUID2: ("liquid_gold0.png","liquid_gold1.png","liquid_gold2.png","liquid_gold3.png",
                                     "liquid_gold4.png","liquid_gold5.png","liquid_gold6.png","liquid_gold7.png",
@@ -145,6 +149,9 @@ class ImageManager:
                                     ),
             model.Objects.LADDER_UP: "ladder2.png",
             model.Objects.LADDER_DOWN: "ladder1.png",
+            model.Objects.WALL1: "winter_tiles0.png",
+            model.Objects.WALL2: "winter_tiles2.png",
+            model.Objects.WALL3: "winter_tiles3.png",
 
         })
 
@@ -284,17 +291,24 @@ class ImageManager:
 
         new_skin_name = "dungeon"
         new_skin = (new_skin_name, {
+            model.Objects.BLOCK1: "rpg_sprite_bw9-0.png",
+            model.Objects.BLOCK2: "rpg_sprite_bw6-1.png",
             model.Objects.DECOR1: "rpg_sprite_gold0-13.png",
             model.Objects.DECOR2: "rpg_sprite_gold8-12.png",
+            model.Objects.DOOR1: "rpg_sprite_bw2-2.png",
+            model.Objects.DOOR1_OPEN: None,
+            model.Objects.DOOR2: "rpg_sprite_bw1-2.png",
+            model.Objects.DOOR2_OPEN: None,
             model.Objects.LADDER_DOWN: "ladder4.png",
             model.Objects.LADDER_UP: "ladder3.png",
             model.Objects.PLAYER: ("knight_light0.png", "knight_light1.png", "knight_light2.png", "knight_light3.png"),
             model.Objects.PLAYER2: ("knight_light4.png", "knight_light5.png", "knight_light6.png", "knight_light7.png"),
             model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
             model.Objects.NPC1: "rpg_sprite_gold5-14.png",
-            model.Objects.TILE1: "tile4.png",
+            model.Objects.TILE1: "basic_brick:3.png",
             model.Objects.TILE2: "wall2.png",
             model.Objects.TILE3: "tile4.png",
+            model.Objects.TILE4: "rpg_sprite_bw8-2.png",
             model.Objects.TREASURE: "rpg_sprite_gold1-12.png",
             model.Objects.WALL1: "winter_tiles0.png",
             model.Objects.WALL2: "winter_tiles3.png",
@@ -340,6 +354,11 @@ class ImageManager:
         sheet_file_name = "tiles64x64.png"
         for i in range(0, 7):
             self.sprite_sheets["tiles64:{0}.png".format(i)] = (sheet_file_name, (i * 64, 0, 64, 64))
+
+        sheet_file_name = "basic_brick2.png"
+        for i in range(0, 4):
+            self.sprite_sheets["basic_brick:{0}.png".format(i)] = (sheet_file_name, (i * 64, 0, 64, 64))
+
 
         sheet_file_name = "brick_tiles_1.png"
         for i in range(0, 5):
@@ -399,14 +418,17 @@ class ImageManager:
         for i in range(0, 5):
             self.sprite_sheets["winter_tiles{0}.png".format(i)] = (sheet_file_name, (i * 119, 1, 96, 96))
 
-        sheet_file_name = "knights.png"
+        sheet_file_name = "knights64.png"
         for i in range(0, 8):
-            self.sprite_sheets["knight_bw{0}.png".format(i)] = (sheet_file_name, (i * 32 + 4,0,24,32))
+            self.sprite_sheets["knight_bw{0}.png".format(i)] = (sheet_file_name, (i * 64 + 8,0,48,64))
 
-
-        sheet_file_name = "knights2.png"
+        sheet_file_name = "knights64-2.png"
         for i in range(0, 8):
-            self.sprite_sheets["knight_light{0}.png".format(i)] = (sheet_file_name, (i * 32 + 4,0,24,32))
+            self.sprite_sheets["knight_light{0}.png".format(i)] = (sheet_file_name, (i * 64 + 8,0,48,64))
+
+        # sheet_file_name = "knights2.png"
+        # for i in range(0, 8):
+        #     self.sprite_sheets["knight_light{0}.png".format(i)] = (sheet_file_name, (i * 32 + 4,0,24,32))
 
 
 class View():
@@ -519,7 +541,8 @@ class DWMainFrame(View):
             self.surface.blit(self.inventory_view.surface, (x, y))
 
         # Draw the number of remaining lives
-        img = View.image_manager.get_skin_image(tile_name=model.Objects.PLAYER)
+        img = View.image_manager.get_skin_image(tile_name=model.Objects.PLAYER, width=32, height=32)
+        img = pygame.transform.scale(img, (int(img.get_rect().width/2), int(img.get_rect().height/2)))
         for i in range(0, self.model.player_lives):
             self.surface.blit(img, (i * 32 + 8, self.world_view.surface.get_rect().height - 32))
 
@@ -550,8 +573,9 @@ class DWMainFrame(View):
                       bg_colour=Colours.DARK_GREY)
 
 
+            # Draw the name of the current world
             if self.model.world is not None:
-                msg_box_width = 200
+                msg_box_width = 260
                 msg_box_height = 34
                 y = 20
 
@@ -582,6 +606,7 @@ class DWMainFrame(View):
 
     def end(self):
         pygame.quit()
+        print("Ending {0}".format(__class__))
 
     def tick(self):
 
@@ -748,6 +773,7 @@ class DWWorldView(View):
                             alpha = 90
                         elif Event.EFFECT_PROTECTION in self.model.world.effects:
                             alpha = 255 - (self.tick_count % 6) * 40
+                            alpha = 255
                         elif Event.EFFECT_KILL_ENEMIES in self.model.world.effects:
                             pass
 
@@ -762,26 +788,34 @@ class DWWorldView(View):
                         int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w, size_h))
 
                     if obj.name == model.Objects.PLAYER:
-                        effect_image = None
+                        effect_image_name = None
                         if Event.EFFECT_INVISIBLE in self.model.world.effects:
-                            effect_image = model.Objects.POTION1
+                            effect_image_name = None
                         elif Event.EFFECT_PROTECTION in self.model.world.effects:
-                            effect_image = model.Objects.HELMET1
+                            effect_image_name = model.Objects.HELMET1
                         elif Event.EFFECT_KILL_ENEMIES in self.model.world.effects:
-                            effect_image = model.Objects.SWORD
+                            effect_image_name = model.Objects.SWORD
 
-                        if effect_image is not None:
+                        if effect_image_name is not None:
                             # Get the image for the object based on the object's name
-                            sword_image = View.image_manager.get_skin_image(effect_image,
+                            effect_image = View.image_manager.get_skin_image(effect_image_name,
                                                                       skin_name=self.skin,
                                                                       tick=tick_count)
-                            alpha = 220 - (self.tick_count % 6) * 40
 
-                            sword_image.set_alpha(alpha)
+                            effect_image = pygame.transform.scale(effect_image, (size_w, size_h))
+
+                            alpha = 220 - (self.tick_count % 6) * 40
+                            effect_image.set_alpha(alpha)
+
+                            # Center effect image vs. player image
+                            dx = image.get_rect().centerx - effect_image.get_rect().centerx
+                            dy = image.get_rect().centery - effect_image.get_rect().centery
 
                             # Blit the object image at the appropriate place and size
-                            self.surface.blit(sword_image, (
-                                int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w, size_h))
+                            self.surface.blit(effect_image, (
+                                int((x + dx) * self.object_zoom_ratio), int((y + dy) * self.object_zoom_ratio), size_w, size_h))
+
+
 
         # Draw current view position
         msg = "View Pos={0} : Distances={1} : Zoom {2:.2} : Tick={3}".format(self.view_pos,

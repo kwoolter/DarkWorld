@@ -224,6 +224,7 @@ class AudioManager:
 
     def end(self):
         pygame.mixer.quit()
+        print("Ending {0}".format(__class__))
 
     def print(self):
         print("sound theme={0}  music theme={1}".format(self.current_sound_theme, self.current_music_theme))

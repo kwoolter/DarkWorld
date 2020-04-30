@@ -125,15 +125,18 @@ class DWModel():
             self.world.tick()
             self.tick_count += 1
 
+            # See if the player is colliding with any enemies
             colliding_enemies = self.world.touching_objects(self.player, distance=0, filter=World3D.ENEMIES)
 
             # If you are colliding with an enemy
             if len(colliding_enemies) > 0:
-                # If you are protect nothing happens
+
+                # If you are protected nothing happens
                 if Event.EFFECT_PROTECTION in self.effects.keys():
                     self.events.add_event(Event(type=Event.GAME,
                                                 name=Event.BLOCKED,
                                                 description="You are protected"))
+
                 # If you can kill enemies then delete them
                 elif Event.EFFECT_KILL_ENEMIES in self.effects.keys():
                     for enemy in colliding_enemies:
@@ -160,6 +163,7 @@ class DWModel():
                 if self.world.is_player_dead() is True:
                     self.player_died()
 
+            # Time to process any effects that wear off over time...
             if self.tick_count % DWModel.EFFECT_COUNTDOWN_RATE == 0:
                 expired_effects = []
                 for effect, count in self.effects.items():
@@ -198,24 +202,29 @@ class DWModel():
 
         self.world.move_player(vector)
 
-        if self.world.player.has_moved() is True:
+        ################################################
+        # All collision logic moved to the tick() method
+        ################################################
 
-            touching_objects = self.world.touching_objects(self.world.player)
+        # if self.world.player.has_moved() is True:
+        #     pass
 
-            for object in touching_objects:
-
-                if object.name == Objects.HOLE:
-                    print("Falling...")
-                    self.move_player((0, 0, -2))
-
-                elif object.name == Objects.TRAP:
-                    if self.world.player.is_colliding(object):
-                        print("Ouch...")
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.LOSE_HEALTH,
-                                                    description="You hit {0}".format(object.name)))
-
-                        self.world.delete_object3D(object)
+            # touching_objects = self.world.touching_objects(self.world.player)
+            #
+            # for object in touching_objects:
+            #
+            #     if object.name == Objects.HOLE:
+            #         print("Falling...")
+            #         self.move_player((0, 0, -2))
+            #
+            #     elif object.name == Objects.TRAP:
+            #         if self.world.player.is_colliding(object):
+            #             print("Ouch...")
+            #             self.events.add_event(Event(type=Event.GAME,
+            #                                         name=Event.LOSE_HEALTH,
+            #                                         description="You hit {0}".format(object.name)))
+            #
+            #             self.world.delete_object3D(object)
 
     def talk_to_npc(self, npc_object: RPGObject3D, npc_name: str = None, world_id: str = None):
 
@@ -365,6 +374,27 @@ class DWModel():
                         self.events.add_event(Event(type=Event.GAME,
                                                     name=Event.DOOR_LOCKED,
                                                     description="You don't have anything to open the door."))
+
+
+                elif object.name == Objects.TRAP_DOOR:
+                    req_obj = Objects.KEY
+                    if self.have_inventory_object(req_obj) is True:
+                        print("Using {0} to open {1}...".format(req_obj, object.name))
+                        self.use_inventory_object(req_obj)
+                        x,y,z = object.xyz
+                        objs_below = self.world.get_objects_at(x,y,z+1)
+                        for obj in objs_below:
+                            self.swap_world_object(obj, Objects.HOLE)
+
+                        self.swap_world_object(object, Objects.EMPTY)
+                        self.events.add_event(Event(type=Event.GAME,
+                                                    name=Event.DOOR_OPEN,
+                                                    description="You open the trap door with a key."))
+                    else:
+                        # print("You don't have required object {0}".format(req_obj))
+                        self.events.add_event(Event(type=Event.GAME,
+                                                    name=Event.DOOR_LOCKED,
+                                                    description="You don't have anything to open the trap door."))
 
                 elif object.name == Objects.TRAP:
                     req_obj = Objects.TRAP_DISABLE
@@ -527,7 +557,7 @@ class DWModel():
         return self._conversations.get_conversation(npc_name)
 
     def end(self):
-        pass
+        print("Ending {0}".format(__class__))
 
 
 class EventQueue():

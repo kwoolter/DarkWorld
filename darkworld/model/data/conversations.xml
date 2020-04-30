@@ -13,7 +13,7 @@
             <text>Press SPACE while playing to interact with things</text>
         </line>
         <line id="5">
-            <text>Press I to toggle inventory</text>
+            <text>Press I to toggle inventory view</text>
         </line>
         <line id="6">
             <text>You can use Page Up and Down to zoom in and out</text>
@@ -22,13 +22,16 @@
             <text>You can press Home to reset zoom view to original position</text>
         </line>
         <line id="7">
-            <text>F2:F3 change sound volume</text>
+            <text>F2:F3 change sound and music volume</text>
         </line>
         <line id="7">
             <text>F1 to get some help</text>
         </line>
         <line id="8">
             <text>Press Esc to pause the game</text>
+        </line>
+        <line id="8">
+            <text>Press F4 from this screen to quit the game</text>
         </line>
         <line id="2">
             <text>Awesome game music by Kevin Macleod</text>
