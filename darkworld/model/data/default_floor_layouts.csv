@@ -1159,35 +1159,35 @@ ID,Name,Layer,Layout
 100,World100,171,                    
 100,World100,171,                    
 110,World110,20,####################
-110,World110,20,#B %  b#   #K   #u #
-110,World110,20,#      D   #    #  #
-110,World110,20,#     b#   #    @  #
-110,World110,20,#@###  #   @    ##E#
+110,World110,20,#B    b#  %#   #u #
+110,World110,20,#      D   #   #  #
+110,World110,20,#     b#   #   @  #
+110,World110,20,#@###  #   @   ##E#
 110,World110,20,#  K#  #  ##    #  #
-110,World110,20,#   #  @  #   B #  #
+110,World110,20,#   #  @  #   B #Q #
 110,World110,20,#   #E#####  ## ## #
 110,World110,20,#   #    K#  #     #
 110,World110,20,#   D     #  #     #
-110,World110,20,#   #     #  #    b#
+110,World110,20,#   #    q#  #    b#
 110,World110,20,#   ##E####  #######
-110,World110,20,#   #   #          #
+110,World110,20,#   #Q  #         q#
 110,World110,20,#A B#   #          #
 110,World110,20,#####   #########  #
-110,World110,20,#   #   #      b#  #
-110,World110,20,#   D   D          #
-110,World110,20,#   #   #          #
-110,World110,20,#   #  K#B      #  #
+110,World110,20,#Q  #   #q     b#  #
+110,World110,20,#   D   D   k   #  #
+110,World110,20,#   #   #       D  #
+110,World110,20,#   #  K#B    Q #  #
 110,World110,20,####################
 110,World110,21,FFFFFFFFFFFFFFFFFFFF
-110,World110,21,FFFFFFFFF  FFF  FFFF
-110,World110,21,FFFFFFFFFF FFF  FFFF
 110,World110,21,FFFFFFFFFFFFFFFFFFFF
 110,World110,21,FFFFFFFFFFFFFFFFFFFF
 110,World110,21,FFFFFFFFFFFFFFFFFFFF
 110,World110,21,FFFFFFFFFFFFFFFFFFFF
 110,World110,21,FFFFFFFFFFFFFFFFFFFF
-110,World110,21,FFFFFFFFFFFFFF FFFFF
-110,World110,21,FFFFFFFFFFFFFF FFFFF
+110,World110,21,FFFFFFFFFFFFFFFFFFFF
+110,World110,21,FFFFFFFFFFFFFFFFFFFF
+110,World110,21,FFFFFFFFFFFFFFFFFFFF
+110,World110,21,FFFFFFFFFFFFFFFFFFFF
 110,World110,21,FFFFFFFFFFFFFFFFFFFF
 110,World110,21,FFFFFFFFFFFFFFFFFFFF
 110,World110,21,FFFFFFFFF FFFFFFFFFF
@@ -1199,7 +1199,7 @@ ID,Name,Layer,Layout
 110,World110,21,F  FFFFFFFFFFFFFFFFF
 110,World110,21,FFFFFFFFFFFFFFFFFFFF
 110,World110,50,         ###########
-110,World110,50,         #u    #   #
+110,World110,50,         #     #  C#
 110,World110,50,         #     @   #
 110,World110,50,         #     #   #
 110,World110,50,         #     #   #
@@ -1212,11 +1212,11 @@ ID,Name,Layer,Layout
 110,World110,50,                    
 110,World110,50,                    
 110,World110,50,                    
-110,World110,50,::    :   ::        
+110,World110,50,:B   B:::E::        
+110,World110,50,:     :C   :        
 110,World110,50,:     :    :        
 110,World110,50,:     :    :        
-110,World110,50,:     :    :        
-110,World110,50,:    S:    :        
+110,World110,50,:q   S:C c :        
 110,World110,50,::::::::::::        
 110,World110,51,                    
 110,World110,51,          fffff FFF 
@@ -1233,26 +1233,26 @@ ID,Name,Layer,Layout
 110,World110,51,                    
 110,World110,51,                    
 110,World110,51,                    
-110,World110,51, !!!!!              
-110,World110,51, !!!!!              
-110,World110,51, !!!!!              
-110,World110,51, !!!!!              
+110,World110,51, !!!!! !!!!         
+110,World110,51, !!!!! !!!!         
+110,World110,51, !!!!! !!!!         
+110,World110,51, !!!!! !!!!         
 110,World110,51,                    
-110,World110,80,;;;;;    :::::::::::
+110,World110,80,b;;b;;;;;b:::::::::b
 110,World110,80,;n       :       U :
-110,World110,80,;                  :
-110,World110,80,;                   
-110,World110,80,;                   
-110,World110,80,;                   
-110,World110,80,;                   
+110,World110,80,;        :         :
+110,World110,80,b        b         b
 110,World110,80,;        :         :
 110,World110,80,;        :         :
-110,World110,80,;        :        S:
-110,World110,80,;    ;;;;:::::::::::
-110,World110,80,;    ;              
-110,World110,80,;    ;              
-110,World110,80,;;  ;;              
-110,World110,80,                    
+110,World110,80,;        b         b
+110,World110,80,;        :         :
+110,World110,80,;    ;   :         :
+110,World110,80,;    ;   :QB     BS:
+110,World110,80,b;  ;b;;;b:::::::::b
+110,World110,80,;   K;              
+110,World110,80,;q   ;              
+110,World110,80,;;   ;              
+110,World110,80, ;   ;              
 110,World110,80,                    
 110,World110,80,                    
 110,World110,80,                    
@@ -1271,21 +1271,22 @@ ID,Name,Layer,Layout
 110,World110,81,                    
 110,World110,81, ****               
 110,World110,81, ****               
-110,World110,81,  **                
-110,World110,81,  **                
+110,World110,81,  ***               
+110,World110,81,  ***               
 110,World110,81,                    
 110,World110,81,                    
 110,World110,81,                    
 110,World110,81,                    
 110,World110,81,                    
 110,World110,110,##########          
-110,World110,110,#U       #          
+110,World110,110,#U      K#          
 110,World110,110,#        #          
 110,World110,110,#        #          
 110,World110,110,#        #          
 110,World110,110,         #          
+110,World110,110,        S#          
 110,World110,110,        ##          
-110,World110,110,        ##          
+110,World110,110,                    
 110,World110,110,                    
 110,World110,110,                    
 110,World110,110,                    
@@ -1298,10 +1299,12 @@ ID,Name,Layer,Layout
 110,World110,110,                    
 110,World110,110,                    
 110,World110,111,                    
-110,World110,111, !!!!               
-110,World110,111, !!!!               
-110,World110,111, !!!!               
-110,World110,111,                    
+110,World110,111, !!!!!!!!           
+110,World110,111, !!!!   !           
+110,World110,111, !!!!   !           
+110,World110,111,        !           
+110,World110,111,        !           
+110,World110,111,        !           
 110,World110,111,                    
 110,World110,111,                    
 110,World110,111,                    

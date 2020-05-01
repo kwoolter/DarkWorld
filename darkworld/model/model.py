@@ -54,11 +54,12 @@ class DWModel():
 
         self.player = WorldObjectLoader.get_object_copy_by_name(Objects.PLAYER)
         self.player.is_player = True
-        self.player_lives = 3
+        self.player_lives = 5
+        self.difficulty = 1
         self.effects = {}
         self.inventory = {}
         self.inventory_copy = copy.deepcopy(self.inventory)
-        self.current_world_id = 1
+        self.current_world_id = 110
 
         # self.move_world(self.current_world_id, do_copy=True)
 
@@ -92,11 +93,10 @@ class DWModel():
 
     def get_next_world_id(self):
         idx = self.world_ids.index(self.current_world_id)
-        if idx == len(self.world_ids):
+        idx += 1
+        if idx >= len(self.world_ids):
             idx = 0
-        else:
-            idx += 1
-
+            self.difficulty += 1
         return self.world_ids[idx]
 
     def get_previous_world_id(self):

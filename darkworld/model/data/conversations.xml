@@ -215,6 +215,26 @@
             <text>Head down deeper into the dungeon at your peril! Who knows if there is a way back up?</text>
         </line>
     </conversation>
+    <conversation id="Knight of Artorius:110">
+        <npc_name>Knight of Artorius</npc_name>
+        <world_id>110</world_id>
+        <linear>True</linear>
+        <line id="4">
+            <text>Hail traveller of this dark realm!</text>
+        </line>
+        <line id="3">
+            <text>I have failed in my quest to proceed any further.</text>
+        </line>
+        <line id="5">
+            <text>Maybe you will succeed where I have failed!</text>
+        </line>
+        <line id="5">
+            <text>Use trap doors to open new ways to descend to the floors below!</text>
+        </line>
+        <line id="5">
+            <text>But...you will need a key to open each one.</text>
+        </line>
+    </conversation>
     <conversation id="Rosie">
         <npc_name>Rosie</npc_name>
         <world_id>9</world_id>

@@ -305,6 +305,7 @@ class ImageManager:
             model.Objects.PLAYER2: ("knight_light4.png", "knight_light5.png", "knight_light6.png", "knight_light7.png"),
             model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
             model.Objects.NPC1: "rpg_sprite_gold5-14.png",
+            model.Objects.NPC2: "rpg_sprite_gold9-14.png",
             model.Objects.TILE1: "basic_brick:3.png",
             model.Objects.TILE2: "wall2.png",
             model.Objects.TILE3: "tile4.png",

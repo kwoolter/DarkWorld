@@ -188,6 +188,7 @@ class DWController:
                             self.audio.change_volume()
                         elif event.key == K_F3:
                             self.audio.change_volume(-0.1)
+                        # Debug print game status info
                         elif event.key == K_F12 and self._debug is True:
                             self.v.print()
                             self.m.print()
