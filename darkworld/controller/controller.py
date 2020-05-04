@@ -105,6 +105,8 @@ class DWController:
                             self.m.interact()
                         elif event.key == K_i:
                             self.v.inventory_show()
+                        elif event.key == K_z:
+                            self.m.do_melee_attack()
                         elif event.key == K_ESCAPE:
                             self.m.pause()
                         elif event.key == K_F12 and self._debug is True:

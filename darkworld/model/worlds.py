@@ -699,6 +699,22 @@ class WorldBuilder():
         ai.set_instructions(instructions)
         world.add_monster(new_monster, ai)
 
+        # World 120
+        world = self.get_world(120)
+        # add hunter enemy #1
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((2 * 32, 4 * 32, 20))
+        ai = AIBotHunter(new_monster, world, tick_slow_factor=1)
+        ai.set_instructions(new_target=None, route=[(4 * 32, 15 * 32, 20), (15 * 32, 16 * 32, 20), (4 * 32, 15 * 32, 20), (3 * 32, 4 * 32, 20)])
+        world.add_monster(new_monster, ai)
+
+        # add hunter enemy #2
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
+        new_monster.set_pos((17 * 32, 15 * 32, 20))
+        ai = AIBotHunter(new_monster, world, tick_slow_factor=1)
+        ai.set_instructions(new_target=None, route=[(17 * 32, 4 * 32, 20), (4 * 32, 3 * 32, 20), (17 * 32, 3 * 32, 20), (17 * 32, 15 * 32, 20)])
+        world.add_monster(new_monster, ai)
+
     def load_world_properties(self):
 
         # World Properties:-
@@ -822,6 +838,20 @@ class WorldBuilder():
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE2, SwitchGroup.AND)}
         new_world_id = 110
         new_world_properties = ("Dungeon World 2", "dungeon", (46, 302, 0), (32 * 5.5, 32 * 3.5, 0), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
+        # World 120
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE2, SwitchGroup.AND)}
+        new_world_id = 120
+        new_world_properties = ("Dungeon World 3", "dungeon", (216, 330, 0), (32 * 5.5, 32 * 3.5, 0), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
+
+        # World 999
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE2, SwitchGroup.NOR)}
+        new_world_id = 999
+        new_world_properties = ("The Hub", "hub", (9*32,16*32, 0), (32 * 5.5, 32 * 3.5, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # Load up all of the properties that we have defined
@@ -1455,6 +1485,84 @@ class World3D:
                     print("Switch: {0}".format(str(obj)))
 
 
+class Navigator:
+
+    STEP_LENGTH = 16
+    HIT_BOX_SIZE = 16
+
+    def __init__(self):
+        self.route=[]
+        self.blockers = []
+
+    def navigate(self, world : World3D, from_object : RPGObject3D, to_object : RPGObject3D ):
+
+        success = True
+        hit_box = pygame.Rect(0,0,Navigator.HIT_BOX_SIZE, Navigator.HIT_BOX_SIZE)
+        self.route=[]
+        self.blockers = []
+
+        #print("Navigate from {0} at {1} to {2} at {3}".format(from_object.name, from_object.xyz, to_object.name, to_object.xyz))
+
+        fz = from_object.z
+        tz = to_object.z
+
+        if fz == tz:
+
+            fx = from_object.rect.centerx
+            fy = from_object.rect.centery
+
+            tx = to_object.rect.centerx
+            ty = to_object.rect.centery
+
+            dx = (tx - fx)
+            dy = (ty - fy)
+            distance_to_object = math.sqrt(dx ** 2 + dy ** 2)
+            steps_to_target = distance_to_object/Navigator.STEP_LENGTH
+            dx = int(dx/steps_to_target)
+            dy = int(dy/steps_to_target)
+
+            plane = world.planes[fz]
+
+            loop = True
+
+            while loop:
+
+                self.route.append((fx,fy,fz))
+
+                hit_box.centerx = fx
+                hit_box.centery = fy
+
+                #print("travelling at dx={0}, dy={1} to {2}".format(dx,dy,(tx,ty)))
+                for obj in plane:
+                    if obj.is_solid is True and \
+                            obj != from_object and \
+                            obj.rect.colliderect(hit_box):
+                        print("Navigating {0} to {1} : Hit a {2}".format(from_object.name, to_object.name, obj.name))
+                        self.blockers.append(obj)
+                        loop = False
+                        success = False
+                        break
+                if success is False:
+                    break
+
+                fx += dx
+                fy += dy
+
+                if to_object.contains_point((fx,fy,fz)) is True:
+                    success = True
+                    loop = False
+                    print("Reached the target")
+                elif world.is_valid_xyz(fx,fy,fz) is False:
+                    success = False
+                    loop = False
+                    print("missed target")
+
+                #print("at {0}".format((fx,fy)))
+
+        return success
+
+
+
 class AIBot:
     INSTRUCTION_FAIL_NOP = "NOP"
     INSTRUCTION_FAIL_TICK = "TICK"
@@ -1656,6 +1764,15 @@ class AIBotRouteFollowing(AIBot):
 
         self.failed_ticks = 0
 
+    def closest_waypoint(self):
+        target_distances = []
+        tx,ty,tz = self.target_object.xyz
+        for i, w in enumerate(self.way_points):
+            wx, wy, wz = w
+            d = math.sqrt((tx-wx)**2 + (ty-wy)**2)
+            target_distances.append((d,i))
+        target_distances.sort()
+        d, self.current_instruction_id = target_distances[0]
 
     def reset(self):
         super(AIBotRouteFollowing, self).reset()
@@ -1735,6 +1852,9 @@ class AIBotTracker(AIBot):
 
 class AIBotHunter(AIBot):
 
+    MODE_HUNTING = "hunting"
+    MODE_TRACKING = "tracking"
+
     def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor: int = 1):
 
         super(AIBotHunter, self).__init__(str(__class__), target_object, world, tick_slow_factor)
@@ -1744,6 +1864,7 @@ class AIBotHunter(AIBot):
 
         self.tracker = AIBotTracker(target_object=target_object, world=world, tick_slow_factor=tick_slow_factor)
         self.router = AIBotRouteFollowing(target_object=target_object, world=world, tick_slow_factor=tick_slow_factor)
+        self.navigator = Navigator()
 
     def __str__(self):
 
@@ -1753,13 +1874,15 @@ class AIBotHunter(AIBot):
 
         return text
 
-    def set_instructions(self, new_target: RPGObject3D = None, distance: float = 100, route: list = None,
+    def set_instructions(self, new_target: RPGObject3D = None, distance: float = 200, route: list = None,
                          loop: bool = True):
 
         self.visibility_distance = distance
         self.following_object = new_target
         self.tracker.set_instructions(new_target=new_target)
         self.router.set_instructions(new_instructions=route, loop=loop)
+        self.mode = AIBotHunter.MODE_TRACKING
+
 
     def tick(self):
 
@@ -1778,12 +1901,17 @@ class AIBotHunter(AIBot):
             distance = math.sqrt((cx - x) ** 2 + (cy - y) ** 2)
 
             if distance <= self.visibility_distance and \
+                self.navigator.navigate(world = self.world, from_object=self.target_object, to_object=self.following_object) is True and \
                     (self.following_object.name == Objects.PLAYER and \
                      Event.EFFECT_INVISIBLE not in self.world.effects or \
                      self.following_object.name != Objects.PLAYER):
                 self.tracker.tick()
+                self.mode = AIBotHunter.MODE_HUNTING
             else:
+                if self.mode == AIBotHunter.MODE_HUNTING:
+                    self.router.closest_waypoint()
                 self.router.tick()
+                self.mode = AIBotHunter.MODE_TRACKING
 
 
     def reset(self):

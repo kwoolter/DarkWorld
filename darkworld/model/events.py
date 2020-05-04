@@ -51,6 +51,7 @@ class Event():
     EFFECT_INVISIBLE = "**Invisibility**"
     EFFECT_PROTECTION = "**Protection**"
     EFFECT_REVEAL_SECRETS = "**Reveal Secrets**"
+    EFFECT_MELEE_ATTACK = "Melee Attack"
 
     EFFECT_DURATION = {
         EFFECT_INVISIBLE : 20,
@@ -58,7 +59,8 @@ class Event():
         EFFECT_FREEZE_ENEMIES : 20,
         EFFECT_SLOW_ENEMIES: 20,
         EFFECT_REVEAL_SECRETS : 0,
-        EFFECT_KILL_ENEMIES : 20
+        EFFECT_KILL_ENEMIES : 20,
+        EFFECT_MELEE_ATTACK : 5
     }
 
     def __init__(self, name: str, description: str = None, type: str = DEFAULT):

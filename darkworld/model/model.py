@@ -59,7 +59,7 @@ class DWModel():
         self.effects = {}
         self.inventory = {}
         self.inventory_copy = copy.deepcopy(self.inventory)
-        self.current_world_id = 110
+        self.current_world_id = 120
 
         # self.move_world(self.current_world_id, do_copy=True)
 
@@ -170,6 +170,17 @@ class DWModel():
                     self.events.add_event(Event(type=Event.GAME,
                                                 name=Event.KILL_ENEMY,
                                                 description="You slay some foes"))
+
+                # If you can kill enemies then delete them
+                elif Event.EFFECT_MELEE_ATTACK in self.effects.keys():
+                    for enemy in colliding_enemies:
+                        if random.randint(0, 10) > 1:
+                            self.swap_world_object(enemy, random.choice((Objects.TREASURE, Objects.COINS, Objects.KEY)))
+                        else:
+                            self.world.delete_object3D(enemy)
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.KILL_ENEMY,
+                                                description="You slay some foes"))
                 # else you die
                 else:
                     print("Hit enemy")
@@ -204,6 +215,14 @@ class DWModel():
 
     def help(self):
         self.talk_to_npc(npc_object=None, npc_name="The Master", world_id="Help")
+
+        n = Navigator()
+        to_obj = self.player
+        from_obj = self.world.bots[0].target_object
+
+        r = n.navigate(self.world, from_obj, to_obj)
+        print("{0}:{1}".format(r,n.route))
+
 
     def get_skin_name(self):
         if self.world is None:
@@ -469,6 +488,9 @@ class DWModel():
                 self.inventory[new_object.name] = 0
             self.inventory[new_object.name] += 1
 
+    def do_melee_attack(self):
+        self.add_effect(Event.EFFECT_MELEE_ATTACK, skip_on_dupe=True)
+
     def have_inventory_object(self, object_name: str):
         have = False
 
@@ -487,11 +509,11 @@ class DWModel():
         else:
             self.inventory[object_name] = -count
 
-    def add_effect(self, effect_type: str, effect_count: int = None):
+    def add_effect(self, effect_type: str, effect_count: int = None, skip_on_dupe : bool = False):
 
-        if effect_type in self.effects.keys():
-            raise Exception(
-                "Effect {0} already active for another {1} ticks.".format(effect_type, self.effects[effect_type]))
+        if effect_type in self.effects.keys() and skip_on_dupe is True:
+            print("Effect {0} already active for another {1} ticks.".format(effect_type, self.effects[effect_type]))
+            return
 
         if effect_count is None:
             effect_count = Event.EFFECT_DURATION[effect_type]

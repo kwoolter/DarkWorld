@@ -301,11 +301,11 @@ class ImageManager:
             model.Objects.DOOR2_OPEN: None,
             model.Objects.LADDER_DOWN: "ladder4.png",
             model.Objects.LADDER_UP: "ladder3.png",
+            model.Objects.KEY: "key3.png",
             model.Objects.PLAYER: ("knight_light0.png", "knight_light1.png", "knight_light2.png", "knight_light3.png"),
             model.Objects.PLAYER2: ("knight_light4.png", "knight_light5.png", "knight_light6.png", "knight_light7.png"),
             model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
             model.Objects.NPC1: "rpg_sprite_gold5-14.png",
-            model.Objects.NPC2: "rpg_sprite_gold9-14.png",
             model.Objects.TILE1: "basic_brick:3.png",
             model.Objects.TILE2: "wall2.png",
             model.Objects.TILE3: "tile4.png",
@@ -315,6 +315,44 @@ class ImageManager:
             model.Objects.WALL2: "winter_tiles3.png",
             model.Objects.WALL3: "winter_tiles2.png",
             model.Objects.FAKE_WALL: "winter_tiles3.png",
+        })
+
+        ImageManager.skins[new_skin_name] = new_skin
+
+        new_skin_name = "hub"
+        new_skin = (new_skin_name, {
+            model.Objects.DECOR1: "rpg_sprite_gold3-17.png",
+            model.Objects.DECOR2: "rpg_sprite_gold4-2.png",
+            model.Objects.ENEMY1: "rpg_sprite_bw5-15.png",
+            model.Objects.ENEMY2: "rpg_sprite_bw0-17.png",
+            model.Objects.WALL1: "winter_tiles0.png",
+            model.Objects.WALL2: "winter_tiles2.png",
+            model.Objects.WALL3: "winter_tiles3.png",
+            model.Objects.FAKE_WALL: "hieroglyph_light6.png",
+            model.Objects.BLOCK1: "rpg_sprite_gold7-1.png",
+            model.Objects.BLOCK2: "rpg_sprite_gold6-1.png",
+            model.Objects.TILE1: "rpg_sprite_green0-1.png",
+            model.Objects.TILE2: "rpg_sprite_green1-1.png",
+            model.Objects.TILE3: "rpg_sprite_green8-2.png",
+            model.Objects.TILE4: "rpg_sprite_green1-1.png",
+            model.Objects.TREASURE: "rpg_sprite_bw7-12.png",
+            model.Objects.TREASURE_CHEST: "rpg_sprite_bw2-3.png",
+            model.Objects.MONSTER1: "hieroglyph_dark1.png",
+            model.Objects.MONSTER2: "hieroglyph_dark1.png",
+            model.Objects.NPC1: "rpg_sprite_bw0-15.png",
+            model.Objects.NPC2: "rpg_sprite_bw8-14.png",
+            model.Objects.SWITCH_1: ("switch9.png", "switch8.png"),
+            model.Objects.SWITCH_2: ("switch7.png", "switch6.png"),
+            model.Objects.SWITCH_3: ("switch9.png", "switch8.png"),
+            model.Objects.SWITCH_4: ("switch7.png", "switch6.png"),
+            model.Objects.DOOR1: "rpg_sprite_green1-2.png",
+            model.Objects.DOOR1_OPEN: None,
+            model.Objects.DOOR2: "rpg_sprite_green5-2.png",
+            model.Objects.DOOR2_OPEN: None,
+            model.Objects.LADDER_UP: "ladder3.png",
+            model.Objects.LADDER_DOWN: "ladder4.png",
+            model.Objects.KEY: "rpg_sprite_bw7-3.png",
+            model.Objects.BOSS_KEY: "rpg_sprite_bw9-3.png",
         })
 
         ImageManager.skins[new_skin_name] = new_skin
@@ -359,7 +397,6 @@ class ImageManager:
         sheet_file_name = "basic_brick2.png"
         for i in range(0, 4):
             self.sprite_sheets["basic_brick:{0}.png".format(i)] = (sheet_file_name, (i * 64, 0, 64, 64))
-
 
         sheet_file_name = "brick_tiles_1.png"
         for i in range(0, 5):
@@ -413,6 +450,12 @@ class ImageManager:
         for y in range(0, 21):
             for x in range(0, 10):
                 self.sprite_sheets["rpg_sprite_bw{0}-{1}.png".format(x, y)] = (
+                    sheet_file_name, (x * 32, y * 32, 32, 32))
+
+        sheet_file_name = "rpg_sheet_bw.png"
+        for y in range(0, 21):
+            for x in range(0, 10):
+                self.sprite_sheets["rpg_sprite_green{0}-{1}.png".format(x, y)] = (
                     sheet_file_name, (x * 32, y * 32, 32, 32))
 
         sheet_file_name = "winter_sheet2.png"
@@ -472,7 +515,8 @@ class DWMainFrame(View):
 
         # Create a view for rendering the model of the current world
         # Define how far away the camera is allowed to follow the player by setting min and max positions
-        self.world_view = DWWorldView(self.model, min_view_pos=(200, -200, -350), max_view_pos=(800, 800, 400))
+        #self.world_view = DWWorldView(self.model, min_view_pos=(200, -200, -350), max_view_pos=(800, 800, 400))
+        self.world_view = DWWorldView(self.model, min_view_pos=(-200, -200, -350), max_view_pos=(800, 800, 400))
         self.inventory_view = DWInventoryView(self.model)
         self.text_box = DWTextBox("Hello World")
 
@@ -794,6 +838,8 @@ class DWWorldView(View):
                             effect_image_name = None
                         elif Event.EFFECT_PROTECTION in self.model.world.effects:
                             effect_image_name = model.Objects.HELMET1
+                        elif Event.EFFECT_MELEE_ATTACK in self.model.world.effects:
+                            effect_image_name = model.Objects.SWORD
                         elif Event.EFFECT_KILL_ENEMIES in self.model.world.effects:
                             effect_image_name = model.Objects.SWORD
 
@@ -805,10 +851,11 @@ class DWWorldView(View):
 
                             effect_image = pygame.transform.scale(effect_image, (size_w, size_h))
 
-                            alpha = 220 - (self.tick_count % 6) * 40
+                            #alpha = 220 - (self.tick_count % 6) * 40
+                            alpha = 220 - (tick_count % 6) * 40
                             effect_image.set_alpha(alpha)
 
-                            # Center effect image vs. player image
+                            # Centre effect image vs. player image
                             dx = image.get_rect().centerx - effect_image.get_rect().centerx
                             dy = image.get_rect().centery - effect_image.get_rect().centery
 
@@ -830,6 +877,51 @@ class DWWorldView(View):
                  rect=text_rect,
                  font=pygame.font.SysFont(pygame.font.get_default_font(), 12),
                  bkg=Colours.DARK_GREY)
+
+
+        n = model.Navigator()
+        to_obj = self.model.player
+        for bot in self.model.world.bots:
+
+            from_obj = bot.target_object
+
+            r = n.navigate(self.model.world, from_obj, to_obj)
+            if r is True:
+                trace_colour = Colours.GREEN
+                point = to_obj.xyz
+                vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
+                                                        view_width=self.width / self.object_zoom_ratio, \
+                                                        view_height=self.height / self.object_zoom_ratio, \
+                                                        model_xyz=point)
+
+                pygame.draw.rect(self.surface,
+                                 trace_colour,
+                                 (vx, vy, to_obj.rect.width, to_obj.rect.height),
+                                 1)
+            else:
+                trace_colour = Colours.RED
+                for blocker in n.blockers:
+                    point = blocker.xyz
+                    vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
+                                                            view_width=self.width / self.object_zoom_ratio, \
+                                                            view_height=self.height / self.object_zoom_ratio, \
+                                                            model_xyz=point)
+
+                    pygame.draw.rect(self.surface,
+                                     trace_colour,
+                                     (vx*self.object_zoom_ratio, vy*self.object_zoom_ratio, blocker.rect.width, blocker.rect.height),
+                                     1)
+
+            for point in n.route:
+                vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
+                                                        view_width=self.width / self.object_zoom_ratio, \
+                                                        view_height=self.height / self.object_zoom_ratio, \
+                                                        model_xyz=point)
+
+                pygame.draw.rect(self.surface,
+                                 trace_colour,
+                                 (vx*self.object_zoom_ratio,vy*self.object_zoom_ratio,model.Navigator.HIT_BOX_SIZE,model.Navigator.HIT_BOX_SIZE),
+                                 1)
 
         # msg = "  {0}  ".format(self.model.world.name)
         # draw_text(surface=self.surface, msg=msg, x=self.width / 2, y=20, size=32, fg_colour=Colours.WHITE,
@@ -931,6 +1023,16 @@ class ModelToView3D():
 
         return objects
 
+    def model_to_view_xyz(self, view_pos, view_width, view_height, model_xyz):
+
+        vx, vy, vz = view_pos
+        mx, my, mz = model_xyz
+
+        vz = (mz - vz)
+        vx = (mx - vx) * (1 - vz / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE)) + (view_width / 2)
+        vy = (my - vy) * (1 - vz / self.infinity * (self.projection == ModelToView3D.PERSPECTIVE)) + (view_height / 2)
+
+        return vx, vy, vz
 
 class DWTextBox(View):
 
