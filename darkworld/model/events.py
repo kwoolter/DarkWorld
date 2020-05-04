@@ -1,5 +1,6 @@
 class Event():
     # Event Types
+    DEBUG = "debug"
     QUIT = "quit"
     DEFAULT = "default"
     STATE = "state"

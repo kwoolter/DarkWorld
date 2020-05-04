@@ -23,11 +23,15 @@ class DWModel():
     EFFECT_COUNTDOWN_RATE = 20
 
     def __init__(self, name: str):
+
+        # Properties
         self.name = name
         self.tick_count = 0
         self.state = DWModel.STATE_LOADED
-        self.events = EventQueue()
+        self._debug = False
 
+        # Model Components
+        self.events = EventQueue()
         self.world_factory = None
         self.world = None
         self.current_world_id = 0
@@ -140,6 +144,18 @@ class DWModel():
 
     def process_event(self, new_event):
         print("Default Game event process:{0}".format(new_event))
+
+        if new_event.type == Event.DEBUG:
+            self.debug()
+
+    def debug(self, debug_on : bool = None):
+
+        if debug_on is None:
+            self._debug = not self._debug
+        else:
+            self._debug = debug_on
+
+        self.world.debug(self._debug)
 
     def tick(self):
 

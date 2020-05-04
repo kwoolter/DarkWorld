@@ -4,24 +4,8 @@ import pygame
 import os
 import numpy as np
 import logging
-from operator import itemgetter
 from darkworld.model.events import *
 from collections import deque
-
-
-class Colours:
-    # set up the colours
-    BLACK = (0, 0, 0)
-    BROWN = (128, 64, 0)
-    WHITE = (255, 255, 255)
-    RED = (237, 28, 36)
-    GREEN = (34, 177, 76)
-    BLUE = (63, 72, 204)
-    DARK_GREY = (40, 40, 40)
-    GREY = (128, 128, 128)
-    GOLD = (255, 201, 14)
-    YELLOW = (255, 255, 0)
-    TRANSPARENT = (255, 1, 1)
 
 
 class ImageManager:
@@ -93,8 +77,8 @@ class ImageManager:
             model.Objects.DOOR1_OPEN: "door_open.png",
             model.Objects.DOOR2: "door.png",
             model.Objects.DOOR2_OPEN: "door_open.png",
-            #model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
-            model.Objects.PLAYER: ("knight_bw0.png","knight_bw1.png","knight_bw2.png","knight_bw3.png"),
+            # model.Objects.PLAYER: ("robotA0000.png", "robotA0001.png", "robotA0002.png", "robotA0003.png"),
+            model.Objects.PLAYER: ("knight_bw0.png", "knight_bw1.png", "knight_bw2.png", "knight_bw3.png"),
             model.Objects.PLAYER2: ("knight_bw4.png", "knight_bw5.png", "knight_bw6.png", "knight_bw7.png"),
             model.Objects.HELMET1: "rpg_sprite_gold2-10.png",
             model.Objects.HELMET2: "rpg_sprite_gold3-10.png",
@@ -112,10 +96,10 @@ class ImageManager:
             model.Objects.TREASURE_CHEST: "rpg_sprite_gold2-3.png",
             model.Objects.DECOR1: "rpg_sprite_gold0-13.png",
             model.Objects.DECOR2: "rpg_sprite_gold1-13.png",
-            model.Objects.TRAP: ("trap0.png","trap1.png","trap2.png","trap3.png",
-                                 "trap4.png","trap5.png","trap6.png","trap7.png",
-                                 "trap6.png","trap5.png","trap4.png","trap3.png",
-                                 "trap2.png","trap1.png","trap0.png","trap0.png"),
+            model.Objects.TRAP: ("trap0.png", "trap1.png", "trap2.png", "trap3.png",
+                                 "trap4.png", "trap5.png", "trap6.png", "trap7.png",
+                                 "trap6.png", "trap5.png", "trap4.png", "trap3.png",
+                                 "trap2.png", "trap1.png", "trap0.png", "trap0.png"),
             model.Objects.TRAP_DISABLE: "trap_disable.png",
             model.Objects.KEY: "key2.png",
             model.Objects.BOSS_KEY: "key4.png",
@@ -142,8 +126,8 @@ class ImageManager:
             model.Objects.SWORD: "rpg_sprite_gold9-5.png",
             model.Objects.TRAP_DOOR: "rpg_sprite_bw2-1.png",
             model.Objects.LIQUID1: "liquid3.png",
-            model.Objects.LIQUID2: ("liquid_gold0.png","liquid_gold1.png","liquid_gold2.png","liquid_gold3.png",
-                                    "liquid_gold4.png","liquid_gold5.png","liquid_gold6.png","liquid_gold7.png",
+            model.Objects.LIQUID2: ("liquid_gold0.png", "liquid_gold1.png", "liquid_gold2.png", "liquid_gold3.png",
+                                    "liquid_gold4.png", "liquid_gold5.png", "liquid_gold6.png", "liquid_gold7.png",
                                     "liquid_gold8.png", "liquid_gold9.png", "liquid_gold10.png", "liquid_gold11.png",
                                     "liquid_gold12.png", "liquid_gold13.png", "liquid_gold14.png", "liquid_gold15.png"
                                     ),
@@ -275,8 +259,8 @@ class ImageManager:
             model.Objects.LADDER_UP: "ladder3.png",
             model.Objects.LADDER_DOWN: "ladder4.png",
             model.Objects.LIQUID1: "rpg_sprite_bw0-3.png",
-            model.Objects.LIQUID2: ("liquid_gold0.png","liquid_gold1.png","liquid_gold2.png","liquid_gold3.png",
-                                    "liquid_gold4.png","liquid_gold5.png","liquid_gold6.png","liquid_gold7.png"),
+            model.Objects.LIQUID2: ("liquid_gold0.png", "liquid_gold1.png", "liquid_gold2.png", "liquid_gold3.png",
+                                    "liquid_gold4.png", "liquid_gold5.png", "liquid_gold6.png", "liquid_gold7.png"),
             model.Objects.MONSTER1: "tile3.png",
             model.Objects.MONSTER2: "tile3.png",
             model.Objects.PLAYER: ("knight_light0.png", "knight_light1.png", "knight_light2.png", "knight_light3.png"),
@@ -412,7 +396,7 @@ class ImageManager:
 
         sheet_file_name = "liquid_gold_sheet.png"
         for i in range(0, 16):
-            self.sprite_sheets["liquid_gold{0}.png".format(i)] = (sheet_file_name, (i * 32,0, 32, 32))
+            self.sprite_sheets["liquid_gold{0}.png".format(i)] = (sheet_file_name, (i * 32, 0, 32, 32))
 
         sheet_file_name = "switches_sheet.png"
         for i in range(0, 10):
@@ -464,11 +448,11 @@ class ImageManager:
 
         sheet_file_name = "knights64.png"
         for i in range(0, 8):
-            self.sprite_sheets["knight_bw{0}.png".format(i)] = (sheet_file_name, (i * 64 + 8,0,48,64))
+            self.sprite_sheets["knight_bw{0}.png".format(i)] = (sheet_file_name, (i * 64 + 8, 0, 48, 64))
 
         sheet_file_name = "knights64-2.png"
         for i in range(0, 8):
-            self.sprite_sheets["knight_light{0}.png".format(i)] = (sheet_file_name, (i * 64 + 8,0,48,64))
+            self.sprite_sheets["knight_light{0}.png".format(i)] = (sheet_file_name, (i * 64 + 8, 0, 48, 64))
 
         # sheet_file_name = "knights2.png"
         # for i in range(0, 8):
@@ -479,6 +463,7 @@ class View():
     image_manager = ImageManager()
 
     def __init__(self, width: int = 0, height: int = 0):
+        self._debug = False
         self.tick_count = 0
         self.height = height
         self.width = width
@@ -492,8 +477,18 @@ class View():
     def tick(self):
         self.tick_count += 1
 
+    def debug(self, debug_on: bool = None):
+
+        if debug_on is None:
+            self._debug = not self._debug
+        else:
+            self._debug = debug_on
+
     def process_event(self, new_event: model.Event):
         print("Default View Class event process:{0}".format(new_event))
+
+        if new_event.type == Event.DEBUG:
+            self.debug()
 
     def draw(self):
         pass
@@ -508,17 +503,20 @@ class DWMainFrame(View):
 
         super(DWMainFrame, self).__init__()
 
+        self._debug = False
+
         self.model = model
         self.surface = None
         self.width = 600
         self.height = 600
+        self._debug = False
 
         # Create a view for rendering the model of the current world
         # Define how far away the camera is allowed to follow the player by setting min and max positions
-        #self.world_view = DWWorldView(self.model, min_view_pos=(200, -200, -350), max_view_pos=(800, 800, 400))
+        # self.world_view = DWWorldView(self.model, min_view_pos=(200, -200, -350), max_view_pos=(800, 800, 400))
         self.world_view = DWWorldView(self.model, min_view_pos=(-200, -200, -350), max_view_pos=(800, 800, 400))
         self.inventory_view = DWInventoryView(self.model)
-        self.text_box = DWTextBox("Hello World")
+        self.text_box = DWTextBox("")
 
     def initialise(self):
 
@@ -587,7 +585,7 @@ class DWMainFrame(View):
 
         # Draw the number of remaining lives
         img = View.image_manager.get_skin_image(tile_name=model.Objects.PLAYER, width=32, height=32)
-        img = pygame.transform.scale(img, (int(img.get_rect().width/2), int(img.get_rect().height/2)))
+        img = pygame.transform.scale(img, (int(img.get_rect().width / 2), int(img.get_rect().height / 2)))
         for i in range(0, self.model.player_lives):
             self.surface.blit(img, (i * 32 + 8, self.world_view.surface.get_rect().height - 32))
 
@@ -617,7 +615,6 @@ class DWMainFrame(View):
                       fg_colour=Colours.WHITE,
                       bg_colour=Colours.DARK_GREY)
 
-
             # Draw the name of the current world
             if self.model.world is not None:
                 msg_box_width = 260
@@ -637,11 +634,10 @@ class DWMainFrame(View):
                                  msg_rect,
                                  2)
 
-
                 msg = "  {0}  ".format(self.model.world.name)
                 draw_text(surface=self.surface, msg=msg,
                           x=self.width / 2,
-                          y=y + msg_box_height/2,
+                          y=y + msg_box_height / 2,
                           size=32,
                           fg_colour=Colours.WHITE,
                           bg_colour=Colours.DARK_GREY)
@@ -661,6 +657,8 @@ class DWMainFrame(View):
         self.text_box.tick()
 
     def process_event(self, new_event: model.Event):
+
+        super(DWMainFrame, self).process_event(new_event)
 
         self.world_view.process_event(new_event)
         self.text_box.process_event(new_event)
@@ -683,7 +681,6 @@ class DWMainFrame(View):
 
 
 class DWWorldView(View):
-
     MAX_ZOOM = 2.0
     MIN_ZOOM = 0.8
 
@@ -740,7 +737,6 @@ class DWWorldView(View):
 
     def draw(self):
 
-
         self.surface.fill(Colours.BLACK)
 
         if self.model.world is None:
@@ -760,7 +756,7 @@ class DWWorldView(View):
         self.set_view((vx, vy, vz))
 
         # Get the visible objects at this view point from the model
-        objs = self.m2v.get_object_list((vx,vy,vz),
+        objs = self.m2v.get_object_list((vx, vy, vz),
                                         self.width / self.object_zoom_ratio,
                                         self.height / self.object_zoom_ratio,
                                         self.depth)
@@ -783,7 +779,7 @@ class DWWorldView(View):
                 elif obj.name == model.Objects.PLAYER:
                     dx, dy, dz = obj.dxdydz
                     tick_count = obj.tick_count // 6
-                    #If player is moving up the screen then swap to different set of images
+                    # If player is moving up the screen then swap to different set of images
                     if dy < 0:
                         object_name = model.Objects.PLAYER2
                 else:
@@ -846,12 +842,12 @@ class DWWorldView(View):
                         if effect_image_name is not None:
                             # Get the image for the object based on the object's name
                             effect_image = View.image_manager.get_skin_image(effect_image_name,
-                                                                      skin_name=self.skin,
-                                                                      tick=tick_count)
+                                                                             skin_name=self.skin,
+                                                                             tick=tick_count)
 
                             effect_image = pygame.transform.scale(effect_image, (size_w, size_h))
 
-                            #alpha = 220 - (self.tick_count % 6) * 40
+                            # alpha = 220 - (self.tick_count % 6) * 40
                             alpha = 220 - (tick_count % 6) * 40
                             effect_image.set_alpha(alpha)
 
@@ -861,47 +857,34 @@ class DWWorldView(View):
 
                             # Blit the object image at the appropriate place and size
                             self.surface.blit(effect_image, (
-                                int((x + dx) * self.object_zoom_ratio), int((y + dy) * self.object_zoom_ratio), size_w, size_h))
+                                int((x + dx) * self.object_zoom_ratio), int((y + dy) * self.object_zoom_ratio), size_w,
+                                size_h))
 
+        if self._debug is True:
 
+            # Draw current view position
+            msg = "View Pos={0} : Distances={1} : Zoom {2:.2} : Tick={3}".format(self.view_pos,
+                                                                                 str(distance),
+                                                                                 self.object_zoom_ratio,
+                                                                                 self.tick_count)
+            text_rect = (0, 0, 300, 30)
+            drawText(surface=self.surface,
+                     text=msg,
+                     color=Colours.GOLD,
+                     rect=text_rect,
+                     font=pygame.font.SysFont(pygame.font.get_default_font(), 12),
+                     bkg=Colours.DARK_GREY)
 
-        # Draw current view position
-        msg = "View Pos={0} : Distances={1} : Zoom {2:.2} : Tick={3}".format(self.view_pos,
-                                                                             str(distance),
-                                                                              self.object_zoom_ratio,
-                                                                              self.tick_count)
-        text_rect = (0, 0, 300, 30)
-        drawText(surface=self.surface,
-                 text=msg,
-                 color=Colours.GOLD,
-                 rect=text_rect,
-                 font=pygame.font.SysFont(pygame.font.get_default_font(), 12),
-                 bkg=Colours.DARK_GREY)
+            n = model.Navigator()
+            to_obj = self.model.player
+            for bot in self.model.world.bots:
 
+                from_obj = bot.target_object
 
-        n = model.Navigator()
-        to_obj = self.model.player
-        for bot in self.model.world.bots:
-
-            from_obj = bot.target_object
-
-            r = n.navigate(self.model.world, from_obj, to_obj)
-            if r is True:
-                trace_colour = Colours.GREEN
-                point = to_obj.xyz
-                vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
-                                                        view_width=self.width / self.object_zoom_ratio, \
-                                                        view_height=self.height / self.object_zoom_ratio, \
-                                                        model_xyz=point)
-
-                pygame.draw.rect(self.surface,
-                                 trace_colour,
-                                 (vx, vy, to_obj.rect.width, to_obj.rect.height),
-                                 1)
-            else:
-                trace_colour = Colours.RED
-                for blocker in n.blockers:
-                    point = blocker.xyz
+                r = n.navigate(self.model.world, from_obj, to_obj)
+                if r is True:
+                    trace_colour = Colours.DARK_GREEN
+                    point = to_obj.xyz
                     vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
                                                             view_width=self.width / self.object_zoom_ratio, \
                                                             view_height=self.height / self.object_zoom_ratio, \
@@ -909,19 +892,41 @@ class DWWorldView(View):
 
                     pygame.draw.rect(self.surface,
                                      trace_colour,
-                                     (vx*self.object_zoom_ratio, vy*self.object_zoom_ratio, blocker.rect.width, blocker.rect.height),
+                                     (vx, vy, to_obj.rect.width, to_obj.rect.height),
                                      1)
+                else:
+                    trace_colour = Colours.DARK_RED
+                    for blocker in n.blockers:
+                        point = blocker.xyz
+                        vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
+                                                                view_width=self.width / self.object_zoom_ratio, \
+                                                                view_height=self.height / self.object_zoom_ratio, \
+                                                                model_xyz=point)
 
-            for point in n.route:
-                vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
-                                                        view_width=self.width / self.object_zoom_ratio, \
-                                                        view_height=self.height / self.object_zoom_ratio, \
-                                                        model_xyz=point)
+                        pygame.draw.rect(self.surface,
+                                         trace_colour,
+                                         (vx * self.object_zoom_ratio, vy * self.object_zoom_ratio, blocker.rect.width,
+                                          blocker.rect.height),
+                                         1)
 
-                pygame.draw.rect(self.surface,
-                                 trace_colour,
-                                 (vx*self.object_zoom_ratio,vy*self.object_zoom_ratio,model.Navigator.HIT_BOX_SIZE,model.Navigator.HIT_BOX_SIZE),
-                                 1)
+                for point in n.route:
+                    vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
+                                                            view_width=self.width / self.object_zoom_ratio, \
+                                                            view_height=self.height / self.object_zoom_ratio, \
+                                                            model_xyz=point)
+                    hit_box = pygame.Rect((0, 0), (model.Navigator.HIT_BOX_SIZE, model.Navigator.HIT_BOX_SIZE))
+                    hit_box.centerx = vx
+                    hit_box.centery = vy
+
+                    # pygame.draw.rect(self.surface,
+                    #                  trace_colour,
+                    #                  (vx*self.object_zoom_ratio,vy*self.object_zoom_ratio,model.Navigator.HIT_BOX_SIZE,model.Navigator.HIT_BOX_SIZE),
+                    #                  1)
+
+                    pygame.draw.rect(self.surface,
+                                     trace_colour,
+                                     hit_box,
+                                     1)
 
         # msg = "  {0}  ".format(self.model.world.name)
         # draw_text(surface=self.surface, msg=msg, x=self.width / 2, y=20, size=32, fg_colour=Colours.WHITE,
@@ -937,7 +942,7 @@ class DWWorldView(View):
         new_view_pos = np.add(self.view_pos, direction)
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
 
-    def zoom_view(self, zoom_delta : float = None):
+    def zoom_view(self, zoom_delta: float = None):
         # Change how much we zoom into the world view
         # object_zoom_ratio = 1.0 Normal View
         # Object_zoom_ratio > 1.0 Zoom in
@@ -945,7 +950,8 @@ class DWWorldView(View):
         if zoom_delta is None:
             self.object_zoom_ratio = 1.0
         else:
-            self.object_zoom_ratio=max(min(self.object_zoom_ratio * (1+zoom_delta), DWWorldView.MAX_ZOOM), DWWorldView.MIN_ZOOM)
+            self.object_zoom_ratio = max(min(self.object_zoom_ratio * (1 + zoom_delta), DWWorldView.MAX_ZOOM),
+                                         DWWorldView.MIN_ZOOM)
 
 
 class ModelToView3D():
@@ -987,7 +993,7 @@ class ModelToView3D():
         for z in visible_planes:
 
             # Get the list of objects from the model that are at this plane...
-            #objects_at_z = sorted(self.model.world.planes[z], key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
+            # objects_at_z = sorted(self.model.world.planes[z], key=lambda obj: obj.rect.y * 1000 + obj.rect.x)
             objects_at_z = self.model.world.planes[z]
 
             # For each object in the list...
@@ -1034,8 +1040,8 @@ class ModelToView3D():
 
         return vx, vy, vz
 
-class DWTextBox(View):
 
+class DWTextBox(View):
     FADE_OFF = "fade off"
     FADE_IN = "fade in"
     FADE_OUT = "fade out"
@@ -1066,7 +1072,7 @@ class DWTextBox(View):
     def is_visible(self):
         return self.tick_count < (self.timer + self.life_time_ticks)
 
-    def initialise(self, fade_out : str = FADE_OFF):
+    def initialise(self, fade_out: str = FADE_OFF):
         super(DWTextBox, self).initialise()
 
         print("Initialising {0}".format(__class__))
@@ -1106,6 +1112,8 @@ class DWTextBox(View):
                 self.timer = self.tick_count
 
     def process_event(self, new_event: model.Event):
+
+        super(DWTextBox, self).process_event(new_event)
 
         if new_event.name in (Event.TALK, Event.READ):
             self.msg_queue.appendleft(new_event.description)
@@ -1149,11 +1157,12 @@ class DWTextBox(View):
         elif self.fade_out == DWTextBox.FADE_IN:
             alpha = 255 * life_pct * 1.5
         elif self.fade_out == DWTextBox.FADE_OUT:
-            alpha = 255 * (1-life_pct) * 1.5
+            alpha = 255 * (1 - life_pct) * 1.5
         elif self.fade_out == DWTextBox.FADE_IN_OUT:
             alpha = 255 * (1 - abs(1 - (life_pct * 2))) * 1.5
 
         self.surface.set_alpha(alpha)
+
 
 class DWInventoryView(View):
 

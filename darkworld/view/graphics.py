@@ -7,7 +7,9 @@ class Colours:
     BROWN = (128, 64, 0)
     WHITE = (255, 255, 255)
     RED = (237, 28, 36)
+    DARK_RED = (100, 0, 0)
     GREEN = (34, 177, 76)
+    DARK_GREEN = (0, 100, 0)
     BLUE = (63, 72, 204)
     DARK_GREY = (40, 40, 40)
     GREY = (128, 128, 128)
@@ -80,6 +82,7 @@ def drawText(surface, text, color, rect, font, aa=False, bkg=None):
 
     return text
 
+
 class spritesheet(object):
     def __init__(self, filename):
         try:
@@ -89,7 +92,7 @@ class spritesheet(object):
             raise err
 
     # Load a specific image from a specific rectangle
-    def image_at(self, rectangle = None, colorkey = None):
+    def image_at(self, rectangle=None, colorkey=None):
         if rectangle is None:
             rectangle = self.sheet.get_rect()
         "Loads image from x,y,x+offset,y+offset"
@@ -103,13 +106,13 @@ class spritesheet(object):
         return image
 
     # Load a whole bunch of images and return them as a list
-    def images_at(self, rects, colorkey = None):
+    def images_at(self, rects, colorkey=None):
         "Loads multiple images, supply a list of coordinates"
         return [self.image_at(rect, colorkey) for rect in rects]
 
     # Load a whole strip of images
-    def load_strip(self, rect, image_count, colorkey = None):
+    def load_strip(self, rect, image_count, colorkey=None):
         "Loads a strip of images and returns them as a list"
-        tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
+        tups = [(rect[0] + rect[2] * x, rect[1], rect[2], rect[3])
                 for x in range(image_count)]
         return self.images_at(tups, colorkey)

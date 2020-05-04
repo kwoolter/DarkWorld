@@ -27,6 +27,9 @@ class DWController:
 
     def debug(self):
         self._debug = not self._debug
+        self.m.events.add_event(model.Event(type=model.Event.DEBUG,
+                                    name="Debug={0}".format(self._debug),
+                                    description="Debug mode = {0}".format(self._debug)))
         if self._debug is True:
             print("\n\nDEBUG MODE\n\n")
 
@@ -220,7 +223,7 @@ class DWController:
                             self.v.print()
                             self.m.print()
                             self.audio.print()
-                        elif event.key == K_NUMLOCK:
+                        elif event.key == K_F11:
                             self.debug()
                         elif event.key == K_q:
                             self.m.player_died()
