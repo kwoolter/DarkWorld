@@ -289,6 +289,7 @@ class ImageManager:
             model.Objects.PLAYER: ("knight_light0.png", "knight_light1.png", "knight_light2.png", "knight_light3.png"),
             model.Objects.PLAYER2: ("knight_light4.png", "knight_light5.png", "knight_light6.png", "knight_light7.png"),
             model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
+            model.Objects.ENEMY2: "rpg_sprite_gold3-18.png",
             model.Objects.NPC1: "rpg_sprite_gold5-14.png",
             model.Objects.TILE1: "basic_brick:3.png",
             model.Objects.TILE2: "wall2.png",
@@ -881,7 +882,7 @@ class DWWorldView(View):
 
                 from_obj = bot.target_object
 
-                r = n.navigate(self.model.world, from_obj, to_obj)
+                r = n.navigate2(self.model.world, from_obj, to_obj)
                 if r is True:
                     trace_colour = Colours.DARK_GREEN
                     point = to_obj.xyz
@@ -895,7 +896,7 @@ class DWWorldView(View):
                                      (vx, vy, to_obj.rect.width, to_obj.rect.height),
                                      1)
                 else:
-                    trace_colour = Colours.DARK_RED
+                    trace_colour = pygame.Color(min(20 + len(n.hits) * 30,255),0, 0)
                     for blocker in n.blockers:
                         point = blocker.xyz
                         vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
@@ -907,26 +908,26 @@ class DWWorldView(View):
                                          trace_colour,
                                          (vx * self.object_zoom_ratio, vy * self.object_zoom_ratio, blocker.rect.width,
                                           blocker.rect.height),
-                                         1)
+                                         2)
 
-                for point in n.route:
-                    vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
-                                                            view_width=self.width / self.object_zoom_ratio, \
-                                                            view_height=self.height / self.object_zoom_ratio, \
-                                                            model_xyz=point)
-                    hit_box = pygame.Rect((0, 0), (model.Navigator.HIT_BOX_SIZE, model.Navigator.HIT_BOX_SIZE))
-                    hit_box.centerx = vx
-                    hit_box.centery = vy
+                    # for point in n.route:
+                    #     vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
+                    #                                             view_width=self.width / self.object_zoom_ratio, \
+                    #                                             view_height=self.height / self.object_zoom_ratio, \
+                    #                                             model_xyz=point)
+                    #     hit_box = pygame.Rect((0, 0), (model.Navigator.HIT_BOX_SIZE, model.Navigator.HIT_BOX_SIZE))
+                    #     hit_box.centerx = vx
+                    #     hit_box.centery = vy
 
                     # pygame.draw.rect(self.surface,
                     #                  trace_colour,
                     #                  (vx*self.object_zoom_ratio,vy*self.object_zoom_ratio,model.Navigator.HIT_BOX_SIZE,model.Navigator.HIT_BOX_SIZE),
                     #                  1)
 
-                    pygame.draw.rect(self.surface,
-                                     trace_colour,
-                                     hit_box,
-                                     1)
+                    # pygame.draw.rect(self.surface,
+                    #                  trace_colour,
+                    #                  hit_box,
+                    #                  1)
 
         # msg = "  {0}  ".format(self.model.world.name)
         # draw_text(surface=self.surface, msg=msg, x=self.width / 2, y=20, size=32, fg_colour=Colours.WHITE,

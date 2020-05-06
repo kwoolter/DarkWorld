@@ -718,11 +718,46 @@ class WorldBuilder():
         new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY1)
         new_monster.set_pos((17 * 32, 15 * 32, 20))
         ai = AIBotHunter(new_monster, world, tick_slow_factor=1)
-        ai.debug(True)
+        #ai.debug(True)
         ai.set_instructions(new_target=None, route=[(16 * 32, 4 * 32, 20),
                                                     (4 * 32, 3 * 32, 20),
                                                     (16 * 32, 3 * 32, 20),
                                                     (17 * 32, 15 * 32, 20)])
+        world.add_monster(new_monster, ai)
+
+        # add hunter enemy #3
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.ENEMY2)
+        new_monster.set_pos((18 * 32, 6 * 32, 20))
+        ai = AIBotHunter(new_monster, world, tick_slow_factor=2)
+        ai.debug(True)
+        ai.set_instructions(new_target=None, route=[(17 * 32, 4 * 32, 20),
+                                                    (16 * 32, 10 * 32, 20),
+                                                    (17 * 32, 16 * 32, 20)
+                                                    ])
+
+        world.add_monster(new_monster, ai)
+
+
+        # add moving block #1
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE1)
+        new_monster.set_pos((17 * 32, 5 * 32, 81))
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.WEST, 32 * 10, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.EAST, 32 * 10, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, ai)
+
+        # add moving block #2
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE1)
+        new_monster.set_pos((13 * 32, 2 * 32, 81))
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.UP, 32 * 20, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.DOWN, 32 * 20, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
         world.add_monster(new_monster, ai)
 
     def load_world_properties(self):
@@ -851,7 +886,9 @@ class WorldBuilder():
 
         # World 120
         switch_groups = {
-            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE2, SwitchGroup.AND)}
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.WALL1, SwitchGroup.NAND),
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.AND),
+        }
         new_world_id = 120
         new_world_properties = ("Dungeon World 3", "dungeon", (216, 330, 0), (32 * 5.5, 32 * 3.5, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
@@ -1145,7 +1182,7 @@ class World3D:
             self.move_player_to_xyz(self.player_exit_pos)
 
         for ai in self.bots:
-            if isinstance(ai, (AIBotTracker, AIBotHunter)) is True:
+            if isinstance(ai, (AIBotTracker, AIBotTracker2, AIBotHunter)) is True:
                 ai.set_instructions(self.player)
         return
 
@@ -1164,7 +1201,7 @@ class World3D:
     def add_monster(self, new_monster, ai=None):
         if ai is not None:
             self.bots.append(ai)
-            if isinstance(ai, AIBotTracker) is True:
+            if isinstance(ai, (AIBotTracker, AIBotTracker2)) is True:
                 ai.set_instructions(self.player)
         self.add_object3D(new_monster, do_copy=False)
 
@@ -1499,6 +1536,49 @@ class World3D:
                     print("Switch: {0}".format(str(obj)))
 
 
+
+class CollisionDetection:
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def line_line_intersection(a1, a2, b1, b2):
+
+        x1, y1 = a1
+        x2, y2 = a2
+
+        x3, y3 = b1
+        x4, y4 = b2
+
+        try:
+            uA = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1))
+            uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1))
+
+            if (uA >= 0 and uA <= 1 and uB >= 0 and uB <= 1):
+                return True
+
+        except Exception as e:
+            pass
+
+        return False
+
+    @staticmethod
+    def line_rectangle_intersection(a1, a2, rectangle_xywh):
+        x1, y1 = a1
+        x2, y2 = a2
+        rx, ry, rw, rh = rectangle_xywh
+
+        left = CollisionDetection.line_line_intersection((x1, y1), (x2, y2), (rx, ry), (rx, ry + rh))
+        right = CollisionDetection.line_line_intersection((x1, y1), (x2, y2), (rx + rw, ry), (rx + rw, ry + rh))
+        top = CollisionDetection.line_line_intersection((x1, y1), (x2, y2), (rx, ry), (rx + rw, ry))
+        bottom = CollisionDetection.line_line_intersection((x1, y1), (x2, y2), (rx, ry + rh), (rx + rw, ry + rh))
+
+        if left or right or top or bottom:
+            return True
+        else:
+            return False
+
+
 class Navigator:
     STEP_LENGTH = 10
     HIT_BOX_SIZE = 24
@@ -1570,10 +1650,60 @@ class Navigator:
                     loop = False
                     # print("missed target")
 
+        else:
+            success = False
+
                 # print("at {0}".format((fx,fy)))
 
         return success
 
+    def navigate2(self, world: World3D, from_object: RPGObject3D, to_object: RPGObject3D):
+
+        success = True
+        self.blockers = []
+        self.hits = []
+
+        fz = from_object.z
+        tz = to_object.z
+
+        # If the two objects are on the same plane...
+        if fz == tz:
+
+            # Which parts of the rectangle should be checked for line of sight?
+            #check_points = ("center", "topleft", "bottomleft", "topright", "bottomright")
+            check_points = ("center", "midtop", "midbottom", "midright", "midleft")
+
+            # Loop through all of the objects in the same plane
+            plane = world.planes[fz]
+
+            for obj in plane:
+
+                # Skip over the from and to objects
+                if obj not in (from_object, to_object):
+
+                    # Use a list of different check points to see if we can see different parts of the target
+                    for check_point in check_points:
+
+                        from_a = getattr(from_object.rect, check_point)
+                        to_a = getattr(to_object.rect, check_point)
+
+                        # See if the line between from and to objects intersects the rectangle of the current object
+                        clip = CollisionDetection.line_rectangle_intersection(from_a, to_a, (obj.rect))
+
+                        # if it does then we can't see the target so record what the check point was the blocker
+                        if clip is True:
+                            self.hits.append((to_a))
+
+                    # if we got more than 50% fails then we failed to see the target
+                    # So record what object was in the way and finish
+                    if len(self.hits)/len(check_points) > 0.5:
+                        success = False
+                        self.blockers.append(obj)
+                        break
+        else:
+            success = False
+
+        return success
 
 class AIBot:
     INSTRUCTION_FAIL_NOP = "NOP"
@@ -1611,6 +1741,26 @@ class AIBot:
     def reset(self):
         self.tick_count = 0
         self.world.move_object_to_xyz(self.target_object, self.initial_xyz)
+
+    def distance_from_target(self, to_object: RPGObject3D):
+
+        fz = self.target_object.z
+        tz = to_object.z
+
+        if fz == tz:
+
+            fx = self.target_object.rect.centerx
+            fy = self.target_object.rect.centery
+
+            tx = to_object.rect.centerx
+            ty = to_object.rect.centery
+
+            distance = math.sqrt((fx - tx) ** 2 + (fy - ty) ** 2)
+
+        else:
+            distance = 99999999
+
+        return distance
 
     def __str__(self):
         text = "Subject:{0} at {1} moved from original position {2}".format(self.target_object.name,
@@ -1785,8 +1935,8 @@ class AIBotRouteFollowing(AIBot):
 
         if self._debug is True:
             print("DEBUG:{0}: Next instruction {1}:{2}".format(self.name,
-                                                         self.current_instruction_id,
-                                                         self.way_points[self.current_instruction_id]))
+                                                               self.current_instruction_id,
+                                                               self.way_points[self.current_instruction_id]))
 
         self.failed_ticks = 0
 
@@ -1877,6 +2027,104 @@ class AIBotTracker(AIBot):
         self.failed_ticks = 0
 
 
+class AIBotTracker2(AIBot):
+
+    def __init__(self, target_object: RPGObject3D, world: World3D, tick_slow_factor: int = 1):
+
+        super(AIBotTracker2, self).__init__(str(__class__), target_object, world, tick_slow_factor)
+
+        self.following_object = None
+        self.navigator = Navigator()
+        self.failed_ticks = 0
+        self.failed_ticks_limit = 10
+
+    def __str__(self):
+
+        text = "{0} Bot: current target:{1} current position:{2}".format(self.name,
+                                                                         str(self.following_object),
+                                                                         str(self.target_object.xyz))
+
+        return text
+
+    def set_instructions(self, new_target: RPGObject3D, sight_range: int = 100, loop: bool = True):
+
+        self.following_object = new_target
+        self.sight_range = sight_range
+        self.loop = loop
+
+    def tick(self):
+
+        success = False
+
+        # If it's not our turn or
+        # We haven't got a target or
+        # Our target is an invisible player then nothing to do this time
+        if super(AIBotTracker2, self).tick() is False or \
+                self.following_object is None or \
+                (self.following_object.name == Objects.PLAYER and Event.EFFECT_INVISIBLE in self.world.effects):
+            return success
+
+        # If we have had too many failed attempts at tracking the object then give-up
+        if self.failed_ticks > self.failed_ticks_limit:
+            self.failed_ticks = 0
+            return success
+
+        cz = self.following_object.z
+        z = self.target_object.z
+
+        # Only do something if the object that we are following is on the same z-plane
+        if cz == z:
+
+            # Se if we are close enough to the target and
+            # Check that there is a direct path to it
+            target_in_sight = self.distance_from_target(self.following_object) < self.sight_range and \
+                              self.navigator.navigate2(world=self.world, from_object=self.target_object,
+                                                      to_object=self.following_object) is True
+
+            # If we can see it....
+            if target_in_sight is True:
+
+                cx = self.following_object.rect.centerx
+                cy = self.following_object.rect.centery
+
+                x = self.target_object.rect.centerx
+                y = self.target_object.rect.centery
+
+                # Try and track the target's X position
+                if cx != x:
+                    if cx < x:
+                        action = World3D.WEST
+                    elif cx > x:
+                        action = World3D.EAST
+                    self.world.move_object(self.target_object, action)
+                    move_x = self.target_object.has_moved()
+                else:
+                    move_x = False
+
+                # Try and track the target's Y position
+                if cy != y:
+                    if cy < y:
+                        action = World3D.DOWN
+                    elif cy > y:
+                        action = World3D.UP
+                    self.world.move_object(self.target_object, action)
+                    move_y = self.target_object.has_moved()
+                else:
+                    move_y = False
+
+                # If we moved and are still in sight of the target then all good
+                success = (move_x or move_y or target_in_sight)
+
+            if self._debug is True and self.failed_ticks >0:
+                print("Failed {0} vs. limit {1}".format(self.failed_ticks, self.failed_ticks_limit   ))
+
+        return success
+
+    def reset(self):
+        super(AIBotTracker2, self).reset()
+        self.failed_ticks = 0
+
+
 class AIBotHunter(AIBot):
     MODE_HUNTING = "hunting"
     MODE_TRACKING = "tracking"
@@ -1888,7 +2136,7 @@ class AIBotHunter(AIBot):
         self.following_object = None
         self.visibility_distance = None
 
-        self.tracker = AIBotTracker(target_object=target_object, world=world, tick_slow_factor=tick_slow_factor)
+        self.tracker = AIBotTracker2(target_object=target_object, world=world, tick_slow_factor=tick_slow_factor)
         self.router = AIBotRouteFollowing(target_object=target_object, world=world, tick_slow_factor=tick_slow_factor)
         self.navigator = Navigator()
 
@@ -1914,7 +2162,7 @@ class AIBotHunter(AIBot):
 
         self.visibility_distance = distance
         self.following_object = new_target
-        self.tracker.set_instructions(new_target=new_target)
+        self.tracker.set_instructions(new_target=new_target, sight_range=distance)
         self.router.set_instructions(new_instructions=route, loop=loop)
         self.mode = AIBotHunter.MODE_TRACKING
 
@@ -1923,29 +2171,17 @@ class AIBotHunter(AIBot):
         if super(AIBotHunter, self).tick() is False or self.following_object is None:
             return
 
-        cx = self.following_object.rect.centerx
-        cy = self.following_object.rect.centery
-        cz = self.following_object.z
 
-        x = self.target_object.rect.centerx
-        y = self.target_object.rect.centery
+        cz = self.following_object.z
         z = self.target_object.z
 
         if cz == z:
-            distance = math.sqrt((cx - x) ** 2 + (cy - y) ** 2)
 
-            if distance <= self.visibility_distance and \
-                    self.navigator.navigate(world=self.world, from_object=self.target_object,
-                                            to_object=self.following_object) is True and \
-                    (self.following_object.name == Objects.PLAYER and \
-                     Event.EFFECT_INVISIBLE not in self.world.effects or \
-                     self.following_object.name != Objects.PLAYER):
-                self.tracker.tick()
+            if self.tracker.tick() is True:
                 self.mode = AIBotHunter.MODE_HUNTING
             else:
                 if self.mode == AIBotHunter.MODE_HUNTING:
-                    pass
-                    #self.router.closest_waypoint()
+                    self.router.closest_waypoint()
                 self.router.tick()
                 self.mode = AIBotHunter.MODE_TRACKING
 
