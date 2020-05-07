@@ -291,7 +291,7 @@ class ImageManager:
             model.Objects.ENEMY1: "rpg_sprite_gold5-15.png",
             model.Objects.ENEMY2: "rpg_sprite_gold3-18.png",
             model.Objects.NPC1: "rpg_sprite_gold5-14.png",
-            model.Objects.TILE1: "basic_brick:3.png",
+            model.Objects.TILE1: "basic_brick:2.png",
             model.Objects.TILE2: "wall2.png",
             model.Objects.TILE3: "tile4.png",
             model.Objects.TILE4: "rpg_sprite_bw8-2.png",
@@ -815,7 +815,7 @@ class DWWorldView(View):
                             alpha = 90
                         elif Event.EFFECT_PROTECTION in self.model.world.effects:
                             alpha = 255 - (self.tick_count % 6) * 40
-                            alpha = 255
+                            #alpha = 255
                         elif Event.EFFECT_KILL_ENEMIES in self.model.world.effects:
                             pass
 
@@ -826,8 +826,8 @@ class DWWorldView(View):
                     image.set_alpha(alpha)
 
                     # Blit the object image at the appropriate place and size
-                    self.surface.blit(image, (
-                        int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w, size_h))
+                    image_rect = pygame.Rect(int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w, size_h)
+                    self.surface.blit(image, image_rect)
 
                     if obj.name == model.Objects.PLAYER:
                         effect_image_name = None
@@ -852,14 +852,18 @@ class DWWorldView(View):
                             alpha = 220 - (tick_count % 6) * 40
                             effect_image.set_alpha(alpha)
 
-                            # Centre effect image vs. player image
-                            dx = image.get_rect().centerx - effect_image.get_rect().centerx
-                            dy = image.get_rect().centery - effect_image.get_rect().centery
+                            if effect_image_name == model.Objects.SWORD:
+                                effect = self.model.get_effect(Event.EFFECT_MELEE_ATTACK)
+                                if effect is not None:
+                                    #print("{0}".format(effect))
+                                    type, count, duration = effect
+                                    effect_image = pygame.transform.rotate(effect_image, 45 + 180 * count/duration)
+                                    effect_image.set_alpha(255)
 
-                            # Blit the object image at the appropriate place and size
-                            self.surface.blit(effect_image, (
-                                int((x + dx) * self.object_zoom_ratio), int((y + dy) * self.object_zoom_ratio), size_w,
-                                size_h))
+                            # Centre effect image vs. player image
+                            effect_rect = effect_image.get_rect()
+                            effect_rect.center = image_rect.center
+                            self.surface.blit(effect_image, effect_rect)
 
         if self._debug is True:
 

@@ -103,8 +103,10 @@ class RPGObject3D(object):
 
         if distance is None:
             touch_field = self._rect.inflate(RPGObject3D.TOUCH_FIELD_X, RPGObject3D.TOUCH_FIELD_Y)
-        else:
+        elif distance != 0:
             touch_field = self._rect.inflate(int(distance), int(distance))
+        else:
+            touch_field = self._rect
 
         return self.z == other_object.z and \
                self.is_visible and \
@@ -262,10 +264,11 @@ class SwitchGroup:
         return result
 
     def print(self):
-        print("Switch group name='{0}': type=({1}), switches={2}, output={3}".format(self.name,
+        print("Switch group name='{0}': type=({1}), switches={2}, output={3}={4}".format(self.name,
                                                                                      self.type,
                                                                                      len(self.switches),
-                                                                                     self.output()))
+                                                                                     self.output(),
+                                                                                         self.outputs[self.output()]))
 
         for obj in self.switch_objects:
             print("\tswitch:{0}={1}".format(str(obj), obj.state))
@@ -739,7 +742,7 @@ class WorldBuilder():
 
 
         # add moving block #1
-        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE1)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE2)
         new_monster.set_pos((17 * 32, 5 * 32, 81))
         ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.WEST, 32 * 10, AIBot.INSTRUCTION_FAIL_TICK),
@@ -750,12 +753,23 @@ class WorldBuilder():
         world.add_monster(new_monster, ai)
 
         # add moving block #2
-        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE1)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE2)
         new_monster.set_pos((13 * 32, 2 * 32, 81))
         ai = AIBotInstructions(new_monster, world)
         instructions = [(World3D.UP, 32 * 20, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK),
                         (World3D.DOWN, 32 * 20, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, ai)
+
+        # add moving block #3
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.TILE2)
+        new_monster.set_pos((2 * 32, 13 * 32, 51))
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.DOWN, 32 * 11, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.UP, 32 * 11, AIBot.INSTRUCTION_FAIL_SKIP),
                         (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK)]
         ai.set_instructions(instructions)
         world.add_monster(new_monster, ai)
@@ -887,13 +901,14 @@ class WorldBuilder():
         # World 120
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.WALL1, SwitchGroup.NAND),
-            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE2, SwitchGroup.AND),
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.TILE1, SwitchGroup.AND),
         }
         new_world_id = 120
         new_world_properties = ("Dungeon World 3", "dungeon", (216, 330, 0), (32 * 5.5, 32 * 3.5, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
         # World 999
+
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE2, SwitchGroup.NOR)}
         new_world_id = 999
@@ -1313,7 +1328,7 @@ class World3D:
 
         dx, dy, dz = vector
 
-        if len(self.touching_objects(selected_object, distance=0, filter=World3D.SLOW_TILES)) > 0:
+        if len(self.touching_objects(selected_object, distance=0, object_filter=World3D.SLOW_TILES)) > 0:
             # print("Hitting some slowing objects")
             dx = int(dx / 2)
             dy = int(dy / 2)
@@ -1439,17 +1454,32 @@ class World3D:
 
         return matching_objects
 
-    def touching_objects(self, target, distance=None, filter: list = None):
+    def touching_objects(self, target : RPGObject3D, distance=None, object_filter: list = [], property_filter: dict = {}):
 
+        # Get the list of objects that are in the same plane as the target object
         objects = self.planes[target.z]
 
+        # Create an empty list to hold any objects that we find that are touching the target and
+        # satisfy the specified object and/or property filters
         touching = []
 
+        # For each object in the plane..
         for object in objects:
-            if object.is_touching(target, distance):
-                if filter is None:
-                    touching.append(object)
-                elif object.name in filter:
+
+            # If you didn't want to filter by object name or the object is in your list of desired objects...
+            # see if the object in the plane is touching the target object at the specified distance
+            if (object_filter == [] or object.name in object_filter) and \
+                    object.is_touching(target, distance):
+
+                # Now see if the object matches the property filters that you specified...
+                match = True
+                for property, value in property_filter.items():
+                    if getattr(object, property) != value:
+                        match = False
+                        break
+
+                # If the property filters matched as well then add to the list of objects touching the target
+                if match is True:
                     touching.append(object)
 
         return touching

@@ -6,6 +6,7 @@ class Event():
     STATE = "state"
     GAME = "game"
     WORLD = "world"
+    EFFECT = "effect"
 
     # Define states
     STATE_LOADED = "Game Loaded"
@@ -55,13 +56,13 @@ class Event():
     EFFECT_MELEE_ATTACK = "Melee Attack"
 
     EFFECT_DURATION = {
-        EFFECT_INVISIBLE : 20,
-        EFFECT_PROTECTION : 20,
-        EFFECT_FREEZE_ENEMIES : 20,
-        EFFECT_SLOW_ENEMIES: 20,
+        EFFECT_INVISIBLE : 200,
+        EFFECT_PROTECTION : 200,
+        EFFECT_FREEZE_ENEMIES : 200,
+        EFFECT_SLOW_ENEMIES: 200,
         EFFECT_REVEAL_SECRETS : 0,
-        EFFECT_KILL_ENEMIES : 20,
-        EFFECT_MELEE_ATTACK : 5
+        EFFECT_KILL_ENEMIES : 200,
+        EFFECT_MELEE_ATTACK : 20
     }
 
     def __init__(self, name: str, description: str = None, type: str = DEFAULT):

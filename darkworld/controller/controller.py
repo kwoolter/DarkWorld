@@ -46,16 +46,22 @@ class DWController:
 
         FPSCLOCK = pygame.time.Clock()
 
-        pygame.time.set_timer(USEREVENT + 1, 20)
+        # Model tick timer
+        pygame.time.set_timer(USEREVENT + 1, 15)
+
+        # View tick timer
         pygame.time.set_timer(USEREVENT + 2, 300)
+
+        # Sound effects tick timer
         pygame.time.set_timer(USEREVENT + 3, 8000)
+
         pygame.event.set_allowed([QUIT, KEYDOWN, KEYUP, USEREVENT])
 
         loop = True
 
         while loop is True:
 
-            # Loop to process game events
+            # Loop to process Dark World game events
             event = self.m.get_next_event()
             while event is not None:
 
@@ -70,7 +76,6 @@ class DWController:
                         self.audio.print()
 
                     self.audio.process_event(event)
-
 
                 except Exception as err:
                     print(str(err))
@@ -89,11 +94,6 @@ class DWController:
                     if event.type == USEREVENT + 1:
 
                         self.m.tick()
-
-                        # try:
-                        #     self.m.tick()
-                        # except Exception as err:
-                        #     print(str(err))
 
                     # Timer for Computer AI moves
                     elif event.type == USEREVENT + 2:

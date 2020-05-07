@@ -9,14 +9,15 @@ RPG with 3D top down perspective view and movement
 While playing
 - ESC to PAUSE
 - Arrow Keys or WASD to move
-- i - toggle inventory
+- I - toggle inventory
 - SPACE - interact
 - Page Up - zoom in
 - Page Down - zoom out
+- F1 Help
 
 While paused/ready to start
 - SPACE to start
-- q to lose a live and restart level
+- Q to lose a live and restart level
 
 ## Requirements
 - Python 3

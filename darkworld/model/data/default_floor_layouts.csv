@@ -1331,7 +1331,7 @@ ID,Name,Layer,Layout
 120,World120,20,bb   :  c:::::B   bb
 120,World120,20,#        :C   :    #
 120,World120,20,#        :    :    #
-120,World120,20,#    :   :    :    #
+120,World120,20,#    :  K:    :    #
 120,World120,20,#    B:::B:  :B    #
 120,World120,20,#                  #
 120,World120,20,#                  #
@@ -1362,18 +1362,18 @@ ID,Name,Layer,Layout
 120,World120,50,#  S               #
 120,World120,50,#                  #
 120,World120,50,b                  b
+120,World120,50,#                   
+120,World120,50,#                   
+120,World120,50,b#                  
 120,World120,50,                    
 120,World120,50,                    
 120,World120,50,                    
 120,World120,50,                    
 120,World120,50,                    
 120,World120,50,                    
-120,World120,50,                    
-120,World120,50,                    
-120,World120,50,                    
-120,World120,50,                    
-120,World120,50,                    
-120,World120,50,                    
+120,World120,50,b#                  
+120,World120,50,#                   
+120,World120,50,#                   
 120,World120,50,b                  b
 120,World120,50,#                  #
 120,World120,50,#  s               #
@@ -1382,6 +1382,8 @@ ID,Name,Layer,Layout
 120,World120,51, ***            *** 
 120,World120,51, ***            *** 
 120,World120,51, ***            *** 
+120,World120,51, *                  
+120,World120,51, *                  
 120,World120,51,                    
 120,World120,51,                    
 120,World120,51,                    
@@ -1390,10 +1392,8 @@ ID,Name,Layer,Layout
 120,World120,51,                    
 120,World120,51,                    
 120,World120,51,                    
-120,World120,51,                    
-120,World120,51,                    
-120,World120,51,                    
-120,World120,51,                    
+120,World120,51, *                  
+120,World120,51, ***                
 120,World120,51, ***            *** 
 120,World120,51, ***            *** 
 120,World120,51, ***            *** 
@@ -1488,7 +1488,7 @@ ID,Name,Layer,Layout
 120,World120,150,#  K# #Q    C##     
 120,World120,150,#  #b##      ##     
 120,World120,150,                   k
-120,World120,150,                    
+120,World120,150,          s         
 120,World120,150,#__#b##      ##     
 120,World120,150,#   # #     c##     
 120,World120,150,#   # b##  ##b      

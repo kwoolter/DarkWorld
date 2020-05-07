@@ -20,7 +20,7 @@ class DWModel():
     DEFAUL_SKIN_NAME = "default"
 
     # Define Effects
-    EFFECT_COUNTDOWN_RATE = 20
+    EFFECT_COUNTDOWN_RATE = 1
 
     def __init__(self, name: str):
 
@@ -165,7 +165,8 @@ class DWModel():
             self.tick_count += 1
 
             # See if the player is colliding with any enemies
-            colliding_enemies = self.world.touching_objects(self.player, distance=0, filter=World3D.ENEMIES)
+            # Be slightly generous on the overlap distance e.g. -2
+            colliding_enemies = self.world.touching_objects(self.player, distance=-2, object_filter=World3D.ENEMIES)
 
             # If you are colliding with an enemy
             if len(colliding_enemies) > 0:
@@ -201,17 +202,16 @@ class DWModel():
                 else:
                     print("Hit enemy")
                     self.player_died()
+
+            # Gravity tries to make the player fall
+            self.world.move_player(World3D.NORTH)
+            if self.world.player.has_changed_planes() is True:
+                self.world.player_state = World3D.PLAYER_FALLING
             else:
+                self.world.player_state = World3D.PLAYER_MOVING
 
-                # Gravity tries to make the player fall
-                self.world.move_player(World3D.NORTH)
-                if self.world.player.has_changed_planes() is True:
-                    self.world.player_state = World3D.PLAYER_FALLING
-                else:
-                    self.world.player_state = World3D.PLAYER_MOVING
-
-                if self.world.is_player_dead() is True:
-                    self.player_died()
+            if self.world.is_player_dead() is True:
+                self.player_died()
 
             # Time to process any effects that wear off over time...
             if self.tick_count % DWModel.EFFECT_COUNTDOWN_RATE == 0:
@@ -225,7 +225,7 @@ class DWModel():
                 for effect in expired_effects:
                     del self.effects[effect]
                     self.world.remove_effect(effect)
-                    self.events.add_event(Event(type=Event.GAME,
+                    self.events.add_event(Event(type=Event.EFFECT,
                                                 name=Event.EFFECT_END,
                                                 description="Effect {0} wears off!".format(effect)))
 
@@ -334,169 +334,166 @@ class DWModel():
 
     def interact(self):
 
-        touching_objects = self.world.touching_objects(self.world.player)
+        touching_objects = self.world.touching_objects(self.world.player, property_filter={"is_interactable":True})
 
         for object in touching_objects:
 
-            if object.is_interactable is True:
+            if object.name == Objects.TELEPORT:
+                if self.world.player.is_inside(object):
+                    self.world.move_player_to_start()
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.ACTION_SUCCEEDED,
+                                                description="You activate the teleport..."))
 
-                if object.name == Objects.TELEPORT:
-                    if self.world.player.is_inside(object):
-                        self.world.move_player_to_start()
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.ACTION_SUCCEEDED,
-                                                    description="You activate the teleport..."))
+            elif object.name == Objects.EXIT_NEXT:
+                req_obj = Objects.BOSS_KEY
+                if self.world.player.is_inside(object):
+                    if self.have_inventory_object(req_obj) is True:
+                        if self.move_world(self.get_next_world_id(), do_copy=True) is True:
+                            # Use the boss key
+                            self.use_inventory_object(req_obj)
 
-                elif object.name == Objects.EXIT_NEXT:
-                    req_obj = Objects.BOSS_KEY
-                    if self.world.player.is_inside(object):
-                        if self.have_inventory_object(req_obj) is True:
-                            if self.move_world(self.get_next_world_id(), do_copy=True) is True:
-                                # Use the boss key
-                                self.use_inventory_object(req_obj)
-
-                                # Take a snap shot of what the player has at the start of the world
-                                self.inventory_copy = copy.deepcopy(self.inventory)
-
-                                self.events.add_event(Event(type=Event.GAME,
-                                                            name=Event.NEW_WORLD,
-                                                            description="Welcome to {0}".format(self.world.name)))
-
-                        else:
-                            self.events.add_event(Event(type=Event.GAME,
-                                                        name=Event.ACTION_FAILED,
-                                                        description="You don't have {0}".format(req_obj)))
-
-                elif object.name == Objects.EXIT_PREVIOUS:
-                    if self.world.player.is_inside(object):
-                        print("Going back to previous world...")
-                        if self.move_world(self.get_previous_world_id()) is True:
-                            self.use_inventory_object(Objects.BOSS_KEY, count=-1)
                             # Take a snap shot of what the player has at the start of the world
                             self.inventory_copy = copy.deepcopy(self.inventory)
 
-                elif object.name == Objects.LADDER_UP:
-                    self.events.add_event(Event(type=Event.GAME,
-                                                name=Event.ACTION_SUCCEEDED,
-                                                description="You climb up the ladder."))
+                            self.events.add_event(Event(type=Event.GAME,
+                                                        name=Event.NEW_WORLD,
+                                                        description="Welcome to {0}".format(self.world.name)))
 
-                    self.world.move_player_to_start()
-
-                elif object.name == Objects.LADDER_DOWN:
-                    self.events.add_event(Event(type=Event.GAME,
-                                                name=Event.ACTION_SUCCEEDED,
-                                                description="You climb down the ladder."))
-                    self.world.move_player(World3D.NORTH * 2)
-
-                elif object.name == Objects.TREASURE_CHEST:
-                    req_obj = Objects.KEY
-                    if self.have_inventory_object(req_obj) is True:
-                        print("Using {0} to open {1}...".format(req_obj, object.name))
-                        self.use_inventory_object(req_obj)
-                        self.swap_world_object(object, Objects.TREASURE)
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.TREASURE_OPEN,
-                                                    description="You open the treasure chest with a key."))
-                    else:
-                        print("You don't have required object {0}".format(req_obj))
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.DOOR_LOCKED,
-                                                    description="You don't have anything to open the treasure chest."))
-
-                elif object.name == Objects.DOOR1:
-                    req_obj = Objects.KEY
-                    if self.have_inventory_object(req_obj) is True:
-                        print("Using {0} to open {1}...".format(req_obj, object.name))
-                        self.use_inventory_object(req_obj)
-                        self.swap_world_object(object, Objects.DOOR1_OPEN)
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.DOOR_OPEN,
-                                                    description="You open the door with a key."))
-                    else:
-                        print("You don't have required object {0}".format(req_obj))
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.DOOR_LOCKED,
-                                                    description="You don't have anything to open the door."))
-
-                elif object.name == Objects.DOOR2:
-                    req_obj = Objects.KEY
-                    if self.have_inventory_object(req_obj) is True:
-                        print("Using {0} to open {1}...".format(req_obj, object.name))
-                        self.use_inventory_object(req_obj)
-                        self.swap_world_object(object, Objects.DOOR2_OPEN)
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.DOOR_OPEN,
-                                                    description="You open the door with a key."))
-                    else:
-                        # print("You don't have required object {0}".format(req_obj))
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.DOOR_LOCKED,
-                                                    description="You don't have anything to open the door."))
-
-
-                elif object.name == Objects.TRAP_DOOR:
-                    req_obj = Objects.KEY
-                    if self.have_inventory_object(req_obj) is True:
-                        print("Using {0} to open {1}...".format(req_obj, object.name))
-                        self.use_inventory_object(req_obj)
-                        x,y,z = object.xyz
-                        objs_below = self.world.get_objects_at(x,y,z+1)
-                        for obj in objs_below:
-                            self.swap_world_object(obj, Objects.HOLE)
-
-                        self.swap_world_object(object, Objects.EMPTY)
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.DOOR_OPEN,
-                                                    description="You open the trap door with a key."))
-                    else:
-                        # print("You don't have required object {0}".format(req_obj))
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.DOOR_LOCKED,
-                                                    description="You don't have anything to open the trap door."))
-
-                elif object.name == Objects.TRAP:
-                    req_obj = Objects.TRAP_DISABLE
-                    if self.have_inventory_object(req_obj) is True:
-                        self.use_inventory_object(req_obj)
-                        self.delete_world_object(object)
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.ACTION_SUCCEEDED,
-                                                    description="You disabled the trap."))
                     else:
                         self.events.add_event(Event(type=Event.GAME,
                                                     name=Event.ACTION_FAILED,
                                                     description="You don't have {0}".format(req_obj)))
 
-                elif object.is_switch is True:
-                    self.world.set_switch_object(object)
+            elif object.name == Objects.EXIT_PREVIOUS:
+                if self.world.player.is_inside(object):
+                    print("Going back to previous world...")
+                    if self.move_world(self.get_previous_world_id()) is True:
+                        self.use_inventory_object(Objects.BOSS_KEY, count=-1)
+                        # Take a snap shot of what the player has at the start of the world
+                        self.inventory_copy = copy.deepcopy(self.inventory)
+
+            elif object.name == Objects.LADDER_UP:
+                self.events.add_event(Event(type=Event.GAME,
+                                            name=Event.ACTION_SUCCEEDED,
+                                            description="You climb up the ladder."))
+
+                self.world.move_player_to_start()
+
+            elif object.name == Objects.LADDER_DOWN:
+                self.events.add_event(Event(type=Event.GAME,
+                                            name=Event.ACTION_SUCCEEDED,
+                                            description="You climb down the ladder."))
+                self.world.move_player(World3D.NORTH * 2)
+
+            elif object.name == Objects.TREASURE_CHEST:
+                req_obj = Objects.KEY
+                if self.have_inventory_object(req_obj) is True:
+                    print("Using {0} to open {1}...".format(req_obj, object.name))
+                    self.use_inventory_object(req_obj)
+                    self.swap_world_object(object, Objects.TREASURE)
                     self.events.add_event(Event(type=Event.GAME,
-                                                name=Event.SWITCH,
-                                                description="You switch {0}".format(object.name)))
-
-                elif object.name in (Objects.NPC1, Objects.NPC2):
-                    self.talk_to_npc(object)
-
-                elif object.name in (Objects.SIGN_1, Objects.SIGN_2):
-                    self.read(object)
-
-                # Temp logic
-                elif object.name in Objects.EFFECT_OBJECTS.keys():
-                    effect = Objects.EFFECT_OBJECTS[object.name]
-                    self.add_effect(effect)
-                    self.delete_world_object(object)
-
+                                                name=Event.TREASURE_OPEN,
+                                                description="You open the treasure chest with a key."))
                 else:
-                    self.collect_inventory_object(object)
+                    print("You don't have required object {0}".format(req_obj))
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.DOOR_LOCKED,
+                                                description="You don't have anything to open the treasure chest."))
+
+            elif object.name == Objects.DOOR1:
+                req_obj = Objects.KEY
+                if self.have_inventory_object(req_obj) is True:
+                    print("Using {0} to open {1}...".format(req_obj, object.name))
+                    self.use_inventory_object(req_obj)
+                    self.swap_world_object(object, Objects.DOOR1_OPEN)
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.DOOR_OPEN,
+                                                description="You open the door with a key."))
+                else:
+                    print("You don't have required object {0}".format(req_obj))
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.DOOR_LOCKED,
+                                                description="You don't have anything to open the door."))
+
+            elif object.name == Objects.DOOR2:
+                req_obj = Objects.KEY
+                if self.have_inventory_object(req_obj) is True:
+                    print("Using {0} to open {1}...".format(req_obj, object.name))
+                    self.use_inventory_object(req_obj)
+                    self.swap_world_object(object, Objects.DOOR2_OPEN)
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.DOOR_OPEN,
+                                                description="You open the door with a key."))
+                else:
+                    # print("You don't have required object {0}".format(req_obj))
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.DOOR_LOCKED,
+                                                description="You don't have anything to open the door."))
+
+
+            elif object.name == Objects.TRAP_DOOR:
+                req_obj = Objects.KEY
+                if self.have_inventory_object(req_obj) is True:
+                    print("Using {0} to open {1}...".format(req_obj, object.name))
+                    self.use_inventory_object(req_obj)
+                    x,y,z = object.xyz
+                    objs_below = self.world.get_objects_at(x,y,z+1)
+                    for obj in objs_below:
+                        self.swap_world_object(obj, Objects.HOLE)
+
+                    self.swap_world_object(object, Objects.EMPTY)
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.DOOR_OPEN,
+                                                description="You open the trap door with a key."))
+                else:
+                    # print("You don't have required object {0}".format(req_obj))
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.DOOR_LOCKED,
+                                                description="You don't have anything to open the trap door."))
+
+            elif object.name == Objects.TRAP:
+                req_obj = Objects.TRAP_DISABLE
+                if self.have_inventory_object(req_obj) is True:
+                    self.use_inventory_object(req_obj)
                     self.delete_world_object(object)
                     self.events.add_event(Event(type=Event.GAME,
                                                 name=Event.ACTION_SUCCEEDED,
-                                                description="You found {0}".format(object.name)))
+                                                description="You disabled the trap."))
+                else:
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.ACTION_FAILED,
+                                                description="You don't have {0}".format(req_obj)))
 
-                    if object.name == Objects.EXTRA_LIFE:
-                        self.player_lives += 1
+            elif object.is_switch is True:
+                self.world.set_switch_object(object)
+                self.events.add_event(Event(type=Event.GAME,
+                                            name=Event.SWITCH,
+                                            description="You switch {0}".format(object.name)))
+
+            elif object.name in (Objects.NPC1, Objects.NPC2):
+                self.talk_to_npc(object)
+
+            elif object.name in (Objects.SIGN_1, Objects.SIGN_2):
+                self.read(object)
+
+            # If the object triggers an effect then look-up the appropriate effect and add it to the model
+            # Finally delete the object that trigger the effect
+            elif object.name in Objects.EFFECT_OBJECTS.keys():
+                effect = Objects.EFFECT_OBJECTS[object.name]
+                self.add_effect(effect)
+                self.delete_world_object(object)
 
             else:
-                print("Object {0} is not interactable".format(object))
+                self.collect_inventory_object(object)
+                self.delete_world_object(object)
+                self.events.add_event(Event(type=Event.GAME,
+                                            name=Event.ACTION_SUCCEEDED,
+                                            description="You found {0}".format(object.name)))
+
+                if object.name == Objects.EXTRA_LIFE:
+                    self.player_lives += 1
+
 
     def collect_inventory_object(self, new_object):
         if new_object.is_collectable is True:
@@ -508,10 +505,11 @@ class DWModel():
         self.add_effect(Event.EFFECT_MELEE_ATTACK, skip_on_dupe=True)
 
     def have_inventory_object(self, object_name: str):
-        have = False
 
         if object_name in self.inventory.keys() and self.inventory[object_name] > 0:
             have = True
+        else:
+            have = False
 
         return have
 
@@ -531,17 +529,31 @@ class DWModel():
             print("Effect {0} already active for another {1} ticks.".format(effect_type, self.effects[effect_type]))
             return
 
+        # look-up the default duration for the specified effect
         if effect_count is None:
             effect_count = Event.EFFECT_DURATION[effect_type]
 
+        # Add the effect duration to the current list of active effects in the game
         if effect_count > 0:
             self.effects[effect_type] = effect_count
 
+        # Activate the effect in the current world
         self.world.add_effect(effect_type, one_off=(effect_count < 1))
 
-        self.events.add_event(Event(type=Event.GAME,
+        # Log an event that a new effect has started
+        self.events.add_event(Event(type=Event.EFFECT,
                                     name=Event.EFFECT_START,
                                     description="Effect {0} activated".format(effect_type)))
+
+    def get_effect(self, effect_type : str):
+
+        # Get the current status of an effect if it is active
+        if effect_type in self.effects.keys():
+            effect = effect_type, self.effects[effect_type], Event.EFFECT_DURATION[effect_type]
+        else:
+            effect = None
+
+        return effect
 
     def delete_world_object(self, old_object):
         self.world.delete_object3D(old_object)
