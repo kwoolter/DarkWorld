@@ -32,6 +32,7 @@ class Event():
     TREASURE = "treasure"
     DOOR_OPEN = "door opened"
     DOOR_LOCKED = "door locked"
+    WORLD_COMPLETE = "world complete"
     NEW_WORLD = "new world"
     SWITCH = "switch"
     TREASURE_OPEN = "treasure chest open"
@@ -54,6 +55,7 @@ class Event():
     EFFECT_PROTECTION = "**Protection**"
     EFFECT_REVEAL_SECRETS = "**Reveal Secrets**"
     EFFECT_MELEE_ATTACK = "Melee Attack"
+    EFFECT_ITEM_DISCOVERY = "***Item Discovery***"
 
     EFFECT_DURATION = {
         EFFECT_INVISIBLE : 200,
@@ -62,6 +64,7 @@ class Event():
         EFFECT_SLOW_ENEMIES: 200,
         EFFECT_REVEAL_SECRETS : 0,
         EFFECT_KILL_ENEMIES : 200,
+        EFFECT_ITEM_DISCOVERY: 1000,
         EFFECT_MELEE_ATTACK : 20
     }
 

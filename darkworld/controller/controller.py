@@ -90,26 +90,26 @@ class DWController:
 
                 if self.m.state == model.DWModel.STATE_PLAYING:
 
-                    # Timer events
+                    # Timer events for the model to process
                     if event.type == USEREVENT + 1:
 
                         self.m.tick()
 
-                    # Timer for Computer AI moves
+                    # Timer for the view time based events
                     elif event.type == USEREVENT + 2:
                         self.v.tick()
 
+                    # Timer events for audio time-based events
                     elif event.type == USEREVENT + 3:
                         self.audio.get_theme_sound(model.Event.RANDOM_ENVIRONMENT, self.m.world.skin)
-                    # Key events
+
+                    # Key UP events - less time critical actions
                     elif event.type == KEYUP:
 
                         if event.key == K_SPACE:
                             self.m.interact()
                         elif event.key == K_i:
                             self.v.inventory_show()
-                        elif event.key == K_z:
-                            self.m.do_melee_attack()
                         elif event.key == K_ESCAPE:
                             self.m.pause()
                         elif event.key == K_F12 and self._debug is True:
@@ -130,20 +130,23 @@ class DWController:
                             self.v.world_view.m2v.infinity += 10
                         elif event.key == K_F10:
                             self.v.world_view.m2v.infinity -= 10
-                        # elif event.key == K_PAGEUP:
-                        #     self.v.world_view.object_size_scale += 0.01
-                        # elif event.key == K_PAGEDOWN:
-                        #     self.v.world_view.object_size_scale -= 0.01
 
+                    # Key pressed events - more time critical actions
                     keys = pygame.key.get_pressed()
+
+                    # First key if the movement keys are pressed
                     if keys[K_LEFT] or keys[K_a]:
                         self.m.move_player(np.array(model.World3D.WEST) * self.move_speed)
                     elif keys[K_RIGHT] or keys[K_d]:
                         self.m.move_player(np.array(model.World3D.EAST) * self.move_speed)
+
                     if keys[K_UP] or keys[K_w]:
                         self.m.move_player(np.array(model.World3D.DOWN) * self.move_speed)
                     elif keys[K_DOWN] or keys[K_s]:
                         self.m.move_player(np.array(model.World3D.UP) * self.move_speed)
+
+                    if keys[K_z]:
+                        self.m.do_melee_attack()
                     elif keys[K_PAGEUP]:
                         self.v.world_view.zoom_view(0.01)
                     elif keys[K_PAGEDOWN]:
@@ -152,6 +155,7 @@ class DWController:
                         self.v.world_view.zoom_view(0.01)
                     elif keys[K_HOME]:
                         self.v.world_view.zoom_view()
+
 
                 # Process events for when the game is in state READY
                 elif self.m.state == model.DWModel.STATE_LOADED:
@@ -235,6 +239,15 @@ class DWController:
                     # Timer for talking
                     elif event.type == USEREVENT + 3:
                         self.m.talk_to_npc(npc_object=None, npc_name="The Master", world_id=self.m.state)
+
+                # Process events for when the game is in state READY
+                elif self.m.state == model.DWModel.STATE_WORLD_COMPLETE:
+                    # Key events
+                    if event.type == KEYUP:
+                        # Space to proceed to next world
+                        if event.key == K_SPACE:
+                            self.m.move_world(do_copy = True)
+                            self.m.state = model.DWModel.STATE_PLAYING
 
                 # Process events for when the game is in state GAME_OVER
                 elif self.m.state == model.DWModel.STATE_GAME_OVER:

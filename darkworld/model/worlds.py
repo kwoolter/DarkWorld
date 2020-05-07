@@ -1953,8 +1953,8 @@ class AIBotRouteFollowing(AIBot):
             else:
                 self.failed_ticks += 1
                 if self.failed_ticks > self.failed_ticks_limit:
-                    self.closest_waypoint()
-                    # self.next_instruction()
+                    #self.closest_waypoint()
+                    self.next_instruction()
 
     def next_instruction(self):
 

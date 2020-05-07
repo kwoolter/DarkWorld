@@ -14,6 +14,7 @@ class DWModel():
     STATE_READY = "Game Ready"
     STATE_PLAYING = "Game Playing"
     STATE_PAUSED = "Game Paused"
+    STATE_WORLD_COMPLETE = "World Complete"
     STATE_GAME_OVER = "Game Over"
 
     # Default skin name
@@ -63,7 +64,7 @@ class DWModel():
         self.effects = {}
         self.inventory = {}
         self.inventory_copy = copy.deepcopy(self.inventory)
-        self.current_world_id = 120
+        self.current_world_id = 1
 
         # self.move_world(self.current_world_id, do_copy=True)
 
@@ -177,27 +178,17 @@ class DWModel():
                                                 name=Event.BLOCKED,
                                                 description="You are protected"))
 
-                # If you can kill enemies then delete them
-                elif Event.EFFECT_KILL_ENEMIES in self.effects.keys():
+                # If you can kill enemies then delete them wuth a chance to discover some random goodies
+                elif Event.EFFECT_KILL_ENEMIES in self.effects.keys() or Event.EFFECT_MELEE_ATTACK in self.effects.keys():
+                    item_discovery = (self.get_effect(Event.EFFECT_ITEM_DISCOVERY) is not None)
                     for enemy in colliding_enemies:
-                        if random.randint(0, 10) > 1:
-                            self.swap_world_object(enemy, random.choice((Objects.TREASURE, Objects.COINS, Objects.KEY)))
-                        else:
-                            self.world.delete_object3D(enemy)
+                        self.swap_world_object(enemy, random.choices((Objects.EMPTY, Objects.TREASURE, Objects.COINS, Objects.KEY),
+                                                                     weights = [20 * (item_discovery is False),5,5,1],
+                                                                     k=1)[0])
                     self.events.add_event(Event(type=Event.GAME,
                                                 name=Event.KILL_ENEMY,
                                                 description="You slay some foes"))
 
-                # If you can kill enemies then delete them
-                elif Event.EFFECT_MELEE_ATTACK in self.effects.keys():
-                    for enemy in colliding_enemies:
-                        if random.randint(0, 10) > 1:
-                            self.swap_world_object(enemy, random.choice((Objects.TREASURE, Objects.COINS, Objects.KEY)))
-                        else:
-                            self.world.delete_object3D(enemy)
-                    self.events.add_event(Event(type=Event.GAME,
-                                                name=Event.KILL_ENEMY,
-                                                description="You slay some foes"))
                 # else you die
                 else:
                     print("Hit enemy")
@@ -255,34 +246,17 @@ class DWModel():
 
     def move_player(self, vector):
 
-        if self.world.player_state == World3D.PLAYER_FALLING or self.state != DWModel.STATE_PLAYING:
+        # If...
+        # The player is falling OR
+        # The game is not in a playing state OR
+        # The player is performing a melee attack THEN
+        # they are not allowed to move at the same time
+        if self.world.player_state == World3D.PLAYER_FALLING or \
+                self.state != DWModel.STATE_PLAYING or \
+            self.get_effect(Event.EFFECT_MELEE_ATTACK) is not None:
             return
 
         self.world.move_player(vector)
-
-        ################################################
-        # All collision logic moved to the tick() method
-        ################################################
-
-        # if self.world.player.has_moved() is True:
-        #     pass
-
-            # touching_objects = self.world.touching_objects(self.world.player)
-            #
-            # for object in touching_objects:
-            #
-            #     if object.name == Objects.HOLE:
-            #         print("Falling...")
-            #         self.move_player((0, 0, -2))
-            #
-            #     elif object.name == Objects.TRAP:
-            #         if self.world.player.is_colliding(object):
-            #             print("Ouch...")
-            #             self.events.add_event(Event(type=Event.GAME,
-            #                                         name=Event.LOSE_HEALTH,
-            #                                         description="You hit {0}".format(object.name)))
-            #
-            #             self.world.delete_object3D(object)
 
     def talk_to_npc(self, npc_object: RPGObject3D, npc_name: str = None, world_id: str = None):
 
@@ -334,8 +308,10 @@ class DWModel():
 
     def interact(self):
 
+        # Get the list of objects that the player is touching and that are interactable
         touching_objects = self.world.touching_objects(self.world.player, property_filter={"is_interactable":True})
 
+        # Examine each touching object and see what to do...
         for object in touching_objects:
 
             if object.name == Objects.TELEPORT:
@@ -349,16 +325,17 @@ class DWModel():
                 req_obj = Objects.BOSS_KEY
                 if self.world.player.is_inside(object):
                     if self.have_inventory_object(req_obj) is True:
-                        if self.move_world(self.get_next_world_id(), do_copy=True) is True:
-                            # Use the boss key
-                            self.use_inventory_object(req_obj)
 
-                            # Take a snap shot of what the player has at the start of the world
-                            self.inventory_copy = copy.deepcopy(self.inventory)
+                        self.state = DWModel.STATE_WORLD_COMPLETE
 
-                            self.events.add_event(Event(type=Event.GAME,
-                                                        name=Event.NEW_WORLD,
-                                                        description="Welcome to {0}".format(self.world.name)))
+                        self.events.add_event(Event(type=Event.GAME,
+                                                    name=Event.WORLD_COMPLETE,
+                                                    description="You completed {0}".format(self.world.name)))
+
+                        self.use_inventory_object(req_obj)
+
+                        # Take a snap shot of what the player has at the start of the world
+                        self.inventory_copy = copy.deepcopy(self.inventory)
 
                     else:
                         self.events.add_event(Event(type=Event.GAME,
@@ -484,6 +461,8 @@ class DWModel():
                 self.add_effect(effect)
                 self.delete_world_object(object)
 
+            # Else the default action is to try and add the object to our inventory
+            # and delete it from the world
             else:
                 self.collect_inventory_object(object)
                 self.delete_world_object(object)
@@ -597,6 +576,9 @@ class DWModel():
 
         if new_world is not None:
 
+            # Take a snap shot of what the player has at the start of the world
+            self.inventory_copy = copy.deepcopy(self.inventory)
+
             if self.world is not None:
                 self.world.delete_player()
 
@@ -611,6 +593,11 @@ class DWModel():
 
         else:
             print("Can't find new world {0}".format(new_world_id))
+
+        if moved is True:
+            self.events.add_event(Event(type=Event.GAME,
+                                        name=Event.NEW_WORLD,
+                                        description="You moved to {0}".format(self.world.name)))
 
         return moved
 

@@ -104,7 +104,7 @@ class AudioManager:
         new_theme_name = AudioManager.DEFAULT_THEME
         new_theme = {
             model.Event.TICK: "LTTP_Menu_Cursor.wav",
-            model.Event.ACTION_FAILED: "LTTP_Error.wav",
+            #model.Event.ACTION_FAILED: "LTTP_Error.wav",
             model.Event.ACTION_FAILED: "interface6.wav",
             model.Event.ACTION_SUCCEEDED: "metal-ringingKW.wav",
             model.Event.BLOCKED: "interface6.wav",
@@ -127,6 +127,7 @@ class AudioManager:
             model.Event.STATE_READY: "clickloud.wav",
             model.Event.NEW_WORLD: "clickloud.wav",
             model.Event.TREASURE_OPEN: "click11.wav",
+            model.Event.WORLD_COMPLETE: "fanfare2.wav",
             model.Event.RANDOM_ENVIRONMENT: ("bubbles.wav", "fireplace.wav", "water-wave1.wav", "water-wave2.wav",
                                              "click44.wav", "click36.wav", "smith2.wav", "raven.wav", "raven2.wav",
                                              "Mmm.ogg", "TouchOfDeath.ogg", "Stone.ogg", "dripping.wav"),

@@ -295,7 +295,7 @@ class ImageManager:
             model.Objects.TILE2: "wall2.png",
             model.Objects.TILE3: "tile4.png",
             model.Objects.TILE4: "rpg_sprite_bw8-2.png",
-            model.Objects.TREASURE: "rpg_sprite_gold1-12.png",
+            model.Objects.TREASURE: "rpg_sprite_gold4-13.png",
             model.Objects.WALL1: "winter_tiles0.png",
             model.Objects.WALL2: "winter_tiles3.png",
             model.Objects.WALL3: "winter_tiles2.png",
