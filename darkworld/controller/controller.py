@@ -141,24 +141,29 @@ class DWController:
                     keys = pygame.key.get_pressed()
 
                     # First key if the movement keys are pressed
+                    move_vector = model.World3D.DUMMY
+
                     if keys[K_LEFT] or keys[K_a]:
-                        self.m.move_player(np.array(model.World3D.WEST) * self.move_speed)
+                        move_vector = np.add(move_vector, np.array(model.World3D.WEST))
+
                     elif keys[K_RIGHT] or keys[K_d]:
-                        self.m.move_player(np.array(model.World3D.EAST) * self.move_speed)
+                        move_vector = np.add(move_vector, np.array(model.World3D.EAST))
 
                     if keys[K_UP] or keys[K_w]:
-                        self.m.move_player(np.array(model.World3D.DOWN) * self.move_speed)
-                    elif keys[K_DOWN] or keys[K_s]:
-                        self.m.move_player(np.array(model.World3D.UP) * self.move_speed)
+                        move_vector = np.add(move_vector, np.array(model.World3D.DOWN))
 
-                    # if keys[K_z]:
-                    #     self.m.do_melee_attack()
+                    elif keys[K_DOWN] or keys[K_s]:
+                        move_vector = np.add(move_vector, np.array(model.World3D.UP))
+
+                    # If the player chose to move then attempt to do so...
+                    if np.array_equal(move_vector, model.World3D.DUMMY) is False:
+                        self.m.move_player(move_vector * self.move_speed)
+
+                    # Now see if the player wants to change the camera zoom...
                     if keys[K_PAGEUP]:
                         self.v.world_view.zoom_view(0.01)
                     elif keys[K_PAGEDOWN]:
                         self.v.world_view.zoom_view(-0.01)
-                    elif keys[K_PAGEUP]:
-                        self.v.world_view.zoom_view(0.01)
                     elif keys[K_HOME]:
                         self.v.world_view.zoom_view()
 

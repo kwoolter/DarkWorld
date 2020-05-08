@@ -866,13 +866,12 @@ class DWWorldView(View):
                             if effect_image_name == model.Objects.SWORD:
                                 effect = self.model.get_effect(Event.EFFECT_MELEE_ATTACK)
                                 if effect is not None:
-                                    # print("{0}".format(effect))
                                     type, count, duration = effect
                                     effect_image = pygame.transform.rotate(effect_image, 45 + 180 * count / duration)
                                     effect_image.set_alpha(255)
 
                                     odx, ody, odz = obj.dxyz
-                                    print("{0}: xyz={1}, oxyz={2}, dxyz={3}".format(obj.name, obj.xyz, obj.old_xyz, obj.dxyz))
+                                    #print("{0}: xyz={1}, oxyz={2}, dxyz={3}".format(obj.name, obj.xyz, obj.old_xyz, obj.dxyz))
                                     pygame.draw.line(self.surface,
                                                      Colours.YELLOW,
                                                      image_rect.center,
