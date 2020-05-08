@@ -788,7 +788,7 @@ class DWWorldView(View):
                 if obj.is_switch is True:
                     tick_count = obj.state
                 elif obj.name == model.Objects.PLAYER:
-                    dx, dy, dz = obj.dxdydz
+                    dx, dy, dz = obj.dxyz
                     tick_count = obj.tick_count // 6
                     # If player is moving up the screen then swap to different set of images
                     if dy < 0:
@@ -816,10 +816,11 @@ class DWWorldView(View):
                     # Change the image's transparency based on how far away from the player's plane it is
                     # Player's plane = opaque (alpha = 255)
                     # Between player and camera - increasing transparency the closer to the camera you get
-                    # Beyond the player's plane - increasing levels of transparency
+                    # Beyond the player's plane - increasing levels of transparency until you reach the max depth of the view
                     # alpha = 255 * (1 - min((abs(pz-d-vz)*20/self.m2v.infinity, 1)))
                     alpha = 255 * (1 - min((abs(pz - d - vz) / self.depth, 1)))
 
+                    # If we are drawing the player then check for special effects to change alpha
                     if obj.name == model.Objects.PLAYER:
                         if Event.EFFECT_INVISIBLE in self.model.world.effects:
                             alpha = 90
@@ -829,6 +830,7 @@ class DWWorldView(View):
                         elif Event.EFFECT_KILL_ENEMIES in self.model.world.effects:
                             pass
 
+                    # If we are drawing an enemy then check for special effects
                     elif obj.name in model.World3D.ENEMIES:
                         if Event.EFFECT_FREEZE_ENEMIES in self.model.world.effects:
                             alpha = 255 - (self.tick_count % 6) * 40
@@ -840,6 +842,7 @@ class DWWorldView(View):
                                              size_h)
                     self.surface.blit(image, image_rect)
 
+                    # If we have drawn the player then check for special effects to draw these as well
                     if obj.name == model.Objects.PLAYER:
                         effect_image_name = None
                         if Event.EFFECT_INVISIBLE in self.model.world.effects:
@@ -859,6 +862,10 @@ class DWWorldView(View):
 
                             effect_image = pygame.transform.scale(effect_image, (size_w, size_h))
 
+                            # Centre effect image vs. player image
+                            effect_rect = effect_image.get_rect()
+                            effect_rect.center = image_rect.center
+
                             # alpha = 220 - (self.tick_count % 6) * 40
                             alpha = 220 - (tick_count % 6) * 40
                             effect_image.set_alpha(alpha)
@@ -867,20 +874,32 @@ class DWWorldView(View):
                                 effect = self.model.get_effect(Event.EFFECT_MELEE_ATTACK)
                                 if effect is not None:
                                     type, count, duration = effect
-                                    effect_image = pygame.transform.rotate(effect_image, 45 + 180 * count / duration)
+                                    # effect_image = pygame.transform.rotate(effect_image, 45 + 180 * count / duration)
                                     effect_image.set_alpha(255)
 
                                     odx, ody, odz = obj.dxyz
-                                    #print("{0}: xyz={1}, oxyz={2}, dxyz={3}".format(obj.name, obj.xyz, obj.old_xyz, obj.dxyz))
-                                    pygame.draw.line(self.surface,
-                                                     Colours.YELLOW,
-                                                     image_rect.center,
-                                                     (image_rect.centerx + odx * 16, image_rect.centery + ody * 16),
-                                                     4)
+
+                                    effect_rect.centerx += (odx * 8 * (1 - count / duration))
+                                    effect_rect.centery += (ody * 8 * (1 - count / duration))
+                                    # print("{0}: xyz={1}, oxyz={2}, dxyz={3}".format(obj.name, obj.xyz, obj.old_xyz, obj.dxyz))
+                                    # pygame.draw.line(self.surface,
+                                    #                  Colours.YELLOW,
+                                    #                  image_rect.center,
+                                    #                  (image_rect.centerx + odx * 16, image_rect.centery + ody * 16),
+                                    #                  4)
+                                    if self._debug is True:
+                                        hit_box = self.model.get_melee_hit_box().rect
+                                        vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
+                                                                                view_width=self.width / self.object_zoom_ratio, \
+                                                                                view_height=self.height / self.object_zoom_ratio, \
+                                                                                model_xyz=(hit_box.x,hit_box.y,pz))
+
+                                        pygame.draw.rect(self.surface,
+                                                         Colours.WHITE,
+                                                         (vx* self.object_zoom_ratio,vy* self.object_zoom_ratio,int(hit_box.width*size_adj),int(hit_box.height*size_adj)),
+                                                         2)
 
                             # Centre effect image vs. player image
-                            effect_rect = effect_image.get_rect()
-                            effect_rect.center = image_rect.center
                             self.surface.blit(effect_image, effect_rect)
 
         if self._debug is True:

@@ -2,7 +2,7 @@
 Dark World by :monkey: kwoolter  :copyright: 2020
 
 ## Summary
-RPG with 3D top down perspective view and movement
+RPG with 3D top down perspective view and movement.
 
 ## Controls
 
@@ -11,6 +11,7 @@ While playing
 - Arrow Keys or WASD to move
 - I - toggle inventory
 - SPACE - interact
+- Z - Melee attack
 - Page Up - zoom in
 - Page Down - zoom out
 - F1 Help

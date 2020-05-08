@@ -1415,8 +1415,8 @@ class World3D:
             else:
                 selected_object.tick()
 
-            if selected_object.name == Objects.PLAYER:
-                print("{0}: dxyz={1}".format(selected_object.name, selected_object.dxyz))
+            # if selected_object.name == Objects.PLAYER:
+            #     print("{0}: dxyz={1}".format(selected_object.name, selected_object.dxyz))
 
     def move_object_to_xyz(self, selected_object: RPGObject3D, xyz):
 

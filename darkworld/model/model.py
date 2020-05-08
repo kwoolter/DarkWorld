@@ -39,6 +39,7 @@ class DWModel():
 
         self.player = None
         self.player_lives = 0
+        self.melee_hit_box = None
         self._conversations = None
         self.effects = {}
         self.inventory = {}
@@ -73,6 +74,8 @@ class DWModel():
         self.player = WorldObjectLoader.get_object_copy_by_name(Objects.PLAYER)
         self.player.is_player = True
         self.player_lives = 5
+        self.melee_hit_box = WorldObjectLoader.get_object_copy_by_name(Objects.SWORD)
+
         self.difficulty = 1
         self.effects = {}
         self.inventory = {}
@@ -169,6 +172,22 @@ class DWModel():
             self.world.tick()
             self.tick_count += 1
 
+            if Event.EFFECT_MELEE_ATTACK in self.effects.keys():
+                hit_box_object = self.get_melee_hit_box()
+                #print("hit box={0}, player={1}".format(self.melee_hit_box.rect, self.player.rect))
+                colliding_enemies = self.world.touching_objects(hit_box_object, distance=0, object_filter=World3D.ENEMIES)
+                if len(colliding_enemies)>0:
+                    print("Melee hit {0}".format(str(colliding_enemies)))
+                    item_discovery = (self.get_effect(Event.EFFECT_ITEM_DISCOVERY) is not None)
+                    for enemy in colliding_enemies:
+                        self.swap_world_object(enemy,
+                                               random.choices((Objects.EMPTY, Objects.TREASURE, Objects.COINS, Objects.KEY),
+                                                              weights=[20 * (item_discovery is False), 5, 5, 1],
+                                                              k=1)[0])
+                    self.events.add_event(Event(type=Event.GAME,
+                                                name=Event.KILL_ENEMY,
+                                                description="You slay some foes"))
+
             # See if the player is colliding with any enemies
             # Be slightly generous on the overlap distance e.g. -2
             colliding_enemies = self.world.touching_objects(self.player, distance=-2, object_filter=World3D.ENEMIES)
@@ -182,8 +201,8 @@ class DWModel():
                                                 name=Event.BLOCKED,
                                                 description="You are protected"))
 
-                # If you can kill enemies then delete them wuth a chance to discover some random goodies
-                elif Event.EFFECT_KILL_ENEMIES in self.effects.keys() or Event.EFFECT_MELEE_ATTACK in self.effects.keys():
+                # If you can kill enemies then delete them with a chance to discover some random goodies
+                elif Event.EFFECT_KILL_ENEMIES in self.effects.keys():
                     item_discovery = (self.get_effect(Event.EFFECT_ITEM_DISCOVERY) is not None)
                     for enemy in colliding_enemies:
                         self.swap_world_object(enemy, random.choices((Objects.EMPTY, Objects.TREASURE, Objects.COINS, Objects.KEY),
@@ -481,6 +500,17 @@ class DWModel():
 
     def do_melee_attack(self):
         self.add_effect(Event.EFFECT_MELEE_ATTACK, skip_on_dupe=True)
+
+    def get_melee_hit_box(self):
+        player_rect = self.player.rect
+        dx, dy, dz = self.player.dxyz
+        self.melee_hit_box.z = self.player.z
+        self.melee_hit_box.rect = self.player.rect.copy()
+        melee_hit_box_rect = self.melee_hit_box.rect
+        melee_hit_box_rect.x += dx * 6
+        melee_hit_box_rect.y += dy * 6
+        melee_hit_box_rect.inflate_ip(-10, -10)
+        return self.melee_hit_box
 
     def have_inventory_object(self, object_name: str):
 
