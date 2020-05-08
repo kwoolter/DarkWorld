@@ -123,11 +123,11 @@ class AudioManager:
             model.Event.STATE_LOADED: "clickloud.wav",
             model.Event.STATE_PLAYING: "clickloud.wav",
             model.Event.STATE_PAUSED: "LTTP_Menu_Cursor.wav",
+            model.Event.STATE_WORLD_COMPLETE: "fanfare2.wav",
             model.Event.STATE_GAME_OVER: "LTTP_Link_Hurt.wav",
             model.Event.STATE_READY: "clickloud.wav",
             model.Event.NEW_WORLD: "clickloud.wav",
             model.Event.TREASURE_OPEN: "click11.wav",
-            model.Event.WORLD_COMPLETE: "fanfare2.wav",
             model.Event.RANDOM_ENVIRONMENT: ("bubbles.wav", "fireplace.wav", "water-wave1.wav", "water-wave2.wav",
                                              "click44.wav", "click36.wav", "smith2.wav", "raven.wav", "raven2.wav",
                                              "Mmm.ogg", "TouchOfDeath.ogg", "Stone.ogg", "dripping.wav"),
@@ -151,6 +151,7 @@ class AudioManager:
             model.Event.STATE_PLAYING: "dark-times-by-kevin-macleod-from-filmmusic-io.mp3",
             model.Event.STATE_PAUSED: "lost-time-by-kevin-macleod-from-filmmusic-io.mp3",
             model.Event.STATE_READY: "Ossuary 5 - Rest.mp3",
+            model.Event.STATE_WORLD_COMPLETE: "the-ice-giants-by-kevin-macleod-from-filmmusic-io.mp3",
             model.Event.STATE_GAME_OVER: "the-descent-by-kevin-macleod-from-filmmusic-io.mp3",
         }
 
@@ -182,7 +183,8 @@ class AudioManager:
 
         # If no theme specified or theme not found use default
         if music_theme is None or music_theme not in self.music_themes.keys():
-            music_theme = self.current_music_theme
+            #music_theme = self.current_music_theme
+            music_theme = AudioManager.DEFAULT_THEME
 
         print("Play that funky music...{0} from {1} theme".format(music_name, music_theme))
 
@@ -193,26 +195,27 @@ class AudioManager:
             music_theme = AudioManager.DEFAULT_THEME
             theme = self.music_themes[music_theme]
             if music_name not in theme.keys():
+                print("Can't find music {0} in theme {1}".format(music_name, music_theme))
                 raise Exception("Can't find music {0} in theme {1}".format(music_name, music_theme))
 
         music_file_name = theme[music_name]
 
-        try:
-            if pygame.mixer.music.get_busy():
-                pygame.mixer.music.stop()
+        #try:
+        if pygame.mixer.music.get_busy():
+            pygame.mixer.music.stop()
 
-            self.stop_music()
+        self.stop_music()
 
-            print("playing '{0}' as the {1} music for theme {2}".format(music_file_name, music_name, music_theme))
-            pygame.mixer.music.load(AudioManager.RESOURCES_DIR_MUSIC + music_file_name)
-            pygame.mixer.music.play(-1)
+        print("playing '{0}' as the {1} music for theme {2}".format(music_file_name, music_name, music_theme))
+        pygame.mixer.music.load(AudioManager.RESOURCES_DIR_MUSIC + music_file_name)
+        pygame.mixer.music.play(-1)
 
-        except Exception as err:
-            print(str(err))
+        # except Exception as err:
+        #     print(str(err))
 
     def stop_music(self):
 
-        # pygame.mixer.music.stop()
+        pygame.mixer.music.stop()
         pygame.mixer.music.fadeout(700)
 
     def change_volume(self, delta: float = 0.1):

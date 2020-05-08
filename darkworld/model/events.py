@@ -1,4 +1,5 @@
 class Event():
+
     # Event Types
     DEBUG = "debug"
     QUIT = "quit"
@@ -14,6 +15,7 @@ class Event():
     STATE_PLAYING = "Game Playing"
     STATE_PAUSED = "Game Paused"
     STATE_GAME_OVER = "Game Over"
+    STATE_WORLD_COMPLETE = "Game World Complete"
 
     # Event Names
     TICK = "Tick"
@@ -32,7 +34,6 @@ class Event():
     TREASURE = "treasure"
     DOOR_OPEN = "door opened"
     DOOR_LOCKED = "door locked"
-    WORLD_COMPLETE = "world complete"
     NEW_WORLD = "new world"
     SWITCH = "switch"
     TREASURE_OPEN = "treasure chest open"

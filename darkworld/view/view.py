@@ -292,7 +292,7 @@ class ImageManager:
             model.Objects.ENEMY2: "rpg_sprite_gold3-18.png",
             model.Objects.NPC1: "rpg_sprite_gold5-14.png",
             model.Objects.TILE1: "basic_brick:2.png",
-            model.Objects.TILE2: "wall2.png",
+            model.Objects.TILE2: "wall2-64.png",
             model.Objects.TILE3: "tile4.png",
             model.Objects.TILE4: "rpg_sprite_bw8-2.png",
             model.Objects.TREASURE: "rpg_sprite_gold4-13.png",
@@ -518,6 +518,7 @@ class DWMainFrame(View):
         self.world_view = DWWorldView(self.model, min_view_pos=(-200, -200, -350), max_view_pos=(800, 800, 400))
         self.inventory_view = DWInventoryView(self.model)
         self.text_box = DWTextBox("")
+        self.world_complete_view = DWWorldCompleteView(self.model)
 
     def initialise(self):
 
@@ -543,6 +544,7 @@ class DWMainFrame(View):
         self.world_view.initialise()
         self.inventory_view.initialise()
         self.text_box.initialise()
+        self.world_complete_view.initialise()
 
     def print(self):
 
@@ -550,6 +552,7 @@ class DWMainFrame(View):
         self.world_view.print()
         self.inventory_view.print()
         self.text_box.print()
+        self.world_complete_view.print()
 
     def inventory_show(self, view_on=None):
         if view_on is None:
@@ -603,7 +606,7 @@ class DWMainFrame(View):
                              0)
 
             pygame.draw.rect(self.surface,
-                             Colours.WHITE,
+                             Colours.LIGHT_GREY,
                              msg_rect,
                              2)
 
@@ -613,7 +616,7 @@ class DWMainFrame(View):
                       y=self.world_view.height / 2,
                       size=32,
                       centre=True,
-                      fg_colour=Colours.WHITE,
+                      fg_colour=Colours.LIGHT_GREY,
                       bg_colour=Colours.DARK_GREY)
 
             # Draw the name of the current world
@@ -631,7 +634,7 @@ class DWMainFrame(View):
                                  0)
 
                 pygame.draw.rect(self.surface,
-                                 Colours.WHITE,
+                                 Colours.LIGHT_GREY,
                                  msg_rect,
                                  2)
 
@@ -640,8 +643,14 @@ class DWMainFrame(View):
                           x=self.width / 2,
                           y=y + msg_box_height / 2,
                           size=32,
-                          fg_colour=Colours.WHITE,
+                          fg_colour=Colours.LIGHT_GREY,
                           bg_colour=Colours.DARK_GREY)
+
+            if self.model.state == model.DWModel.STATE_WORLD_COMPLETE:
+                self.world_complete_view.draw()
+                view_rect = self.world_complete_view.surface.get_rect()
+                view_rect.center = pane_rect.center
+                self.surface.blit(self.world_complete_view.surface, view_rect)
 
     def update(self):
         pygame.display.update()
@@ -656,6 +665,7 @@ class DWMainFrame(View):
 
         self.world_view.tick()
         self.text_box.tick()
+        self.world_complete_view.tick()
 
     def process_event(self, new_event: model.Event):
 
@@ -815,7 +825,7 @@ class DWWorldView(View):
                             alpha = 90
                         elif Event.EFFECT_PROTECTION in self.model.world.effects:
                             alpha = 255 - (self.tick_count % 6) * 40
-                            #alpha = 255
+                            # alpha = 255
                         elif Event.EFFECT_KILL_ENEMIES in self.model.world.effects:
                             pass
 
@@ -826,7 +836,8 @@ class DWWorldView(View):
                     image.set_alpha(alpha)
 
                     # Blit the object image at the appropriate place and size
-                    image_rect = pygame.Rect(int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w, size_h)
+                    image_rect = pygame.Rect(int(x * self.object_zoom_ratio), int(y * self.object_zoom_ratio), size_w,
+                                             size_h)
                     self.surface.blit(image, image_rect)
 
                     if obj.name == model.Objects.PLAYER:
@@ -855,10 +866,18 @@ class DWWorldView(View):
                             if effect_image_name == model.Objects.SWORD:
                                 effect = self.model.get_effect(Event.EFFECT_MELEE_ATTACK)
                                 if effect is not None:
-                                    #print("{0}".format(effect))
+                                    # print("{0}".format(effect))
                                     type, count, duration = effect
-                                    effect_image = pygame.transform.rotate(effect_image, 45 + 180 * count/duration)
+                                    effect_image = pygame.transform.rotate(effect_image, 45 + 180 * count / duration)
                                     effect_image.set_alpha(255)
+
+                                    odx, ody, odz = obj.dxyz
+                                    print("{0}: xyz={1}, oxyz={2}, dxyz={3}".format(obj.name, obj.xyz, obj.old_xyz, obj.dxyz))
+                                    pygame.draw.line(self.surface,
+                                                     Colours.YELLOW,
+                                                     image_rect.center,
+                                                     (image_rect.centerx + odx * 16, image_rect.centery + ody * 16),
+                                                     4)
 
                             # Centre effect image vs. player image
                             effect_rect = effect_image.get_rect()
@@ -900,7 +919,7 @@ class DWWorldView(View):
                                      (vx, vy, to_obj.rect.width, to_obj.rect.height),
                                      1)
                 else:
-                    trace_colour = pygame.Color(min(20 + len(n.hits) * 30,255),0, 0)
+                    trace_colour = pygame.Color(min(20 + len(n.hits) * 30, 255), 0, 0)
                     for blocker in n.blockers:
                         point = blocker.xyz
                         vx, vy, vz = self.m2v.model_to_view_xyz(view_pos=self.view_pos, \
@@ -1003,6 +1022,9 @@ class ModelToView3D():
 
             # For each object in the list...
             for obj in objects_at_z:
+
+                if obj.is_visible is False:
+                    continue
 
                 # Calculate where the object's position is relative to the current camera view point
                 ox, oy, oz = obj.xyz
@@ -1257,6 +1279,126 @@ class DWInventoryView(View):
                 img = pygame.transform.scale(img, (self.icon_size, self.icon_size))
                 self.surface.blit(img, (self.text_rect.x, y - int(self.icon_size / 2)))
 
-                text = "{0} x {1}".format(item, count)
+                text = "{0} x {1}".format(item.title(), count)
                 draw_text(surface=self.surface, msg=text, x=x, y=y + 6 - int(self.icon_size / 4), size=self.text_size,
                           fg_colour=Colours.WHITE, bg_colour=Colours.DARK_GREY, centre=False)
+
+
+class DWWorldCompleteView(View):
+
+    def __init__(self, model: model.DWModel):
+        super(DWWorldCompleteView, self).__init__()
+
+        # Connect to the model
+        self.model = model
+        self.surface = None
+
+        # Properties of the text box
+        self.width = 400
+        self.height = 300
+        self.icon_size = 40
+        self.text_size = 24
+        self.margin = 6
+        self.padding = 6
+        self.skin = ImageManager.DEFAULT_SKIN
+        self.fg = Colours.WHITE
+        self.bg = Colours.DARK_GREY
+
+    def initialise(self):
+        super(DWWorldCompleteView, self).initialise()
+
+        print("Initialising {0}".format(__class__))
+        self.surface = pygame.Surface((self.width, self.height))
+        self.surface.set_colorkey((0, 255, 0))
+        self.set_size()
+
+    def set_size(self):
+
+        self.height += len(self.model.inventory.keys()) * self.icon_size
+
+        self.border_rect = pygame.Rect(self.padding,
+                                       self.padding,
+                                       self.width - 2 * self.padding,
+                                       self.height - 2 * self.padding)
+
+        self.text_rect = pygame.Rect(self.padding + self.margin,
+                                     self.padding + self.margin,
+                                     self.width - 2 * (self.padding + self.margin),
+                                     self.height - 2 * (self.padding + self.padding))
+
+    def print(self):
+        print("Printing {0} tick=({1})".format(__class__, self.tick_count))
+
+    def draw(self):
+
+        self.surface.fill(Colours.DARK_GREY)
+
+        pane_rect = self.surface.get_rect()
+
+        # Get what skin we are using for the world that we are drawing
+        self.skin = self.model.get_skin_name()
+
+        pygame.draw.rect(self.surface,
+                         Colours.DARK_GREY,
+                         self.border_rect,
+                         0)
+
+        pygame.draw.rect(self.surface,
+                         Colours.LIGHT_GREY,
+                         self.border_rect,
+                         2)
+
+        x = self.text_rect.centerx
+        y = self.text_rect.y + 16
+
+        text = "{0} Complete".format(self.model.world.name, self.tick_count)
+        draw_text(surface=self.surface, msg=text, x=x, y=y, size=int(self.text_size * 1.5),
+                  fg_colour=Colours.LIGHT_GREY, bg_colour=Colours.DARK_GREY, centre=True)
+
+        img = View.image_manager.get_skin_image(tile_name=model.Objects.PLAYER, skin_name=self.skin,
+                                                tick=self.tick_count)
+        img = pygame.transform.scale(img, (self.icon_size * 4, self.icon_size * 4))
+
+        alpha = 255 * (1 - abs(1 - ((self.tick_count % 50 / 50) * 2)))
+        img.set_alpha(alpha)
+        img_rect = img.get_rect()
+        img_rect.centerx = pane_rect.centerx
+        img_rect.bottom = pane_rect.bottom - 16
+        self.surface.blit(img, img_rect)
+
+        y = self.text_rect.y + self.text_size
+        x = self.text_rect.x + self.icon_size
+
+        # Display what you currently have in your inventory and the current value
+        inventory_value = 0
+        types_of_item = 0
+
+        for item, count in self.model.inventory.items():
+
+            if count > 0:
+                types_of_item += 1
+
+                item_object = model.WorldObjectLoader.get_object_copy_by_name(item)
+                inventory_value += (item_object.value * count)
+
+                y += (self.icon_size * (types_of_item % 2 == 1))
+
+                img = View.image_manager.get_skin_image(tile_name=item, skin_name=self.skin)
+                img = pygame.transform.scale(img, (self.icon_size, self.icon_size))
+                self.surface.blit(img, (self.text_rect.x + (((types_of_item % 2) == 0) * self.text_rect.width / 2),
+                                        y - int(self.icon_size / 2)))
+
+                text = "{0} x {1}".format(item.title(), count)
+                draw_text(surface=self.surface,
+                          msg=text,
+                          x=x + (((types_of_item % 2) == 0) * self.text_rect.width / 2),
+                          y=y + 6 - int(self.icon_size / 4),
+                          size=self.text_size,
+                          fg_colour=Colours.LIGHT_GREY,
+                          bg_colour=None,
+                          centre=False)
+
+        y = self.text_rect.bottom - (self.text_size * 1.0)
+        text = "Inventory Value = {0}".format(inventory_value)
+        draw_text(surface=self.surface, msg=text, x=self.text_rect.centerx, y=y, size=int(self.text_size * 1.5),
+                  fg_colour=Colours.LIGHT_GREY, bg_colour=None, centre=True)

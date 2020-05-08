@@ -20,6 +20,7 @@ class RPGObject3D(object):
                  type: int = 0,
                  opos=(0, 0, 0),
                  osize=(1, 1, 1),
+                 value=0,
                  solid: bool = True,
                  visible: bool = True,
                  interactable: bool = False,
@@ -32,6 +33,7 @@ class RPGObject3D(object):
         self.name = name
         self.type = type
         self.state = state
+        self.value = value
 
         # Position and size
         ox, oy, oz = opos
@@ -40,6 +42,7 @@ class RPGObject3D(object):
         self._old_z = oz
         self._rect = pygame.Rect(ox, oy, ow, oh)
         self._old_rect = self._rect.copy()
+        self.dxyz = (0,0,0)
 
         # Properties
         self.is_solid = solid
@@ -1032,6 +1035,7 @@ class WorldObjectLoader():
                 new_object = RPGObject3D(name=row.get("Name"), \
                                          opos=(0, 0, 0), \
                                          osize=(int(row.get("width")), int(row.get("depth")), int(row.get("height"))), \
+                                         value=int(row.get("value")), \
                                          solid=WorldObjectLoader.BOOL_MAP[row.get("solid").upper()], \
                                          visible=WorldObjectLoader.BOOL_MAP[row.get("visible").upper()], \
                                          interactable=WorldObjectLoader.BOOL_MAP[row.get("interactable").upper()],
@@ -1326,6 +1330,8 @@ class World3D:
 
     def move_object(self, selected_object, vector):
 
+        start_xyz = selected_object.xyz
+
         dx, dy, dz = vector
 
         if len(self.touching_objects(selected_object, distance=0, object_filter=World3D.SLOW_TILES)) > 0:
@@ -1389,17 +1395,28 @@ class World3D:
                         # print("DY:Object {0} collided with object {1}".format(selected_object, str(object)))
                         break
 
+
+        end_xyz = selected_object.xyz
+
         # did we move anywhere?
-        if selected_object.has_moved() is True:
+        if start_xyz != end_xyz:
+
+            sx, sy, sz = start_xyz
+            ex, ey, ez = end_xyz
+            selected_object.dxyz = (ex - sx, ey - sy, ez - sz)
 
             # If we succeeded in moving planes...
-            if selected_object.has_changed_planes() is True:
+            if sz != ez:
                 # Adjust the plane data to reflect new position
-                self.delete_object3D(selected_object, selected_object._old_z)
+                self.delete_object3D(selected_object, sz)
                 self.add_object3D(selected_object, do_copy=False)
+
             # Otherwise tick the object to trigger animation.
             else:
                 selected_object.tick()
+
+            if selected_object.name == Objects.PLAYER:
+                print("{0}: dxyz={1}".format(selected_object.name, selected_object.dxyz))
 
     def move_object_to_xyz(self, selected_object: RPGObject3D, xyz):
 

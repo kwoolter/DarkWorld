@@ -9,13 +9,13 @@ from darkworld.model.events import *
 class DWModel():
     DATA_FILES_DIR = os.path.dirname(__file__) + "\\data\\"
 
-    # Define states
-    STATE_LOADED = "Game Loaded"
-    STATE_READY = "Game Ready"
-    STATE_PLAYING = "Game Playing"
-    STATE_PAUSED = "Game Paused"
-    STATE_WORLD_COMPLETE = "World Complete"
-    STATE_GAME_OVER = "Game Over"
+    # Define states to synch up with corresponding event names
+    STATE_LOADED = Event.STATE_LOADED
+    STATE_READY = Event.STATE_READY
+    STATE_PLAYING = Event.STATE_PLAYING
+    STATE_PAUSED = Event.STATE_PAUSED
+    STATE_WORLD_COMPLETE = Event.STATE_WORLD_COMPLETE
+    STATE_GAME_OVER = Event.STATE_GAME_OVER
 
     # Default skin name
     DEFAUL_SKIN_NAME = "default"
@@ -28,7 +28,7 @@ class DWModel():
         # Properties
         self.name = name
         self.tick_count = 0
-        self.state = DWModel.STATE_LOADED
+        self._state = DWModel.STATE_LOADED
         self._debug = False
 
         # Model Components
@@ -43,6 +43,19 @@ class DWModel():
         self.effects = {}
         self.inventory = {}
         self.inventory_copy = copy.deepcopy(self.inventory)
+
+    @property
+    def state(self):
+        return self._state
+
+    @state.setter
+    def state(self, new_state):
+        if new_state != self._state:
+            self._old_state = self._state
+            self._state = new_state
+            self.events.add_event(Event(type=Event.STATE,
+                                        name=self.state,
+                                        description="Game state changed to {0}".format(self.state)))
 
     def initialise(self):
         print("Initialising {0}:{1}".format(self.name, __class__))
@@ -64,14 +77,12 @@ class DWModel():
         self.effects = {}
         self.inventory = {}
         self.inventory_copy = copy.deepcopy(self.inventory)
-        self.current_world_id = 1
+        self.current_world_id = 9
 
         # self.move_world(self.current_world_id, do_copy=True)
 
         self.state = DWModel.STATE_LOADED
-        self.events.add_event(Event(type=Event.STATE,
-                                    name=self.state,
-                                    description="Game state changed to {0}".format(self.state)))
+
 
     def reset(self):
 
@@ -111,9 +122,6 @@ class DWModel():
 
     def start(self):
         self.state = DWModel.STATE_PLAYING
-        self.events.add_event(Event(type=Event.STATE,
-                                    name=self.state,
-                                    description="Game state changed to {0}".format(self.state)))
 
         self.move_world(self.current_world_id, do_copy=True)
 
@@ -128,10 +136,6 @@ class DWModel():
                 self.state = DWModel.STATE_PLAYING
             elif self.state == DWModel.STATE_PLAYING:
                 self.state = DWModel.STATE_PAUSED
-
-        self.events.add_event(Event(type=Event.STATE,
-                                    name=self.state,
-                                    description="Game state changed to {0}".format(self.state)))
 
     def print(self):
 
@@ -191,7 +195,6 @@ class DWModel():
 
                 # else you die
                 else:
-                    print("Hit enemy")
                     self.player_died()
 
             # Gravity tries to make the player fall
@@ -327,10 +330,6 @@ class DWModel():
                     if self.have_inventory_object(req_obj) is True:
 
                         self.state = DWModel.STATE_WORLD_COMPLETE
-
-                        self.events.add_event(Event(type=Event.GAME,
-                                                    name=Event.WORLD_COMPLETE,
-                                                    description="You completed {0}".format(self.world.name)))
 
                         self.use_inventory_object(req_obj)
 
@@ -549,14 +548,9 @@ class DWModel():
 
         if self.player_lives <= 0:
             self.state = DWModel.STATE_GAME_OVER
-            self.events.add_event(Event(type=Event.STATE,
-                                        name=self.state,
-                                        description="{0} has died. Game Over".format(self.player.name)))
+
         else:
             self.state = DWModel.STATE_READY
-            self.events.add_event(Event(type=Event.STATE,
-                                        name=self.state,
-                                        description="{0} has died.".format(self.player.name)))
 
     def swap_world_object(self, old_object, new_object_name):
         self.world.swap_object(old_object, new_object_name)

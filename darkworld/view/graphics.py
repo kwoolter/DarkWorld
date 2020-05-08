@@ -13,6 +13,7 @@ class Colours:
     BLUE = (63, 72, 204)
     DARK_GREY = (40, 40, 40)
     GREY = (128, 128, 128)
+    LIGHT_GREY = (200,200,200)
     GOLD = (255, 201, 14)
     YELLOW = (255, 255, 0)
     TRANSPARENT = (255, 1, 1)

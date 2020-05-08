@@ -86,7 +86,7 @@ ID,Name,Layer,Layout
 10,World1,80,                    
 10,World1,80,                    
 10,World1,80,                    
-10,World1,80,       fOf          
+10,World1,80,       fff          
 10,World1,80,       fff          
 10,World1,80,       fff          
 10,World1,80,      ffff          
@@ -106,7 +106,7 @@ ID,Name,Layer,Layout
 10,World1,79,                    
 10,World1,79,                    
 10,World1,79,      #####         
-10,World1,79,      #   #         
+10,World1,79,      # % #         
 10,World1,79,      #   #         
 10,World1,79,     ####@#         
 10,World1,79,     #b^  #B        
@@ -115,7 +115,7 @@ ID,Name,Layer,Layout
 10,World1,79,     #^    B##      
 10,World1,79,     ## ^   b#      
 10,World1,79,      #     b#      
-10,World1,79,      ###b t##      
+10,World1,79,      ###b K##      
 10,World1,79,        #####       
 10,World1,79,                    
 10,World1,79,                    
@@ -899,7 +899,7 @@ ID,Name,Layer,Layout
 8,World8,120,                    
 8,World8,120,                    
 9,World9,50,####################
-9,World9,50,#                  #
+9,World9,50,#        K         #
 9,World9,50,#                  #
 9,World9,50,# c  a A  g  q Q   #
 9,World9,50,#                  #
@@ -1324,7 +1324,7 @@ ID,Name,Layer,Layout
 120,World120,20,#                  #
 120,World120,20,#                  #
 120,World120,20,#    B:  :B:::B    #
-120,World120,20,#    :    :   :    #
+120,World120,20,#    :    :g  :    #
 120,World120,20,#    :    :        #
 120,World120,20,#    :   a:        #
 120,World120,20,bb   B:::::K  :   bb

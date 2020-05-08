@@ -78,7 +78,7 @@ class DWController:
                     self.audio.process_event(event)
 
                 except Exception as err:
-                    print(str(err))
+                    print("Caught exception {0}".format(str(err)))
 
                 if event.type == model.Event.QUIT:
                     loop = False
@@ -131,6 +131,12 @@ class DWController:
                         elif event.key == K_F10:
                             self.v.world_view.m2v.infinity -= 10
 
+                    # Key DOWN events - less time critical actions
+                    elif event.type == KEYDOWN:
+
+                        if event.key == K_z:
+                            self.m.do_melee_attack()
+
                     # Key pressed events - more time critical actions
                     keys = pygame.key.get_pressed()
 
@@ -145,9 +151,9 @@ class DWController:
                     elif keys[K_DOWN] or keys[K_s]:
                         self.m.move_player(np.array(model.World3D.UP) * self.move_speed)
 
-                    if keys[K_z]:
-                        self.m.do_melee_attack()
-                    elif keys[K_PAGEUP]:
+                    # if keys[K_z]:
+                    #     self.m.do_melee_attack()
+                    if keys[K_PAGEUP]:
                         self.v.world_view.zoom_view(0.01)
                     elif keys[K_PAGEDOWN]:
                         self.v.world_view.zoom_view(-0.01)
@@ -248,6 +254,10 @@ class DWController:
                         if event.key == K_SPACE:
                             self.m.move_world(do_copy = True)
                             self.m.state = model.DWModel.STATE_PLAYING
+
+                    # Timer events
+                    elif event.type == USEREVENT + 2:
+                        self.v.tick()
 
                 # Process events for when the game is in state GAME_OVER
                 elif self.m.state == model.DWModel.STATE_GAME_OVER:
