@@ -82,8 +82,41 @@ class DWController:
 
                 if event.type == model.Event.QUIT:
                     loop = False
+                    break
 
                 event = self.m.get_next_event()
+
+            # If we are playing the game then process all of the key controls
+            if self.m.state == model.DWModel.STATE_PLAYING:
+                # Key pressed events - more time critical actions
+                keys = pygame.key.get_pressed()
+
+                # First key if the movement keys are pressed
+                move_vector = model.World3D.DUMMY
+
+                if keys[K_LEFT] or keys[K_a]:
+                    move_vector = np.add(move_vector, np.array(model.World3D.WEST))
+
+                elif keys[K_RIGHT] or keys[K_d]:
+                    move_vector = np.add(move_vector, np.array(model.World3D.EAST))
+
+                if keys[K_UP] or keys[K_w]:
+                    move_vector = np.add(move_vector, np.array(model.World3D.DOWN))
+
+                elif keys[K_DOWN] or keys[K_s]:
+                    move_vector = np.add(move_vector, np.array(model.World3D.UP))
+
+                # If the player chose to move then attempt to do so...
+                if np.array_equal(move_vector, model.World3D.DUMMY) is False:
+                    self.m.move_player(move_vector * self.move_speed)
+
+                # Now see if the player wants to change the camera zoom...
+                if keys[K_PAGEUP]:
+                    self.v.world_view.zoom_view(0.01)
+                elif keys[K_PAGEDOWN]:
+                    self.v.world_view.zoom_view(-0.01)
+                elif keys[K_HOME]:
+                    self.v.world_view.zoom_view()
 
             # Loop to process pygame events
             for event in pygame.event.get():
@@ -136,37 +169,6 @@ class DWController:
 
                         if event.key == K_z:
                             self.m.do_melee_attack()
-
-                    # Key pressed events - more time critical actions
-                    keys = pygame.key.get_pressed()
-
-                    # First key if the movement keys are pressed
-                    move_vector = model.World3D.DUMMY
-
-                    if keys[K_LEFT] or keys[K_a]:
-                        move_vector = np.add(move_vector, np.array(model.World3D.WEST))
-
-                    elif keys[K_RIGHT] or keys[K_d]:
-                        move_vector = np.add(move_vector, np.array(model.World3D.EAST))
-
-                    if keys[K_UP] or keys[K_w]:
-                        move_vector = np.add(move_vector, np.array(model.World3D.DOWN))
-
-                    elif keys[K_DOWN] or keys[K_s]:
-                        move_vector = np.add(move_vector, np.array(model.World3D.UP))
-
-                    # If the player chose to move then attempt to do so...
-                    if np.array_equal(move_vector, model.World3D.DUMMY) is False:
-                        self.m.move_player(move_vector * self.move_speed)
-
-                    # Now see if the player wants to change the camera zoom...
-                    if keys[K_PAGEUP]:
-                        self.v.world_view.zoom_view(0.01)
-                    elif keys[K_PAGEDOWN]:
-                        self.v.world_view.zoom_view(-0.01)
-                    elif keys[K_HOME]:
-                        self.v.world_view.zoom_view()
-
 
                 # Process events for when the game is in state READY
                 elif self.m.state == model.DWModel.STATE_LOADED:

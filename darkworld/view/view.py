@@ -391,7 +391,7 @@ class ImageManager:
         for i in range(0, 5):
             self.sprite_sheets["token{0}.png".format(i)] = (sheet_file_name, (i * 8, 0, 8, 8))
 
-        sheet_file_name = "ladders_sheet.png"
+        sheet_file_name = "ladders_sheet2.png"
         for i in range(0, 5):
             self.sprite_sheets["ladder{0}.png".format(i)] = (sheet_file_name, (0, i * 32, 32, 32))
 
@@ -515,7 +515,7 @@ class DWMainFrame(View):
         # Create a view for rendering the model of the current world
         # Define how far away the camera is allowed to follow the player by setting min and max positions
         # self.world_view = DWWorldView(self.model, min_view_pos=(200, -200, -350), max_view_pos=(800, 800, 400))
-        self.world_view = DWWorldView(self.model, min_view_pos=(-200, -200, -350), max_view_pos=(800, 800, 400))
+        self.world_view = DWWorldView(self.model, min_view_pos=(200, 200, -350), max_view_pos=(400, 400, 400))
         self.inventory_view = DWInventoryView(self.model)
         self.text_box = DWTextBox("")
         self.world_complete_view = DWWorldCompleteView(self.model)
@@ -763,8 +763,8 @@ class DWWorldView(View):
         # Move the camera relative to the players position
         vz += self.camera_distance
 
-        # Set the view at the position
-        self.set_view((vx, vy, vz))
+        # Set the view at the position and adjust vx,vy,vz accordingly
+        vx,vy,vz = self.set_view((vx, vy, vz))
 
         # Get the visible objects at this view point from the model
         objs = self.m2v.get_object_list((vx, vy, vz),
@@ -977,6 +977,8 @@ class DWWorldView(View):
     def set_view(self, new_view_pos):
         # Set the position of the camera applying the minimum and maximum constraints of where is is allowed to go
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
+
+        return self.view_pos
 
     def move_view(self, direction):
         # Move the view camera in a specified direction but...
@@ -1226,7 +1228,7 @@ class DWInventoryView(View):
         self.margin = 4
         self.padding = 4
         self.skin = ImageManager.DEFAULT_SKIN
-        self.fg = Colours.WHITE
+        self.fg = Colours.LIGHT_GREY
         self.bg = Colours.BLACK
         self.is_visible = True
 

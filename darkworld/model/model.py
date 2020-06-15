@@ -80,7 +80,7 @@ class DWModel():
         self.effects = {}
         self.inventory = {}
         self.inventory_copy = copy.deepcopy(self.inventory)
-        self.current_world_id = 9
+        self.current_world_id = 1
 
         # self.move_world(self.current_world_id, do_copy=True)
 
