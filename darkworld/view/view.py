@@ -3,6 +3,7 @@ from .graphics import *
 import pygame
 import os
 import numpy as np
+import math
 import logging
 from darkworld.model.events import *
 from collections import deque
@@ -27,6 +28,8 @@ class ImageManager:
 
     def get_image(self, image_file_name: str, width: int = 32, height: int = 32):
 
+        transparent = pygame.Color(255, 22, 33)
+
         if image_file_name not in ImageManager.image_cache.keys():
 
             if image_file_name in self.sprite_sheets.keys():
@@ -44,10 +47,14 @@ class ImageManager:
 
             try:
 
-                # image = pygame.transform.scale(original_image, (width, height))
-                # smallest_size = original_image.get_bounding_rect()
-                # cropped_image = pygame.Surface((smallest_size.width, smallest_size.height))
-                # pygame.Surface.blit(cropped_image, original_image, smallest_size)
+                image = pygame.transform.scale(original_image, (width, height))
+                smallest_size = image.get_bounding_rect()
+                print(f'{image_file_name}:{image.get_rect()} smallest={smallest_size}')
+                cropped_image = pygame.Surface((smallest_size.width, smallest_size.height))
+                cropped_image.fill(transparent)
+                cropped_image.blit(image, dest=(0,0), area= smallest_size)
+                cropped_image.set_colorkey(transparent)
+                #ImageManager.image_cache[image_file_name] = cropped_image
                 ImageManager.image_cache[image_file_name] = original_image
                 logging.info("Image {0} loaded and scaled to {1}x{2} and cached.".format(filename, width, height))
 
@@ -502,7 +509,7 @@ class DWMainFrame(View):
 
     def __init__(self, model: model.DWModel):
 
-        super(DWMainFrame, self).__init__()
+        super().__init__()
 
         self._debug = False
 
@@ -515,14 +522,15 @@ class DWMainFrame(View):
         # Create a view for rendering the model of the current world
         # Define how far away the camera is allowed to follow the player by setting min and max positions
         # self.world_view = DWWorldView(self.model, min_view_pos=(200, -200, -350), max_view_pos=(800, 800, 400))
-        self.world_view = DWWorldView(self.model, min_view_pos=(200, 200, -350), max_view_pos=(400, 400, 400))
+        self.world_view = DWWorldView(self.model, min_view_pos=(200, 200, -350), max_view_pos=(500, 500, 400))
         self.inventory_view = DWInventoryView(self.model)
         self.text_box = DWTextBox("")
         self.world_complete_view = DWWorldCompleteView(self.model)
+        self.game_loaded_view = DWWorldGameLoaded(self.model)
 
     def initialise(self):
 
-        super(DWMainFrame, self).initialise()
+        super().initialise()
 
         print("Initialising {0}".format(__class__))
 
@@ -545,6 +553,7 @@ class DWMainFrame(View):
         self.inventory_view.initialise()
         self.text_box.initialise()
         self.world_complete_view.initialise()
+        self.game_loaded_view.initialise()
 
     def print(self):
 
@@ -553,6 +562,7 @@ class DWMainFrame(View):
         self.inventory_view.print()
         self.text_box.print()
         self.world_complete_view.print()
+        self.game_loaded_view.print()
 
     def inventory_show(self, view_on=None):
         if view_on is None:
@@ -570,14 +580,6 @@ class DWMainFrame(View):
         # Draw the main view of the world
         self.world_view.draw()
         self.surface.blit(self.world_view.surface, (x, y))
-
-        x = 4
-        y = 4
-
-        # If the text box is active then draw it
-        if self.text_box.is_visible is True:
-            self.text_box.draw()
-            self.surface.blit(self.text_box.surface, (x, y))
 
         x = self.world_view.width - self.inventory_view.width - 4
         y = 4
@@ -652,6 +654,28 @@ class DWMainFrame(View):
                 view_rect.center = pane_rect.center
                 self.surface.blit(self.world_complete_view.surface, view_rect)
 
+            elif self.model.state == model.DWModel.STATE_LOADED:
+                self.game_loaded_view.draw()
+                view_rect = self.game_loaded_view.surface.get_rect()
+                view_rect.center = pane_rect.center
+                self.surface.blit(self.game_loaded_view.surface, view_rect)
+
+        # If the text box is active then draw it
+        if self.text_box.is_visible is True:
+            if self.model.state == model.DWModel.STATE_LOADED:
+                self.text_box.width = 200
+            else:
+                self.text_box.width = 130
+            self.text_box.draw()
+            text_rect = self.text_box.surface.get_rect()
+            if self.model.state == model.DWModel.STATE_LOADED:
+                text_rect.centerx = pane_rect.centerx
+                text_rect.bottom = view_rect.bottom - 10
+            else:
+                text_rect.topleft = pane_rect.topleft
+
+            self.surface.blit(self.text_box.surface, text_rect)
+
     def update(self):
         pygame.display.update()
 
@@ -661,15 +685,16 @@ class DWMainFrame(View):
 
     def tick(self):
 
-        super(DWMainFrame, self).tick()
+        super().tick()
 
         self.world_view.tick()
         self.text_box.tick()
         self.world_complete_view.tick()
+        self.game_loaded_view.tick()
 
     def process_event(self, new_event: model.Event):
 
-        super(DWMainFrame, self).process_event(new_event)
+        super().process_event(new_event)
 
         self.world_view.process_event(new_event)
         self.text_box.process_event(new_event)
@@ -975,6 +1000,9 @@ class DWWorldView(View):
         #           bg_colour=Colours.BLACK)
 
     def set_view(self, new_view_pos):
+
+        # self.min_view_pos = np.divide(self.min_view_pos, self.object_zoom_ratio)
+        # self.max_view_pos = np.divide(self.min_view_pos, self.object_zoom_ratio)
         # Set the position of the camera applying the minimum and maximum constraints of where is is allowed to go
         self.view_pos = np.clip(new_view_pos, self.min_view_pos, self.max_view_pos)
 
@@ -996,6 +1024,7 @@ class DWWorldView(View):
         else:
             self.object_zoom_ratio = max(min(self.object_zoom_ratio * (1 + zoom_delta), DWWorldView.MAX_ZOOM),
                                          DWWorldView.MIN_ZOOM)
+            self.set_view(self.view_pos)
 
 
 class ModelToView3D():
@@ -1095,7 +1124,7 @@ class DWTextBox(View):
     FADE_IN_OUT = "fade in and out"
 
     def __init__(self, model: str):
-        super(DWTextBox, self).__init__()
+        super().__init__()
 
         # Connect to the model
         self.model = model
@@ -1103,12 +1132,12 @@ class DWTextBox(View):
         self.surface = None
 
         # Properties of the text box
-        self.width = 100
-        self.max_height = self.height = 150
+        self.width = 130
+        self.height = 150
         self.margin = 4
         self.padding = 4
         self.skin = "default"
-        self.text_size = 16
+        self.text_size = 20
         self.fg = Colours.WHITE
         self.bg = Colours.BLACK
         self.timer = self.tick_count
@@ -1120,7 +1149,7 @@ class DWTextBox(View):
         return self.tick_count < (self.timer + self.life_time_ticks)
 
     def initialise(self, fade_out: str = FADE_OFF):
-        super(DWTextBox, self).initialise()
+        super().initialise()
 
         print("Initialising {0}".format(__class__))
         self.surface = pygame.Surface((self.width, self.height))
@@ -1131,19 +1160,35 @@ class DWTextBox(View):
 
     def set_size(self):
 
-        # get the height of the font
-        fontHeight = self.font.size("Tg")[1]
-        self.height = min(max(len(self.model) * fontHeight / 6, fontHeight * 5), self.max_height)
+        # Get the width of the text to be displayed
+        fullWidth = self.font.size(self.model)[0]
 
-        self.border_rect = (self.padding,
+        # get the maximum height of the font with some padding
+        fontHeight = self.font.size("Tg")[1] + 2
+
+        # How many line of text will we be displaying given the width of teh text box?
+        lines = math.ceil(fullWidth / (self.width - (self.padding + self.margin)*2))
+
+        # Calculate how high the text box needs to be
+        self.height = lines * (fontHeight) + (self.margin + self.padding)*2
+
+        #  Calculate rect for actual text
+        self.text_rect = pygame.Rect(self.padding + self.margin,
+                          self.padding + self.margin,
+                          self.width - 2 * (self.padding + self.margin),
+                          self.height - 2 * (self.padding + self.padding))
+
+        # Calculate rect for border
+        self.border_rect = pygame.Rect(self.padding,
                             self.padding,
                             self.width - 2 * self.padding,
                             self.height - 2 * self.padding)
 
-        self.text_rect = (self.padding + self.margin,
-                          self.padding + self.margin,
-                          self.width - 2 * (self.padding + self.margin),
-                          self.height - 2 * (self.padding + self.padding))
+        # Create a surface of the right size
+        self.surface = pygame.Surface((self.width, self.height))
+        self.surface.set_colorkey((0, 255, 0))
+        #print(f'text({self.model}), text w/h:{self.text_rect.width}/{self.text_rect.height}, full width = {fullWidth}, lines={lines}')
+
 
     def print(self):
         print("Printing Dark Work Text Box view: txt={0}, fade option = {1}".format(self.model, self.fade_out))
@@ -1151,7 +1196,7 @@ class DWTextBox(View):
 
     def tick(self):
 
-        super(DWTextBox, self).tick()
+        super().tick()
 
         if len(self.msg_queue) > 0:
             if self.tick_count > (self.timer + self.life_time_ticks):
@@ -1160,7 +1205,7 @@ class DWTextBox(View):
 
     def process_event(self, new_event: model.Event):
 
-        super(DWTextBox, self).process_event(new_event)
+        super().process_event(new_event)
 
         if new_event.name in (Event.TALK, Event.READ):
             self.msg_queue.appendleft(new_event.description)
@@ -1174,12 +1219,10 @@ class DWTextBox(View):
             self.msg_queue.append(new_event.description)
 
     def draw(self):
+        self.set_size()
+
         if self.tick_count > (self.timer + self.life_time_ticks):
             return
-
-        self.surface.fill((0, 255, 0))
-
-        self.set_size()
 
         pygame.draw.rect(self.surface,
                          Colours.DARK_GREY,
@@ -1214,7 +1257,7 @@ class DWTextBox(View):
 class DWInventoryView(View):
 
     def __init__(self, model: model.DWModel):
-        super(DWInventoryView, self).__init__()
+        super().__init__()
 
         # Connect to the model
         self.model = model
@@ -1233,7 +1276,7 @@ class DWInventoryView(View):
         self.is_visible = True
 
     def initialise(self):
-        super(DWInventoryView, self).initialise()
+        super().initialise()
 
         print("Initialising {0}".format(__class__))
         self.surface = pygame.Surface((self.width, self.height))
@@ -1307,7 +1350,7 @@ class DWInventoryView(View):
 class DWWorldCompleteView(View):
 
     def __init__(self, model: model.DWModel):
-        super(DWWorldCompleteView, self).__init__()
+        super().__init__()
 
         # Connect to the model
         self.model = model
@@ -1325,7 +1368,7 @@ class DWWorldCompleteView(View):
         self.bg = Colours.DARK_GREY
 
     def initialise(self):
-        super(DWWorldCompleteView, self).initialise()
+        super().initialise()
 
         print("Initialising {0}".format(__class__))
         self.surface = pygame.Surface((self.width, self.height))
@@ -1377,9 +1420,11 @@ class DWWorldCompleteView(View):
 
         img = View.image_manager.get_skin_image(tile_name=model.Objects.PLAYER, skin_name=self.skin,
                                                 tick=self.tick_count)
-        img = pygame.transform.scale(img, (self.icon_size * 4, self.icon_size * 4))
 
-        alpha = 255 * (1 - abs(1 - ((self.tick_count % 50 / 50) * 2)))
+        scale_factor = int((4.5 - 2* abs(1 - (self.tick_count % 50 / 25)))* self.icon_size)
+        img = pygame.transform.scale(img, (scale_factor, scale_factor))
+
+        alpha = int(255 * (1 - abs(1 - (self.tick_count % 50 / 25))))
         img.set_alpha(alpha)
         img_rect = img.get_rect()
         img_rect.centerx = pane_rect.centerx
@@ -1422,3 +1467,97 @@ class DWWorldCompleteView(View):
         text = "Inventory Value = {0}".format(inventory_value)
         draw_text(surface=self.surface, msg=text, x=self.text_rect.centerx, y=y, size=int(self.text_size * 1.5),
                   fg_colour=Colours.LIGHT_GREY, bg_colour=None, centre=True)
+
+class DWWorldGameLoaded(View):
+
+    def __init__(self, model: model.DWModel):
+        super().__init__()
+
+        # Connect to the model
+        self.model = model
+        self.surface = None
+
+        # Properties of the text box
+        self.width = 400
+        self.height = 300
+        self.icon_size = 40
+        self.text_size = 24
+        self.margin = 6
+        self.padding = 6
+        self.skin = ImageManager.DEFAULT_SKIN
+        self.fg = Colours.WHITE
+        self.bg = Colours.DARK_GREY
+
+    def initialise(self):
+        super().initialise()
+
+        print("Initialising {0}".format(__class__))
+        self.surface = pygame.Surface((self.width, self.height))
+        self.surface.set_colorkey((0, 255, 0))
+        self.set_size()
+
+    def set_size(self):
+
+        self.height += len(self.model.inventory.keys()) * self.icon_size
+
+        self.border_rect = pygame.Rect(self.padding,
+                                       self.padding,
+                                       self.width - 2 * self.padding,
+                                       self.height - 2 * self.padding)
+
+        self.text_rect = pygame.Rect(self.padding + self.margin,
+                                     self.padding + self.margin,
+                                     self.width - 2 * (self.padding + self.margin),
+                                     self.height - 2 * (self.padding + self.padding))
+
+    def print(self):
+        print("Printing {0} tick=({1})".format(__class__, self.tick_count))
+
+    def draw(self):
+
+        self.surface.fill(Colours.DARK_GREY)
+
+        pane_rect = self.surface.get_rect()
+
+        # Get what skin we are using for the world that we are drawing
+        self.skin = self.model.get_skin_name()
+
+        pygame.draw.rect(self.surface,
+                         Colours.DARK_GREY,
+                         self.border_rect,
+                         0)
+
+        pygame.draw.rect(self.surface,
+                         Colours.LIGHT_GREY,
+                         self.border_rect,
+                         2)
+
+        x = self.text_rect.centerx
+        y = self.text_rect.y + 32
+
+        text = "Dark World"
+        draw_text(surface=self.surface,
+                  msg=text,
+                  x=x,
+                  y=y,
+                  size=64,
+                  fg_colour=Colours.LIGHT_GREY,
+                  bg_colour=Colours.DARK_GREY,
+                  centre=True)
+
+        img = View.image_manager.get_skin_image(tile_name=model.Objects.NPC1, skin_name=self.skin,
+                                                tick=self.tick_count)
+
+        scale_factor = int((4.5 - 2* abs(1 - (self.tick_count % 100 / 50)))* self.icon_size)
+        img = pygame.transform.scale(img, (scale_factor, scale_factor))
+
+        img_alpha = int(255 * (1 - abs(1 - (self.tick_count % 100 / 50))))
+        img.set_alpha(img_alpha)
+        img_rect = img.get_rect()
+        img_rect.centerx = pane_rect.centerx
+        img_rect.centery =  pane_rect.centery - 10
+        self.surface.blit(img, img_rect)
+
+
+
+

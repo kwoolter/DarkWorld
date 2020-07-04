@@ -28,7 +28,7 @@ class DWModel():
         # Properties
         self.name = name
         self.tick_count = 0
-        self._state = DWModel.STATE_LOADED
+        self._state = None
         self._debug = False
 
         # Model Components
