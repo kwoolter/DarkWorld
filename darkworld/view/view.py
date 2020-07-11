@@ -774,6 +774,7 @@ class DWWorldView(View):
     def draw(self):
 
         self.surface.fill(Colours.BLACK)
+        #self.surface.fill((200,200,200))
 
         if self.model.world is None:
             return
@@ -1421,7 +1422,7 @@ class DWWorldCompleteView(View):
         img = View.image_manager.get_skin_image(tile_name=model.Objects.PLAYER, skin_name=self.skin,
                                                 tick=self.tick_count)
 
-        scale_factor = int((4.5 - 2* abs(1 - (self.tick_count % 50 / 25)))* self.icon_size)
+        scale_factor = int((6 - 3* abs(1 - (self.tick_count % 50 / 25)))* self.icon_size)
         img = pygame.transform.scale(img, (scale_factor, scale_factor))
 
         alpha = int(255 * (1 - abs(1 - (self.tick_count % 50 / 25))))
@@ -1548,7 +1549,7 @@ class DWWorldGameLoaded(View):
         img = View.image_manager.get_skin_image(tile_name=model.Objects.NPC1, skin_name=self.skin,
                                                 tick=self.tick_count)
 
-        scale_factor = int((4.5 - 2* abs(1 - (self.tick_count % 100 / 50)))* self.icon_size)
+        scale_factor = int((6 - 3* abs(1 - (self.tick_count % 100 / 50)))* self.icon_size)
         img = pygame.transform.scale(img, (scale_factor, scale_factor))
 
         img_alpha = int(255 * (1 - abs(1 - (self.tick_count % 100 / 50))))

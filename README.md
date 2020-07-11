@@ -14,6 +14,7 @@ While playing
 - Z - Melee attack
 - Page Up - zoom in
 - Page Down - zoom out
+- HOME - reset Zoom view
 - F1 Help
 
 While paused/ready to start
@@ -33,6 +34,14 @@ While paused/ready to start
 </td>
 <td>
 <img height=300 width=370 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Capture2.JPG" alt="game2">
+</td>
+</tr>
+<tr>
+<td>
+<img height=300 width=370 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Loading.JPG" alt="loading">
+</td>
+<td>
+<img height=300 width=370 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/LevelComplete.JPG" alt="Complete">
 </td>
 </tr>
 </table>
