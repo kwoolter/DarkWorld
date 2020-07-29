@@ -1657,8 +1657,8 @@ ID,Name,Layer,Layout
 998,World120,99,: :   K:  ^^^^$ ^:^:
 998,World120,99,: ::::::     ^^:^:^:
 998,World120,99,: :^^^^^^^^^^^::::^:
-998,World120,99,: ::       _ ::^^^^:
-998,World120,99,:  :       _ ::^   :
+998,World120,99,: ::       ~ ::^^^^:
+998,World120,99,:  :       ~ ::^   :
 998,World120,99,:  ^^^^^^^^^^^^^   :
 998,World120,99,:                  :
 998,World120,99,::::::::::::::::::::
@@ -1682,11 +1682,11 @@ ID,Name,Layer,Layout
 998,World120,100,ffffffffffffffff   f
 998,World120,100,ffffffffffffffff   f
 998,World120,100,ffffffffffffffffffff
-998,World120,149,                   
+998,World120,149,                    
 998,World120,149,                    
 998,World120,149,                    
 998,World120,149,                  ::
-998,World120,149,                 : 
+998,World120,149,                  : 
 998,World120,149,                  : 
 998,World120,149,                  : 
 998,World120,149,                  : 
@@ -1716,7 +1716,7 @@ ID,Name,Layer,Layout
 998,World120,200,         :::     : :
 998,World120,200,        :s  :    : :
 998,World120,200,       :   U :   : :
-998,World120,200,       : K    :   : :
+998,World120,200,       :K    :   : :
 998,World120,200,       :     :   :$:
 998,World120,200,        :   :    :::
 998,World120,200,         :::        
