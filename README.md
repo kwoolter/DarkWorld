@@ -30,18 +30,18 @@ While paused/ready to start
 <table>
 <tr>
 <td>
-<img height=300 width=370 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Capture1.JPG" alt="game1">
+<img height=310 width=300 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Capture1.JPG" alt="game1">
 </td>
 <td>
-<img height=300 width=370 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Capture2.JPG" alt="game2">
+<img height=310 width=300 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Capture2.JPG" alt="game2">
 </td>
 </tr>
 <tr>
 <td>
-<img height=300 width=370 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Loading.JPG" alt="loading">
+<img height=310 width=300 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/Loading.JPG" alt="loading">
 </td>
 <td>
-<img height=300 width=370 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/LevelComplete.JPG" alt="Complete">
+<img height=310 width=300 src="https://github.com/kwoolter/DarkWorld/blob/master/darkworld/view/resources/screenshots/LevelComplete.JPG" alt="Complete">
 </td>
 </tr>
 </table>

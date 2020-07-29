@@ -777,6 +777,28 @@ class WorldBuilder():
         ai.set_instructions(instructions)
         world.add_monster(new_monster, ai)
 
+        # World 998
+        world = self.get_world(998)
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.WALL2)
+        new_monster.set_pos((12 * 32, 15 * 32, 99))
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.WEST, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.EAST, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, ai)
+
+        new_monster = WorldObjectLoader.get_object_copy_by_name(Objects.WALL2)
+        new_monster.set_pos((12 * 32, 16 * 32, 99))
+        ai = AIBotInstructions(new_monster, world)
+        instructions = [(World3D.WEST, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK),
+                        (World3D.EAST, 32 * 8, AIBot.INSTRUCTION_FAIL_SKIP),
+                        (World3D.DUMMY, 80, AIBot.INSTRUCTION_FAIL_TICK)]
+        ai.set_instructions(instructions)
+        world.add_monster(new_monster, ai)
+
     def load_world_properties(self):
 
         # World Properties:-
@@ -910,8 +932,15 @@ class WorldBuilder():
         new_world_properties = ("Dungeon World 3", "dungeon", (216, 330, 0), (32 * 5.5, 32 * 3.5, 0), switch_groups)
         self.world_properties[new_world_id] = new_world_properties
 
-        # World 999
+        # World 998
+        switch_groups = {
+            Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.WALL1, SwitchGroup.NAND),
+            Objects.SWITCH_2: (Objects.SWITCH_TILE2, Objects.WALL2, SwitchGroup.NOR)}
+        new_world_id = 998
+        new_world_properties = ("Walls", "hub", (1*32, 9 * 32, 0), (32 * 5.5, 32 * 3.5, 0), switch_groups)
+        self.world_properties[new_world_id] = new_world_properties
 
+        # World 999
         switch_groups = {
             Objects.SWITCH_1: (Objects.SWITCH_TILE1, Objects.TILE2, SwitchGroup.NOR)}
         new_world_id = 999
