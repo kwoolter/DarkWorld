@@ -62,7 +62,7 @@
             <text>Game Paused</text>
         </line>
         <line id="3">
-            <text>Press SPACE to get go back to the game</text>
+            <text>Press SPACE to go back to the game</text>
         </line>
         <line id="7">
             <text>F2:F3 change sound volume</text>
